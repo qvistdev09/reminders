@@ -1,0 +1,31 @@
+{
+  "name": "reminders",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "engines": {
+    "node": "14.x"
+  },
+  "scripts": {
+    "build": "cd client && npm install && npm run build",
+    "start": "node index.js",
+    "dev-client": "cd client && npm start",
+    "dev-server": "node index.js",
+    "dev": "concurrently --kill-others-on-fail \"npm run dev-client\" \"npm run dev-server\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qvistdev09/reminders.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/qvistdev09/reminders/issues"
+  },
+  "homepage": "https://github.com/qvistdev09/reminders#readme",
+  "dependencies": {
+    "concurrently": "^6.0.1",
+    "express": "^4.17.1"
+  }
+}
