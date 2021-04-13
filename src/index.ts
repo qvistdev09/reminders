@@ -3,8 +3,8 @@ import path from 'path';
 import helmet from 'helmet';
 import * as dotenv from 'dotenv';
 import RequestJwt from './types/request-jwt';
-import ControlledError from './errors/controlled-error';
-import { authRequired } from './auth/auth-middleware';
+import { ControlledError } from './classes/controlled-error';
+import { authRequired } from './middleware/auth-required';
 
 dotenv.config();
 

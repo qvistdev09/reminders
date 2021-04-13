@@ -7,4 +7,4 @@ class ControlledError {
   }
 }
 
-export default ControlledError;
+export { ControlledError };
