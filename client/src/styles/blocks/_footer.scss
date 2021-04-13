@@ -1,0 +1,26 @@
+@use '../variables/layout';
+@use '../variables/colors';
+@use '../variables/font-sizes';
+@use '../variables/font-weights';
+
+.footer {
+  display: flex;
+  justify-content: center;
+}
+
+.footer__inner {
+  flex: 1;
+  max-width: layout.$innerWidth;
+  padding: 0.25rem layout.$innerXPadding;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer__text {
+  color: lighten(colors.$primary, 60%);
+  font-size: font-sizes.$footerText;
+  font-weight: font-weights.$footerText;
+}
+
+

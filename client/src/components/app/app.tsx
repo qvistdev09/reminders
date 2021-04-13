@@ -19,7 +19,11 @@ const App = () => (
         </BrowserRouter>
       </div>
     </main>
-    <footer>Footer here</footer>
+    <footer className='footer'>
+      <div className='footer__inner'>
+        <p className='footer__text'>by Oscar Lindqvist</p>
+      </div>
+    </footer>
   </>
 );
 

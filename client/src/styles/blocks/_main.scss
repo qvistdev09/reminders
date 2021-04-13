@@ -1,9 +1,11 @@
 @use '../variables/layout';
+@use '../variables/colors';
 
 .main {
   display: flex;
   justify-content: center;
   padding: 0rem layout.$innerXPadding;
+  background-color: colors.$lightBg;
 }
 
 .main__inner {
