@@ -1,0 +1,30 @@
+@use '../variables/colors';
+
+.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon__img {
+  flex: 1;
+  color: pink;
+}
+
+.icon--small {
+  width: 1rem;
+}
+
+.icon--medium {
+  width: 1.6rem;
+}
+
+.icon--large {
+  width: 3rem;
+}
+
+.icon--white {
+  path {
+    fill: colors.$white;
+  }
+}

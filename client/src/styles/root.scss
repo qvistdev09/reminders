@@ -1,2 +1,6 @@
 @use './global/normalize';
 @use './global/reset-light';
+@use './global/base-styles';
+
+@use './blocks/header';
+@use './blocks/icon';
