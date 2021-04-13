@@ -21,6 +21,7 @@ The app is deployed to Heroku on the following url:
 
 * Node.js
 * Express
+* PostgreSQL with Sequelize as driver
 
 ### Frontend
 
