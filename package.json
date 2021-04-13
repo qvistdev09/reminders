@@ -2,7 +2,7 @@
   "name": "reminders",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "build/index.js",
   "engines": {
     "node": "14.x"
   },
@@ -11,7 +11,8 @@
     "prestart": "tsc",
     "start": "node build/index.js",
     "dev-client": "cd client && npm start",
-    "dev-server": "node index.js",
+    "dev-server": "node build/index.js",
+    "predev": "tsc",
     "dev": "concurrently --kill-others-on-fail \"npm run dev-client\" \"npm run dev-server\""
   },
   "repository": {
@@ -26,6 +27,7 @@
   },
   "homepage": "https://github.com/qvistdev09/reminders#readme",
   "dependencies": {
+    "@okta/jwt-verifier": "^2.1.0",
     "@tsconfig/node14": "^1.0.0",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.11",
