@@ -55,7 +55,7 @@
 }
 
 .header__btn:focus {
-  box-shadow: 0px 0px 0px 3px lighten(colors.$primary, 7%);
+  box-shadow: 0px 0px 0px 3px lighten(colors.$primary, 4%);
 }
 
 .header__btn + .header__btn {
@@ -70,8 +70,5 @@
 
 .header__btn--action:hover {
   background-color: darken(colors.$action, 5%);
-}
-
-.header__btn--action:focus {
-  box-shadow: 0px 0px 0px 3px lighten(colors.$primary, 7%);
+  border-color: darken(colors.$action, 5%);
 }
