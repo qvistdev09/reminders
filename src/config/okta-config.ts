@@ -1,9 +1,19 @@
 import OktaJwtVerifier from '@okta/jwt-verifier';
 
-const issuer = `https://${process.env.OKTA_DOMAIN}/oauth2/default`;
+const oktaDomain = process.env.OKTA_DOMAIN as string;
+if (!oktaDomain) {
+  throw new Error('Missing Okta domain in environment variables');
+}
+
+const clientId = process.env.OKTA_CLIENT_ID as string;
+if (!clientId) {
+  throw new Error('Missing Okta client id in environment variables');
+}
+
+const issuer = `https://${oktaDomain}/oauth2/default`;
 
 const appJwtVerifier = new OktaJwtVerifier({
-  clientId: process.env.OKTA_CLIENT_ID,
+  clientId,
   issuer,
 });
 

@@ -1,12 +1,13 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
 import express, { NextFunction, Response } from 'express';
 import path from 'path';
 import helmet from 'helmet';
-import * as dotenv from 'dotenv';
 import RequestJwt from './types/request-jwt';
 import { ControlledError } from './classes/controlled-error';
 import { authRequired } from './middleware/auth-required';
-
-dotenv.config();
+import { sequelize, authenticateDb } from './config/db-config';
+authenticateDb();
 
 const port: number = parseInt(process.env.PORT as string, 10);
 
