@@ -16,7 +16,9 @@ const Header = () => {
           >
             Sign up
           </button>
-          <button className='header__btn'>Login</button>
+          <button className='header__btn' onClick={() => history.push('/login')}>
+            Login
+          </button>
         </div>
       </nav>
     </header>
