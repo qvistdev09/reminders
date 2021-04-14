@@ -8,6 +8,7 @@ import { clientAuth } from '../../config/okta-config';
 import Header from '../header/header';
 import SignUp from '../sign-up/sign-up';
 import Login from '../login/login';
+import Breadcrumb from '../breadcrumb/breadcrumb';
 
 // types
 import { OktaAuth } from '@okta/okta-auth-js/lib/types';
@@ -27,6 +28,7 @@ const App = () => {
       onAuthRequired={onAuthRequired}
     >
       <Header />
+      <Breadcrumb />
       <main className='main'>
         <div className='main__inner'>
           <Switch>

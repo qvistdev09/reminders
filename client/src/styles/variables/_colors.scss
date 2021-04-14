@@ -3,3 +3,9 @@ $black: rgb(7, 48, 22);
 $primary: rgb(46, 148, 130);
 $lightBg: rgb(213, 238, 234);
 $action: rgb(0, 203, 132);
+
+// derived colors
+$lightBgDarkened: darken($lightBg, 3%);
+$lightBgBorder: darken($lightBg, 10%);
+$lightBgIcon: darken($lightBg, 50%);
+$lightBgText: darken($lightBg, 70%);

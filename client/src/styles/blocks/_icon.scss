@@ -11,6 +11,10 @@
   color: pink;
 }
 
+.icon--tiny {
+  width: 0.7rem;
+}
+
 .icon--small {
   width: 1rem;
 }
@@ -26,5 +30,19 @@
 .icon--white {
   path {
     fill: colors.$white;
+    &.nofill {
+      fill: none;
+      stroke: colors.$white;
+    }
+  }
+}
+
+.icon--semi-dark {
+  path {
+    fill: colors.$lightBgIcon;
+    &.nofill {
+      fill: none;
+      stroke: colors.$lightBgIcon;
+    }
   }
 }

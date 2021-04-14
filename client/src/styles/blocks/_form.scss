@@ -7,7 +7,7 @@
   flex-direction: column;
   border-left: 2px solid darken(colors.$lightBg, 10%);
   border-right: 2px solid darken(colors.$lightBg, 10%);
-  background-color: darken(colors.$lightBg, 3%);
+  background-color: colors.$lightBgDarkened;
   padding: 2rem;
 }
 
