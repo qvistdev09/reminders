@@ -3,20 +3,18 @@ import Header from '../header/header';
 import SignUp from '../sign-up/sign-up';
 
 const App = () => (
-  <>
+  <BrowserRouter>
     <Header />
     <main className='main'>
       <div className='main__inner'>
-        <BrowserRouter>
-          <Switch>
-            <Route exact path='/'>
-              <p>You are at root</p>
-            </Route>
-            <Route exact path='/sign-up'>
-              <SignUp />
-            </Route>
-          </Switch>
-        </BrowserRouter>
+        <Switch>
+          <Route exact path='/'>
+            <p>You are at root</p>
+          </Route>
+          <Route exact path='/sign-up'>
+            <SignUp />
+          </Route>
+        </Switch>
       </div>
     </main>
     <footer className='footer'>
@@ -24,7 +22,7 @@ const App = () => (
         <p className='footer__text'>by Oscar Lindqvist</p>
       </div>
     </footer>
-  </>
+  </BrowserRouter>
 );
 
 export default App;

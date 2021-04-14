@@ -6,6 +6,7 @@
 .footer {
   display: flex;
   justify-content: center;
+  background-color: colors.$lightBg;
 }
 
 .footer__inner {
@@ -18,7 +19,7 @@
 }
 
 .footer__text {
-  color: lighten(colors.$primary, 60%);
+  color: colors.$black;
   font-size: font-sizes.$footerText;
   font-weight: font-weights.$footerText;
 }
