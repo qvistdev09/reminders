@@ -1,5 +1,6 @@
 import { useHistory } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
+import { Link } from 'react-router-dom';
 import Icon from '../icon/icon';
 
 const Header = () => {
@@ -21,9 +22,11 @@ const Header = () => {
   return (
     <header className='header'>
       <nav className='header__inner'>
-        <h1 className='header__logo'>
-          <Icon padding={0} size='medium' /> reminders
-        </h1>
+        <Link to='/'>
+          <h1 className='header__logo'>
+            <Icon padding={0} size='medium' /> reminders
+          </h1>
+        </Link>
         <div className='header__login'>
           {!authed && (
             <button
