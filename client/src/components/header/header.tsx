@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import { Link } from 'react-router-dom';
@@ -8,6 +9,12 @@ const Header = () => {
   const history = useHistory();
 
   const authed = authState.isAuthenticated;
+
+  useEffect(() => {
+    if (authState.isAuthenticated) {
+      oktaAuth.token.getUserInfo().then(info => console.log(info, 'hey'));
+    }
+  }, [authState.isAuthenticated, oktaAuth]);
 
   const loginOrLogout = authed ? (
     <button className='header__btn' onClick={() => oktaAuth.signOut()}>

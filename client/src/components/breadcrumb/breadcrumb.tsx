@@ -17,7 +17,7 @@ const Breadcrumb = () => {
         </Link>
         <Icon icon='chevronForward' color='semiDark' size='tiny' />
         {crumbs.map((crumb: string, index: number, array: string[]) => (
-          <div className='breadcrumb__crumbwrapper'>
+          <div className='breadcrumb__crumbwrapper' key={crumb + index.toString()}>
             <Link to={constructLink(index, array)} className='breadcrumb__link'>
               {crumb}
             </Link>
