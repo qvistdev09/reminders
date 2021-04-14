@@ -17,20 +17,9 @@ authenticateDb();
 // routes
 import api from './api';
 
-const contentSecuritySettings = {
-  ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-  ['connect-src']: ["'self'", 'https://qvistdev-reminders.herokuapp.com/api/users'],
-};
-
 const app = express();
 
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: contentSecuritySettings,
-    },
-  })
-);
+app.use(helmet());
 
 app.use('/api', api);
 
