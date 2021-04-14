@@ -77,7 +77,7 @@ const SignUp = () => {
         id='security-answer'
         type='text'
       />
-      <button type='submit'>Sign up</button>
+      <button type='submit' className='form__submit-btn'>Sign up</button>
     </form>
   );
 };

@@ -28,9 +28,32 @@
   border-radius: 0.45rem;
   padding: 0.55rem;
   color: colors.$black;
+  font-weight: font-weights.$inputText;
+  font-size: font-sizes.$inputText;
 }
 
 .form__input:focus {
   box-shadow: 0px 0px 0px 2px darken(colors.$lightBg, 25%);
   background-color: lighten(colors.$lightBg, 10%);
+}
+
+.form__submit-btn {
+  outline: none;
+  border: 1px solid colors.$action;
+  padding: 0.5rem;
+  border-radius: 0.35rem;
+  font-size: font-sizes.$button;
+  font-weight: font-weights.$buttonAction;
+  color: colors.$white;
+  background-color: colors.$action;
+  cursor: pointer;
+}
+
+.form__submit-btn:hover {
+  background-color: darken(colors.$action, 5%);
+  border-color: darken(colors.$action, 5%);
+}
+
+.form__submit-btn:focus {
+  box-shadow: 0px 0px 0px 3px darken(colors.$lightBg, 40%);
 }
