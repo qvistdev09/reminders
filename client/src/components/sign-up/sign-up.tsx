@@ -27,6 +27,7 @@ const SignUp = () => {
     securityAnswer: '',
   });
   const [errorMessage, setErrorMessage] = useState('');
+  const [successfulSignup, setSuccessfulSignup] = useState(false);
 
   const updateForm = (value: string, field: SignUpField) => {
     setFormData(prevState => ({
@@ -61,7 +62,7 @@ const SignUp = () => {
     userApi
       .signUp(formData)
       .then(() => {
-        console.log('User created success');
+        setSuccessfulSignup(true);
         automatedLogin(formData.email, formData.password);
       })
       .catch((err: AxiosError) => {
@@ -71,6 +72,10 @@ const SignUp = () => {
         setErrorMessage(err.message);
       });
   };
+
+  if (successfulSignup) {
+    return <p>You successfully signed up! Please wait while you are being logged in.</p>;
+  }
 
   return (
     <form className='form' onSubmit={handleFormSubmit}>
