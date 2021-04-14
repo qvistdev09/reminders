@@ -1,5 +1,5 @@
 import { Route, Switch } from 'react-router-dom';
-import { Security } from '@okta/okta-react';
+import { Security, LoginCallback } from '@okta/okta-react';
 import { toRelativeUrl } from '@okta/okta-auth-js';
 import { useHistory } from 'react-router-dom';
 import { clientAuth } from '../../config/okta-config';
@@ -33,12 +33,9 @@ const App = () => {
             <Route exact path='/'>
               <p>{process.env.NODE_ENV}</p>
             </Route>
-            <Route exact path='/sign-up'>
-              <SignUp />
-            </Route>
-            <Route exact path='/login'>
-              <Login />
-            </Route>
+            <Route exact path='/sign-up' component={SignUp} />
+            <Route exact path='/login' component={Login} />
+            <Route path='/login/callback' component={LoginCallback} />
           </Switch>
         </div>
       </main>
