@@ -31,7 +31,7 @@ const App = () => {
         <div className='main__inner'>
           <Switch>
             <Route exact path='/'>
-              <p>You are at root</p>
+              <p>{process.env.NODE_ENV}</p>
             </Route>
             <Route exact path='/sign-up'>
               <SignUp />

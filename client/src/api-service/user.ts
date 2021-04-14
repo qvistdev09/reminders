@@ -11,7 +11,8 @@ interface SignUpForm {
   securityAnswer: String;
 }
 
-const signUp = (userDetails: SignUpForm) => axios.post(`${apiUrl}/users`, userDetails);
+const signUp = (userDetails: SignUpForm) =>
+  axios.post(`${apiUrl}/users`, { newUser: userDetails });
 
 const userApi = { signUp };
 

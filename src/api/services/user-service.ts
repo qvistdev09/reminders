@@ -1,16 +1,6 @@
-import axios from 'axios';
-
-const oktaToken = process.env.OKTA_TOKEN as string;
-
-if (!oktaToken) {
-  console.error('Missing Okta token in environment variables');
-}
-
-const headers = {
-  Accept: 'application/json',
-  'Content-Type': 'application/json',
-  Authorization: `SSWS ${oktaToken}`,
-};
+import { oktaAxios } from './okta-axios';
+import { ClientUserProfile } from '../validation-schemas/sign-up-validation';
+const oktaGroup = process.env.OKTA_GROUP as string;
 
 interface OktaUserProfile {
   profile: {
@@ -26,8 +16,30 @@ interface OktaUserProfile {
     };
     password: string;
   };
+  groupIds: [string];
 }
 
-const createUser = (userDetails: OktaUserProfile) => {
-  
+const postUserToOkta = (userDetails: ClientUserProfile) => {
+  if (!oktaGroup) {
+    throw new Error('Missing Okta group, cannot create user');
+  }
+  const newUser: OktaUserProfile = {
+    profile: {
+      firstName: userDetails.firstName,
+      lastName: userDetails.lastName,
+      email: userDetails.email,
+      login: userDetails.email,
+    },
+    credentials: {
+      recovery_question: {
+        question: userDetails.securityQuestion,
+        answer: userDetails.securityAnswer,
+      },
+      password: userDetails.password,
+    },
+    groupIds: [oktaGroup],
+  };
+  return oktaAxios.post('users', newUser);
 };
+
+export { postUserToOkta, ClientUserProfile };

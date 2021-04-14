@@ -4,6 +4,7 @@ import FormLabelledInput from '../form/elements/form-labelled-input';
 // api service
 import { userApi } from '../../api-service/user';
 import { useOktaAuth } from '@okta/okta-react';
+import { AxiosError } from 'axios';
 
 type SignUpField =
   | 'firstName'
@@ -60,9 +61,15 @@ const SignUp = () => {
     userApi
       .signUp(formData)
       .then(() => {
+        console.log('User created success');
         automatedLogin(formData.email, formData.password);
       })
-      .catch(err => setErrorMessage(err.message));
+      .catch((err: AxiosError) => {
+        if (err.response?.data && err.response.data.error) {
+          return setErrorMessage(err.response.data.error);
+        }
+        setErrorMessage(err.message);
+      });
   };
 
   return (

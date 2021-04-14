@@ -4,7 +4,7 @@ import express, { NextFunction, Response } from 'express';
 import path from 'path';
 import helmet from 'helmet';
 
-// types
+// custom types
 import RequestJwt from './types/request-jwt';
 
 // classes
@@ -17,9 +17,20 @@ authenticateDb();
 // routes
 import api from './api';
 
+const contentSecuritySettings = {
+  ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+  ['connect-src']: ["'self'", 'https://qvistdev-reminders.herokuapp.com/api/users'],
+};
+
 const app = express();
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: contentSecuritySettings,
+    },
+  })
+);
 
 app.use('/api', api);
 
