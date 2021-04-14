@@ -8,7 +8,6 @@ import axios, { AxiosError } from 'axios';
 const router = express.Router();
 
 router.post('/', (req: RequestJwt, res: Response, next: NextFunction) => {
-  console.log('post request!');
   if (!req.body.newUser) {
     return next(new ControlledError('Missing fields', 400));
   }
