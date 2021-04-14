@@ -1,13 +1,18 @@
-import { useState } from 'react';
+import { SyntheticEvent, useState } from 'react';
+import { useOktaAuth } from '@okta/okta-react';
 import FormLabelledInput from '../form/elements/form-labelled-input';
+import { Redirect } from 'react-router';
 
 type LoginField = 'email' | 'password';
 
-const Login = () => {
+const LoginForm = () => {
+  const { oktaAuth } = useOktaAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+  const [errorMessage, setErrorMessage] = useState('');
+  const [sessionToken, setSessionToken] = useState('');
 
   const updateForm = (value: string, field: LoginField) => {
     setFormData(prevState => ({
@@ -16,8 +21,35 @@ const Login = () => {
     }));
   };
 
+  const handleLogin = async (e: SyntheticEvent) => {
+    e.preventDefault();
+    try {
+      const transaction = await oktaAuth.signInWithCredentials({
+        username: formData.email,
+        password: formData.password,
+      });
+      if (
+        transaction.status === 'SUCCESS' &&
+        typeof transaction.sessionToken === 'string'
+      ) {
+        setSessionToken(transaction.sessionToken);
+        oktaAuth.signInWithRedirect({
+          sessionToken: transaction.sessionToken,
+        });
+      } else {
+        setErrorMessage('Failed to login');
+      }
+    } catch (err) {
+      setErrorMessage('Failed to login');
+    }
+  };
+
+  if (sessionToken) {
+    return null;
+  }
+
   return (
-    <form className='form'>
+    <form className='form' onSubmit={handleLogin}>
       <FormLabelledInput
         value={formData.email}
         onChange={(value: string) => updateForm(value, 'email')}
@@ -29,12 +61,24 @@ const Login = () => {
         onChange={(value: string) => updateForm(value, 'password')}
         label='Your password'
         id='login-password'
+        type='password'
       />
       <button type='submit' className='form__submit-btn'>
         Login
       </button>
+      {errorMessage !== '' && <p>{errorMessage}</p>}
     </form>
   );
+};
+
+const Login = () => {
+  const { authState } = useOktaAuth();
+
+  if (authState.isPending) {
+    return <p>Signing in...</p>;
+  }
+
+  return authState.isAuthenticated ? <Redirect to='/' /> : <LoginForm />;
 };
 
 export default Login;
