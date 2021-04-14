@@ -25,6 +25,10 @@ app.use('/api', api);
 
 app.use(express.static(path.resolve(__dirname, '../client/build')));
 
+app.get('*', (req: RequestJwt, res: Response) => {
+  res.sendFile(path.resolve(__dirname, '../client/build/index.html'));
+});
+
 app.use((err: any, req: RequestJwt, res: Response, next: NextFunction) => {
   if (err instanceof ControlledError) {
     return res.status(err.statusCode).json({ error: err.message });
