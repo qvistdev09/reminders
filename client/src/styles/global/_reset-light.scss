@@ -24,3 +24,16 @@ form {
   box-sizing: border-box;
   text-decoration: none;
 }
+
+a {
+  text-decoration: none;
+}
+
+button, input {
+  border: none;
+  outline: none;
+}
+
+ul {
+  list-style: none;
+}
