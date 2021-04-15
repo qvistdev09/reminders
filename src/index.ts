@@ -16,8 +16,8 @@ import RequestJwt from './types/request-jwt';
 import { ControlledError } from './classes/controlled-error';
 
 // database
-import { sequelize, authenticateDb } from './config/db-config';
-authenticateDb();
+import { authAndSyncDatabase } from './database/initialize';
+authAndSyncDatabase();
 
 // routes
 import api from './api';

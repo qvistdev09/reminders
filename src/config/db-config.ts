@@ -24,14 +24,4 @@ const sequelize = new Sequelize(dbUrl, {
   },
 });
 
-const authenticateDb = async () => {
-  try {
-    console.log('attempting to connect to DB')
-    await sequelize.authenticate();
-    console.log('Successfully connected to database');
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-export { sequelize, authenticateDb };
+export { sequelize };
