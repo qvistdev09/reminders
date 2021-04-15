@@ -5,11 +5,9 @@ import path from 'path';
 
 // helmet config
 import helmet from 'helmet';
+import { allowedCSPconnect } from './config/helmet-config';
 const appCSPsettings = helmet.contentSecurityPolicy.getDefaultDirectives();
-appCSPsettings['connect-src'] = [
-  "'self'",
-  'https://dev-54501397.okta.com/api/v1/authn',
-];
+appCSPsettings['connect-src'] = allowedCSPconnect;
 
 // custom types
 import RequestJwt from './types/request-jwt';
