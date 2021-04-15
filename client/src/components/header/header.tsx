@@ -48,7 +48,7 @@ const Header = () => {
       <nav className='header__inner'>
         <Link to='/' className='header__logo-container'>
           <h1 className='header__logo'>
-            <Icon padding={0} size='medium' /> reminders
+            <Icon padding={0} size='large' /> reminders
           </h1>
         </Link>
         <div className='header__nav-items-container'>

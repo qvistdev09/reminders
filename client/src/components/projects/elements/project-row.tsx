@@ -16,7 +16,10 @@ const ProjectRow = ({ projectTitle, projectId }: Props) => {
   return (
     <div className='projects__project-row'>
       <div className='projects__project-row-upper'>
-        <Link to={`/projects/${slug}`}>{projectTitle}</Link>
+        <Link to={`/projects/${slug}`} className='projects__title-link'>
+          <Icon icon='open' color='semiDark' size='medium' />
+          {projectTitle}
+        </Link>
         <button className='projects__row-btn' onClick={() => setExpanded(!expanded)}>
           Configure
           <Icon icon={icon} color='semiDark' size='small' />

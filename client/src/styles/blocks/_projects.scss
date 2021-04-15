@@ -7,6 +7,20 @@
   padding: 1rem;
 }
 
+.projects__title-link {
+  display: flex;
+  align-items: center;
+  & > div {
+    margin-right: 0.35rem;
+    transform: translateY(-10%);
+  }
+  color: colors.$black;
+}
+
+.projects__title-link:hover {
+  text-decoration: underline;
+}
+
 .projects__project-row {
   border-radius: 0.35rem;
   background-color: colors.$lightBgLightened;
