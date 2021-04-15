@@ -8,7 +8,7 @@ const Projects = () => {
     <div className='main__projects-container'>
       <div className='utility--darkened-column'>
         <h2 className='utility--feature-header '>Create new project</h2>
-        <form className='form'>
+        <form className='form form--small-p'>
           <FormLabelledInput
             value={newProjectName}
             onChange={setNewProjectName}

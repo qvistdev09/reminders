@@ -8,12 +8,16 @@
   padding: 2rem;
 }
 
+.form--small-p {
+  padding: 1rem;
+}
+
 .form__label {
   margin-bottom: 0.35rem;
   text-transform: uppercase;
   font-size: font-sizes.$formLabel;
   font-weight: font-weights.$formLabel;
-  color: desaturate(darken(colors.$lightBg, 50%), 50%);
+  color: colors.$lightBgText;
   padding-left: 0.2rem;
 }
 
