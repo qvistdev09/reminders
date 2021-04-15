@@ -1,9 +1,11 @@
 import IconCube from './elements/icon-cube';
 import IconChevronForward from './elements/icon-chevron-forward';
+import IconGrid from './elements/icon-grid';
 
 const icons = {
   cube: IconCube,
   chevronForward: IconChevronForward,
+  grid: IconGrid,
 };
 
 const sizes = {
@@ -19,7 +21,7 @@ const colors = {
 };
 
 interface Props {
-  icon?: 'cube' | 'chevronForward';
+  icon?: 'cube' | 'chevronForward' | 'grid';
   size?: 'tiny' | 'small' | 'medium' | 'large';
   color?: 'white' | 'semiDark';
   padding?: number;

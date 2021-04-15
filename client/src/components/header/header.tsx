@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 // components
 import Icon from '../icon/icon';
 import UserIcon from '../user-icon/user-icon';
+import HeaderNavItem from './elements/header-nav-item';
 
 // redux
 import { useAppDispatch } from '../../hooks/redux-hooks';
@@ -45,11 +46,20 @@ const Header = () => {
   return (
     <header className='header'>
       <nav className='header__inner'>
-        <Link to='/'>
+        <Link to='/' className='header__logo-container'>
           <h1 className='header__logo'>
             <Icon padding={0} size='medium' /> reminders
           </h1>
         </Link>
+        <div className='header__nav-items-container'>
+          {authed && (
+            <HeaderNavItem
+              label='Projects'
+              icon={<Icon icon='grid' color='white' size='small' padding={0} />}
+              to='/projects'
+            />
+          )}
+        </div>
         <div className='header__login'>
           {!authed && (
             <button

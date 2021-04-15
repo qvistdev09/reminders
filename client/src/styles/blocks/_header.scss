@@ -12,10 +12,38 @@
 .header__inner {
   flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: stretch;
+  justify-content: flex-start;
   max-width: layout.$innerWidth;
-  padding: 0.5rem layout.$innerXPadding;
+  padding: 0 layout.$innerXPadding;
+  min-height: layout.$headerMinHeight;
+}
+
+.header__nav-items-container {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.header__nav-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: font-sizes.$headerNavItem;
+  font-weight: font-weights.$headerNavItem;
+  padding: 0.5rem;
+}
+
+.header__nav-item:hover {
+  background-color: rgba(0, 0, 0, 0.167);
+}
+
+.header__nav-item-label {
+  margin-top: 0.45rem;
+  color: colors.$white;
+  text-align: center;
 }
 
 .header__logo {
@@ -29,6 +57,13 @@
   & > div {
     margin-right: 0.5rem;
   }
+}
+
+.header__logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 1rem;
 }
 
 .header__login {
