@@ -1,0 +1,28 @@
+@use '../variables/layout';
+@use '../variables/colors';
+@use '../variables/font-sizes';
+@use '../variables/font-weights';
+
+.user-icon {
+  width: layout.$userIconSize;
+  min-width: layout.$userIconSize;
+  height: layout.$userIconSize;
+  min-height: layout.$userIconSize;
+  background-color: colors.$userIcon;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  margin-left: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.016);
+}
+
+.user-icon__initials {
+  text-align: center;
+  color: colors.$white;
+  font-size: font-sizes.$userIcon;
+  font-weight: font-weights.$userIcon;
+  letter-spacing: 0.10rem;
+  text-indent: 0.10rem;
+  text-transform: uppercase;
+}
