@@ -1,7 +1,23 @@
+import { Model, Optional } from 'sequelize';
 import { sequelize } from '../../config/db-config';
 import { DataTypes } from 'sequelize';
 
-const Project = sequelize.define('Project', {
+interface ProjectAttributes {
+  projectId?: number;
+  projectTitle: string;
+  projectOwner: string;
+}
+
+interface ProjectCreationAttributes extends Optional<ProjectAttributes, 'projectId'> {}
+
+export interface ProjectInstance
+  extends Model<ProjectAttributes, ProjectCreationAttributes>,
+    ProjectAttributes {
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+const Project = sequelize.define<ProjectInstance>('Project', {
   projectId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
