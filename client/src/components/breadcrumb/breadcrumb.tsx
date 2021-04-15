@@ -9,6 +9,14 @@ const Breadcrumb = () => {
     return `/${array.slice(0, index + 1).join('/')}`;
   };
 
+  const beautify = (str: string) => {
+    const withSpaces = str.replace(/-/g, ' ');
+    if (withSpaces.includes('_')) {
+      return withSpaces.split('_')[0];
+    }
+    return withSpaces;
+  };
+
   return (
     <div className='breadcrumb'>
       <div className='breadcrumb__inner'>
@@ -19,7 +27,7 @@ const Breadcrumb = () => {
         {crumbs.map((crumb: string, index: number, array: string[]) => (
           <div className='breadcrumb__crumbwrapper' key={crumb + index.toString()}>
             <Link to={constructLink(index, array)} className='breadcrumb__link'>
-              {crumb}
+              {beautify(crumb)}
             </Link>
             <Icon icon='chevronForward' color='semiDark' size='tiny' />
           </div>

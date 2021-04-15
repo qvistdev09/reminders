@@ -10,6 +10,7 @@ import SignUp from '../sign-up/sign-up';
 import Login from '../login/login';
 import Breadcrumb from '../breadcrumb/breadcrumb';
 import Projects from '../projects/projects';
+import ProjectPage from '../project-page/project-page';
 
 // types
 import { OktaAuth } from '@okta/okta-auth-js/lib/types';
@@ -39,6 +40,7 @@ const App = () => {
             <Route exact path='/sign-up' component={SignUp} />
             <Route exact path='/login' component={Login} />
             <SecureRoute exact path='/projects' component={Projects} />
+            <SecureRoute path='/projects/:slug' component={ProjectPage} />
             <Route path='/login/callback' component={LoginCallback} />
           </Switch>
         </div>

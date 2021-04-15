@@ -2,6 +2,7 @@ import { SyntheticEvent, useState, useEffect } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import { postNewProject, getUsersProjects } from '../../api-service/projects';
 import FormLabelledInput from '../form/elements/form-labelled-input';
+import ProjectRow from './elements/project-row';
 
 interface ProjectObj {
   projectTitle: string;
@@ -73,7 +74,11 @@ const Projects = () => {
       <div className='utility--border-right'>
         <h2 className='utility--feature-header'>Your projects</h2>
         {projects.map(project => (
-          <p key={project.projectId}>{project.projectTitle}</p>
+          <ProjectRow
+            key={project.projectId}
+            projectTitle={project.projectTitle}
+            projectId={project.projectId}
+          />
         ))}
       </div>
     </div>
