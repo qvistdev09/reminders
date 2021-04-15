@@ -2,7 +2,14 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 import express, { NextFunction, Response } from 'express';
 import path from 'path';
+
+// helmet config
 import helmet from 'helmet';
+const appCSPsettings = helmet.contentSecurityPolicy.getDefaultDirectives();
+appCSPsettings['connect-src'] = [
+  "'self'",
+  'https://dev-54501397.okta.com/api/v1/authn',
+];
 
 // custom types
 import RequestJwt from './types/request-jwt';
@@ -19,7 +26,13 @@ import api from './api';
 
 const app = express();
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: appCSPsettings,
+    },
+  })
+);
 
 app.use('/api', api);
 
