@@ -6,7 +6,8 @@
 .footer {
   display: flex;
   justify-content: center;
-  background-color: colors.$lightBg;
+  background-color: colors.$lightBgDarkened;
+  border-top: 2px solid colors.$lightBgBorder;
 }
 
 .footer__inner {
