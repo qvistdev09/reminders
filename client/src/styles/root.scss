@@ -1,6 +1,7 @@
 @use './global/normalize';
 @use './global/reset-light';
 @use './global/base-styles';
+@use './global/utilities';
 
 @use './blocks/header';
 @use './blocks/form';

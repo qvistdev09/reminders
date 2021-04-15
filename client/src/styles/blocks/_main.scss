@@ -11,6 +11,16 @@
 .main__inner {
   flex: 1;
   max-width: layout.$innerWidth;
+  display: flex;
+  flex-direction: column;
+
+  & > div {
+    flex: 1;
+  }
+}
+
+.main__signup-container,
+.main__login-container {
   display: grid;
   grid-template-columns: 0.6fr 0.4fr;
 }

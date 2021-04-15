@@ -1,0 +1,9 @@
+@use '../variables/colors';
+@use '../variables/font-sizes';
+@use '../variables/font-weights';
+
+.utility--darkened-column {
+  border-left: 2px solid darken(colors.$lightBg, 10%);
+  border-right: 2px solid darken(colors.$lightBg, 10%);
+  background-color: colors.$lightBgDarkened;
+}

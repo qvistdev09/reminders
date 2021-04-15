@@ -49,25 +49,27 @@ const LoginForm = () => {
   }
 
   return (
-    <form className='form' onSubmit={handleLogin}>
-      <FormLabelledInput
-        value={formData.email}
-        onChange={(value: string) => updateForm(value, 'email')}
-        label='Your email'
-        id='login-email'
-      />
-      <FormLabelledInput
-        value={formData.password}
-        onChange={(value: string) => updateForm(value, 'password')}
-        label='Your password'
-        id='login-password'
-        type='password'
-      />
-      <button type='submit' className='form__submit-btn'>
-        Login
-      </button>
-      {errorMessage !== '' && <p>{errorMessage}</p>}
-    </form>
+    <div className='main__login-container'>
+      <form className='form utility--darkened-column' onSubmit={handleLogin}>
+        <FormLabelledInput
+          value={formData.email}
+          onChange={(value: string) => updateForm(value, 'email')}
+          label='Your email'
+          id='login-email'
+        />
+        <FormLabelledInput
+          value={formData.password}
+          onChange={(value: string) => updateForm(value, 'password')}
+          label='Your password'
+          id='login-password'
+          type='password'
+        />
+        <button type='submit' className='form__submit-btn'>
+          Login
+        </button>
+        {errorMessage !== '' && <p>{errorMessage}</p>}
+      </form>
+    </div>
   );
 };
 
