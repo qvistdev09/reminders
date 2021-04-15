@@ -73,13 +73,15 @@ const Projects = () => {
       </div>
       <div className='utility--border-right'>
         <h2 className='utility--feature-header'>Your projects</h2>
-        {projects.map(project => (
-          <ProjectRow
-            key={project.projectId}
-            projectTitle={project.projectTitle}
-            projectId={project.projectId}
-          />
-        ))}
+        <div className='projects__container'>
+          {projects.map(project => (
+            <ProjectRow
+              key={project.projectId}
+              projectTitle={project.projectTitle}
+              projectId={project.projectId}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

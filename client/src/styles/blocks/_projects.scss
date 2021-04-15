@@ -1,0 +1,52 @@
+@use '../variables/layout';
+@use '../variables/colors';
+@use '../variables/font-sizes';
+@use '../variables/font-weights';
+
+.projects__container {
+  padding: 1rem;
+}
+
+.projects__project-row {
+  border-radius: 0.35rem;
+  background-color: colors.$lightBgLightened;
+  border: 1px solid colors.$lightBgBorder;
+  overflow: hidden;
+}
+
+.projects__project-row-upper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+
+.projects__project-row-lower {
+  border-top: 1px solid colors.$lightBgBorder;
+  background-color: colors.$lightBgSemiLightened;
+  padding: 1rem;
+}
+
+.projects__row-btn {
+  cursor: pointer;
+  border-radius: 0.35rem;
+  padding: 0.3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: font-sizes.$rowExpandButton;
+  font-weight: font-weights.$rowExpandButton;
+  color: colors.$lightBgIcon;
+
+  & > div {
+    margin-left: 0.2rem;
+  }
+}
+
+.projects__row-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.projects__project-row + .projects__project-row {
+  margin-top: 1rem;
+}
