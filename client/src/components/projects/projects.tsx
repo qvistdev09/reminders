@@ -3,15 +3,29 @@ import { useOktaAuth } from '@okta/okta-react';
 import { postNewProject, getUsersProjects } from '../../api-service/projects';
 import FormLabelledInput from '../form/elements/form-labelled-input';
 
+interface ProjectObj {
+  projectTitle: string;
+}
+
 const Projects = () => {
   const [newProjectName, setNewProjectName] = useState('');
+  const [projects, setProjects] = useState([] as ProjectObj[]);
   const { authState } = useOktaAuth();
+
+  const fetchProjects = () => {
+    if (authState.accessToken) {
+      const { accessToken } = authState.accessToken;
+      getUsersProjects(accessToken)
+        .then(({ data: { projects } }) => setProjects(projects))
+        .catch(err => console.log(err.message));
+    }
+  };
 
   useEffect(() => {
     if (authState.accessToken) {
       const { accessToken } = authState.accessToken;
       getUsersProjects(accessToken)
-        .then(response => console.log(response))
+        .then(({ data: { projects } }) => setProjects(projects))
         .catch(err => console.log(err.message));
     }
   }, [authState.accessToken]);
@@ -31,6 +45,7 @@ const Projects = () => {
         },
         accessToken
       );
+      fetchProjects();
       console.log(serverResponse);
     } catch (error) {
       console.log(error.message);
@@ -57,6 +72,9 @@ const Projects = () => {
       </div>
       <div className='utility--border-right'>
         <h2 className='utility--feature-header'>Your projects</h2>
+        {projects.map(project => (
+          <p key={project.projectTitle}>{project.projectTitle}</p>
+        ))}
       </div>
     </div>
   );
