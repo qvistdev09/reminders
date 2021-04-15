@@ -7,7 +7,10 @@ const getProjectsByUserId = (userId: string) =>
       projectOwner: userId,
     },
   }).then((projects: ProjectInstance[]) =>
-    projects.map(project => ({ projectTitle: project.projectTitle }))
+    projects.map(project => ({
+      projectTitle: project.projectTitle,
+      projectId: project.projectId,
+    }))
   );
 
 const createNewProject = (userId: string, projectTitle: string) =>

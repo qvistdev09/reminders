@@ -5,6 +5,7 @@ import FormLabelledInput from '../form/elements/form-labelled-input';
 
 interface ProjectObj {
   projectTitle: string;
+  projectId: number;
 }
 
 const Projects = () => {
@@ -37,7 +38,7 @@ const Projects = () => {
         throw new Error('No authentication');
       }
       const { accessToken } = authState.accessToken;
-      const serverResponse = await postNewProject(
+      await postNewProject(
         {
           project: {
             projectTitle: newProjectName,
@@ -46,7 +47,6 @@ const Projects = () => {
         accessToken
       );
       fetchProjects();
-      console.log(serverResponse);
     } catch (error) {
       console.log(error.message);
     }
@@ -73,7 +73,7 @@ const Projects = () => {
       <div className='utility--border-right'>
         <h2 className='utility--feature-header'>Your projects</h2>
         {projects.map(project => (
-          <p key={project.projectTitle}>{project.projectTitle}</p>
+          <p key={project.projectId}>{project.projectTitle}</p>
         ))}
       </div>
     </div>
