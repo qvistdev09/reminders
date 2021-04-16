@@ -1,14 +1,16 @@
+import PermissionsGrid from '../../permissions-grid/permissions-grid';
+import { ProjectWithPermissions } from '../../../../../src/api/services/permissions-service';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import Icon from '../../icon/icon';
 
 interface Props {
-  projectTitle: string;
-  projectId: number;
+  data: ProjectWithPermissions;
 }
 
-const ProjectRow = ({ projectTitle, projectId }: Props) => {
+const ProjectRow = ({ data }: Props) => {
   const [expanded, setExpanded] = useState(false);
+  const { projectTitle, projectId } = data.project;
   const slug = `${projectTitle.toLowerCase().replace(/\s/g, '-')}_${projectId}`;
 
   const icon = expanded ? 'chevronDown' : 'chevronForward';
@@ -18,7 +20,7 @@ const ProjectRow = ({ projectTitle, projectId }: Props) => {
       <div className='projects__project-row-upper'>
         <Link to={`/projects/${slug}`} className='projects__title-link'>
           <Icon icon='open' color='semiDark' size='medium' />
-          {projectTitle}
+          <h3>{projectTitle}</h3>
         </Link>
         <button className='projects__row-btn' onClick={() => setExpanded(!expanded)}>
           Configure
@@ -27,7 +29,8 @@ const ProjectRow = ({ projectTitle, projectId }: Props) => {
       </div>
       {expanded && (
         <div className='projects__project-row-lower'>
-          <p>This would be some of the expanded content.</p>
+          <h4 className='projects__settings-header'>Permissions</h4>
+          <PermissionsGrid permissions={data.projectPermissions} />
         </div>
       )}
     </div>

@@ -56,6 +56,7 @@ const getNameFromOkta = (uid: string): Promise<NameObj> => {
       resolve({
         firstName: profile.firstName,
         lastName: profile.lastName,
+        email: profile.email,
       });
     } catch (err) {
       reject(err);

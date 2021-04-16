@@ -6,7 +6,7 @@ import { getNameFromOkta } from './user-service';
 // types
 import { NameObj } from '../../shared-types';
 
-interface PermissionInstanceWithName {
+export interface PermissionInstanceWithName {
   userPermission: PermissionInstance;
   userProfile: NameObj;
 }

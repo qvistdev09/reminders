@@ -14,17 +14,29 @@
     margin-right: 0.35rem;
     transform: translateY(-10%);
   }
-  color: colors.$black;
+  h3 {
+    color: colors.$black;
+    font-size: font-sizes.$projectsTitle;
+    font-weight: font-weights.$projectsTitle;
+  }
 }
 
 .projects__title-link:hover {
   text-decoration: underline;
 }
 
+.projects__settings-header {
+  color: colors.$black;
+  font-size: font-sizes.$projectSettingsHeader;
+  font-weight: font-weights.$projectSettingsHeader;
+  margin-bottom: 0.5rem;
+  margin-left: 0.2rem;
+}
+
 .projects__project-row {
   border-radius: 0.35rem;
   background-color: colors.$lightBgLightened;
-  border: 1px solid colors.$lightBgBorder;
+  border: 2px solid colors.$lightBgBorder;
   overflow: hidden;
 }
 
