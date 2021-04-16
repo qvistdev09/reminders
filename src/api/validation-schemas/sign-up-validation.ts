@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import { ControlledError } from '../../classes/controlled-error';
 
-interface ClientUserProfile {
+export interface ClientUserProfile {
   firstName: string;
   lastName: string;
   email: string;
@@ -33,4 +33,4 @@ const validateSignUpFields = (
   return userFields as ClientUserProfile;
 };
 
-export { validateSignUpFields, ClientUserProfile };
+export { validateSignUpFields };

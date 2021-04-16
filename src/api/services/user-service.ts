@@ -1,5 +1,9 @@
 import { oktaAxios } from './okta-axios';
 import { ClientUserProfile } from '../validation-schemas/sign-up-validation';
+
+// types
+import { NameObj } from '../../shared-types';
+
 const oktaGroup = process.env.OKTA_GROUP as string;
 
 interface OktaUserProfile {
@@ -42,11 +46,6 @@ const postUserToOkta = (userDetails: ClientUserProfile) => {
   return oktaAxios.post('users', newUser);
 };
 
-interface NameObj {
-  firstName: string;
-  lastName: string;
-}
-
 const getNameFromOkta = (uid: string): Promise<NameObj> => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -64,4 +63,4 @@ const getNameFromOkta = (uid: string): Promise<NameObj> => {
   });
 };
 
-export { postUserToOkta, getNameFromOkta, ClientUserProfile };
+export { postUserToOkta, getNameFromOkta };

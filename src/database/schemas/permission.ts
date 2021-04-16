@@ -2,14 +2,19 @@ import { Model, Optional } from 'sequelize';
 import { sequelize } from '../../config/db-config';
 import { DataTypes } from 'sequelize';
 
+// types
+import { PermissionRole } from '../../shared-types';
+
 interface PermissionAttributes {
+  projectId?: number;
   permissionId?: number;
   permissionUid: string;
-  permissionRole: 'viewer' | 'editor';
+  permissionRole: PermissionRole;
 }
 
 interface PermissionCreationAttributes
-  extends Optional<PermissionAttributes, 'permissionId'> {}
+  extends Optional<PermissionAttributes, 'permissionId'>,
+    Optional<PermissionAttributes, 'projectId'> {}
 
 export interface PermissionInstance
   extends Model<PermissionAttributes, PermissionCreationAttributes>,

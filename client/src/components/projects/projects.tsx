@@ -3,15 +3,11 @@ import { useOktaAuth } from '@okta/okta-react';
 import { postNewProject, getUsersProjects } from '../../api-service/projects';
 import FormLabelledInput from '../form/elements/form-labelled-input';
 import ProjectRow from './elements/project-row';
-
-interface ProjectObj {
-  projectTitle: string;
-  projectId: number;
-}
+import { ProjectWithPermissions } from '../../../../src/api/services/permissions-service';
 
 const Projects = () => {
   const [newProjectName, setNewProjectName] = useState('');
-  const [projects, setProjects] = useState([] as ProjectObj[]);
+  const [projects, setProjects] = useState([] as ProjectWithPermissions[]);
   const { authState } = useOktaAuth();
 
   const fetchProjects = () => {
@@ -31,6 +27,10 @@ const Projects = () => {
         .catch(err => console.log(err.message));
     }
   }, [authState.accessToken]);
+
+  useEffect(() => {
+    console.log(projects);
+  }, [projects]);
 
   const newProjectSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -74,11 +74,11 @@ const Projects = () => {
       <div className='utility--border-right'>
         <h2 className='utility--feature-header'>Your projects</h2>
         <div className='projects__container'>
-          {projects.map(project => (
+          {projects.map(({ project }) => (
             <ProjectRow
               key={project.projectId}
               projectTitle={project.projectTitle}
-              projectId={project.projectId}
+              projectId={project.projectId as number}
             />
           ))}
         </div>
