@@ -1,18 +1,17 @@
-import { useOktaAuth } from '@okta/okta-react';
 import { UserObj } from '../../../src/shared-types/index';
 import { userApi } from '../api-service/user';
 import { useState, useEffect } from 'react';
+import { useAccessToken } from '../hooks/use-access-token';
 
 const useAppUsers = (filterString?: string): UserObj[] => {
-  const { authState } = useOktaAuth();
+  const accessToken = useAccessToken();
   const [users, setUsers] = useState([] as UserObj[]);
 
   useEffect(() => {
-    if (authState.accessToken) {
-      const { accessToken } = authState.accessToken;
+    if (accessToken) {
       userApi.getAllAppUsers(accessToken).then(users => setUsers(users));
     }
-  }, [authState.accessToken]);
+  }, [accessToken]);
 
   if (filterString) {
     return users.filter(user => {

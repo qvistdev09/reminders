@@ -1,26 +1,14 @@
-import { SyntheticEvent, useState, useEffect } from 'react';
-import { useOktaAuth } from '@okta/okta-react';
-import { postNewProject, getUsersProjects } from '../../api-service/projects';
+import { SyntheticEvent, useState } from 'react';
 import FormLabelledInput from '../form/elements/form-labelled-input';
 import ProjectsRow from './elements/projects-row';
-import { ProjectWithPermissions } from '../../../../src/api/services/permissions-service';
 import Modal from '../modal/modal';
 import ProjectsAddCollaborators from './elements/projects-add-collaborators';
+import { useProjects } from '../../hooks/use-projects';
 
 const Projects = () => {
   const [newProjectName, setNewProjectName] = useState('');
-  const [projects, setProjects] = useState([] as ProjectWithPermissions[]);
+  const [projects, submitProject] = useProjects();
   const [permissionsModal, setPermissionsModal] = useState(false);
-  const { authState } = useOktaAuth();
-
-  const fetchProjects = () => {
-    if (authState.accessToken) {
-      const { accessToken } = authState.accessToken;
-      getUsersProjects(accessToken)
-        .then(({ data: { projects } }) => setProjects(projects))
-        .catch(err => console.log(err.message));
-    }
-  };
 
   const showPermissionsModal = () => {
     setPermissionsModal(true);
@@ -30,38 +18,10 @@ const Projects = () => {
     }
   };
 
-  useEffect(() => {
-    if (authState.accessToken) {
-      const { accessToken } = authState.accessToken;
-      getUsersProjects(accessToken)
-        .then(({ data: { projects } }) => setProjects(projects))
-        .catch(err => console.log(err.message));
-    }
-  }, [authState.accessToken]);
-
-  useEffect(() => {
-    console.log(projects);
-  }, [projects]);
-
   const newProjectSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    try {
-      if (!authState.accessToken) {
-        throw new Error('No authentication');
-      }
-      const { accessToken } = authState.accessToken;
-      await postNewProject(
-        {
-          project: {
-            projectTitle: newProjectName,
-          },
-        },
-        accessToken
-      );
-      fetchProjects();
-    } catch (error) {
-      console.log(error.message);
-    }
+    submitProject(newProjectName);
+    setNewProjectName('');
   };
 
   return (
