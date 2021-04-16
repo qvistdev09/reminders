@@ -16,7 +16,7 @@ import RequestJwt from './types/request-jwt';
 import { ControlledError } from './classes/controlled-error';
 
 // database
-import { authAndSyncDatabase } from './database/initialize';
+import { authAndSyncDatabase } from './database/root';
 authAndSyncDatabase();
 
 // routes

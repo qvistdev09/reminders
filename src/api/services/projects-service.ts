@@ -1,4 +1,4 @@
-import { Project } from '../../database/schemas/project';
+import { Project } from '../../database/root';
 import { ProjectInstance } from '../../database/schemas/project';
 
 const getProjectsByUserId = (userId: string) =>
