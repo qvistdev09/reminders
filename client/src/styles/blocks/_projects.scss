@@ -7,6 +7,29 @@
   padding: 1rem;
 }
 
+.projects__settings-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.projects__settings-btn {
+  color: colors.$settingsAction;
+  font-size: font-sizes.$projectSettingsBtn;
+  font-weight: font-weights.$projectSettingsBtn;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.35rem;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.071);
+  }
+}
+
 .projects__title-link {
   display: flex;
   align-items: center;
@@ -29,8 +52,6 @@
   color: colors.$black;
   font-size: font-sizes.$projectSettingsHeader;
   font-weight: font-weights.$projectSettingsHeader;
-  margin-bottom: 0.5rem;
-  margin-left: 0.2rem;
   text-transform: uppercase;
 }
 

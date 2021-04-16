@@ -29,8 +29,13 @@ const ProjectRow = ({ data }: Props) => {
       </div>
       {expanded && (
         <div className='projects__project-row-lower'>
-          <h4 className='projects__settings-header'>Permissions</h4>
-          <PermissionsGrid permissions={data.projectPermissions} />
+          <div className='projects__settings-section'>
+            <div className='projects__settings-header-container'>
+              <h4 className='projects__settings-header'>Permissions</h4>
+              <button className='projects__settings-btn'>Add</button>
+            </div>
+            <PermissionsGrid permissions={data.projectPermissions} />
+          </div>
         </div>
       )}
     </div>
