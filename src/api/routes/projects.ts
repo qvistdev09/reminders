@@ -1,8 +1,8 @@
 import express, { NextFunction, Response } from 'express';
-import RequestJwt from 'src/types/request-jwt';
-import { authRequired } from 'src/middleware/auth-required';
-import { createNewProject, getProjectsByUserId } from 'src/api/services/projects-service';
-import { appendPermissionsToProject } from 'src/api/services/permissions-service';
+import RequestJwt from '../../types/request-jwt';
+import { authRequired } from '../../middleware/auth-required';
+import { createNewProject, getProjectsByUserId } from '../services/projects-service';
+import { appendPermissionsToProject } from '../services/permissions-service';
 
 const router = express.Router();
 

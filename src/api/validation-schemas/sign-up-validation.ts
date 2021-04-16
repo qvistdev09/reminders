@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { ControlledError } from 'src/classes/controlled-error';
+import { ControlledError } from '../../classes/controlled-error';
 
 export interface ClientUserProfile {
   firstName: string;

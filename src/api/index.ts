@@ -1,9 +1,9 @@
 import express, { Response } from 'express';
-import { authRequired } from 'src/middleware/auth-required';
-import RequestJwt from 'src/types/request-jwt';
+import { authRequired } from '../middleware/auth-required';
+import RequestJwt from '../types/request-jwt';
 
-import users from 'src/api/routes/users';
-import projects from 'src/api/routes/projects';
+import users from './routes/users';
+import projects from './routes/projects';
 
 const router = express.Router();
 

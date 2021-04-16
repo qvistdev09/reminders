@@ -1,8 +1,8 @@
 import { NextFunction, Response } from 'express';
 import { Jwt } from '@okta/jwt-verifier';
-import RequestJwt from 'src/types/request-jwt';
-import { ControlledError } from 'src/classes/controlled-error';
-import appJwtVerifier from 'src/config/okta-config';
+import RequestJwt from '../types/request-jwt';
+import { ControlledError } from '../classes/controlled-error';
+import appJwtVerifier from '../config/okta-config';
 
 const authRequired = (req: RequestJwt, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization || '';

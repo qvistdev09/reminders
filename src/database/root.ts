@@ -1,8 +1,8 @@
-import { sequelize } from 'src/config/db-config';
+import { sequelize } from '../config/db-config';
 
 // schemas
-import { Project } from 'src/database/schemas/project';
-import { Permission } from 'src/database/schemas/permission';
+import { Project } from './schemas/project';
+import { Permission } from './schemas/permission';
 
 Project.hasMany(Permission, {
   foreignKey: {
