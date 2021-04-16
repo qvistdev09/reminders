@@ -1,0 +1,51 @@
+@use '../variables/layout';
+@use '../variables/colors';
+@use '../variables/font-sizes';
+@use '../variables/font-weights';
+
+.modal {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.694);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal__inner {
+  background-color: colors.$lightBg;
+  border-radius: 0.3rem;
+  min-width: 30%;
+  box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.132);
+}
+
+.modal__header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  border-bottom: 1px solid colors.$lightBgBorder;
+}
+
+.modal__label {
+  color: colors.$black;
+  font-size: font-sizes.$modalLabel;
+  font-weight: font-weights.$modalLabel;
+}
+
+.modal__content {
+  padding: 0.5rem;
+}
+
+.modal__close-btn {
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.35rem;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.098);
+  }
+}

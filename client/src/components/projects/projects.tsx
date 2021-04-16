@@ -4,10 +4,12 @@ import { postNewProject, getUsersProjects } from '../../api-service/projects';
 import FormLabelledInput from '../form/elements/form-labelled-input';
 import ProjectRow from './elements/project-row';
 import { ProjectWithPermissions } from '../../../../src/api/services/permissions-service';
+import Modal from '../modal/modal';
 
 const Projects = () => {
   const [newProjectName, setNewProjectName] = useState('');
   const [projects, setProjects] = useState([] as ProjectWithPermissions[]);
+  const [permissionsModal, setPermissionsModal] = useState(false);
   const { authState } = useOktaAuth();
 
   const fetchProjects = () => {
@@ -16,6 +18,14 @@ const Projects = () => {
       getUsersProjects(accessToken)
         .then(({ data: { projects } }) => setProjects(projects))
         .catch(err => console.log(err.message));
+    }
+  };
+
+  const showPermissionsModal = () => {
+    setPermissionsModal(true);
+    const html = document.querySelector('html');
+    if (html) {
+      html.style.overflow = 'hidden';
     }
   };
 
@@ -73,9 +83,18 @@ const Projects = () => {
       </div>
       <div className='utility--border-right'>
         <h2 className='utility--feature-header'>Your projects</h2>
+        {permissionsModal && (
+          <Modal label='Add collaborators' close={() => setPermissionsModal(false)}>
+            <p>Hey</p>
+          </Modal>
+        )}
         <div className='projects__container'>
           {projects.map(data => (
-            <ProjectRow key={data.project.projectId} data={data} />
+            <ProjectRow
+              key={data.project.projectId}
+              data={data}
+              openModal={showPermissionsModal}
+            />
           ))}
         </div>
       </div>

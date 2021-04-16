@@ -6,9 +6,10 @@ import Icon from '../../icon/icon';
 
 interface Props {
   data: ProjectWithPermissions;
+  openModal: () => void;
 }
 
-const ProjectRow = ({ data }: Props) => {
+const ProjectRow = ({ data, openModal }: Props) => {
   const [expanded, setExpanded] = useState(false);
   const { projectTitle, projectId } = data.project;
   const slug = `${projectTitle.toLowerCase().replace(/\s/g, '-')}_${projectId}`;
@@ -32,7 +33,9 @@ const ProjectRow = ({ data }: Props) => {
           <div className='projects__settings-section'>
             <div className='projects__settings-header-container'>
               <h4 className='projects__settings-header'>Permissions</h4>
-              <button className='projects__settings-btn'>Add</button>
+              <button className='projects__settings-btn' onClick={openModal}>
+                Add
+              </button>
             </div>
             <PermissionsGrid permissions={data.projectPermissions} />
           </div>

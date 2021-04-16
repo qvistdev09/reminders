@@ -3,6 +3,7 @@ import IconChevronForward from './elements/icon-chevron-forward';
 import IconChevronDown from './elements/icon-chevron-down';
 import IconGrid from './elements/icon-grid';
 import IconOpen from './elements/icon-open';
+import IconClose from './elements/icon-close';
 
 const icons = {
   cube: IconCube,
@@ -10,6 +11,7 @@ const icons = {
   chevronDown: IconChevronDown,
   grid: IconGrid,
   open: IconOpen,
+  close: IconClose,
 };
 
 const sizes = {
@@ -25,7 +27,7 @@ const colors = {
 };
 
 interface Props {
-  icon?: 'cube' | 'chevronForward' | 'chevronDown' | 'grid' | 'open';
+  icon?: 'cube' | 'chevronForward' | 'chevronDown' | 'grid' | 'open' | 'close';
   size?: 'tiny' | 'small' | 'medium' | 'large';
   color?: 'white' | 'semiDark';
   padding?: number;
