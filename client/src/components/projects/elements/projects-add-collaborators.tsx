@@ -1,28 +1,10 @@
-import { useState, useEffect } from 'react';
-import { userApi } from '../../../api-service/user';
-import { UserObj } from '../../../../../src/shared-types/index';
-import { useOktaAuth } from '@okta/okta-react';
+import { useState } from 'react';
+import { useAppUsers } from '../../../hooks/use-app-users';
 import FormLabelledInput from '../../form/elements/form-labelled-input';
 
 const ProjectsAddCollaborators = () => {
-  const { authState } = useOktaAuth();
   const [searchValue, setSearchValue] = useState('');
-  const [users, setUsers] = useState([] as UserObj[]);
-
-  useEffect(() => {
-    if (authState.accessToken) {
-      const { accessToken } = authState.accessToken;
-      userApi.getAllAppUsers(accessToken).then(users => setUsers(users));
-    }
-  }, [authState.accessToken]);
-
-  const filteredUsers =
-    searchValue === ''
-      ? ([] as UserObj[])
-      : users.filter(user => {
-          const completeName = `${user.firstName} ${user.lastName}`;
-          return new RegExp(searchValue, 'i').test(completeName);
-        });
+  const users = useAppUsers(searchValue);
 
   return (
     <form className='form'>
@@ -34,7 +16,7 @@ const ProjectsAddCollaborators = () => {
         label='Search for users'
         id='user-search'
       />
-      {filteredUsers.map(user => (
+      {users.map(user => (
         <p key={user.uid}>{`${user.firstName} ${user.lastName}`}</p>
       ))}
       <button className='form__submit-btn'>Save</button>
