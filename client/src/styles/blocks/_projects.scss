@@ -98,3 +98,22 @@
 .projects__project-row + .projects__project-row {
   margin-top: 1rem;
 }
+
+.projects__user-search-match {
+  display: flex;
+  padding: 0.5rem;
+  border-bottom: 1px solid darken(colors.$lightBg, 25%);
+  &:nth-child(even) {
+    background-color: colors.$lightBgDarkened;
+  }
+  &:nth-child(odd) {
+    background-color: colors.$lightBgSemiLightened;
+  }
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.projects__user-search-match-email {
+  flex: 1;
+}

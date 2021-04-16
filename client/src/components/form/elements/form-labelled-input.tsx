@@ -4,7 +4,7 @@ interface Props {
   value: string;
   onChange: (str: string) => void;
   required?: boolean;
-  type?: 'text' | 'password' | 'email';
+  type?: 'text' | 'password' | 'email' | 'search';
   label: string;
   id: string;
 }
