@@ -9,7 +9,7 @@ interface Props {
   openModal: () => void;
 }
 
-const ProjectRow = ({ data, openModal }: Props) => {
+const ProjectsRow = ({ data, openModal }: Props) => {
   const [expanded, setExpanded] = useState(false);
   const { projectTitle, projectId } = data.project;
   const slug = `${projectTitle.toLowerCase().replace(/\s/g, '-')}_${projectId}`;
@@ -45,4 +45,4 @@ const ProjectRow = ({ data, openModal }: Props) => {
   );
 };
 
-export default ProjectRow;
+export default ProjectsRow;

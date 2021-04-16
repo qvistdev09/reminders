@@ -2,9 +2,10 @@ import { SyntheticEvent, useState, useEffect } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import { postNewProject, getUsersProjects } from '../../api-service/projects';
 import FormLabelledInput from '../form/elements/form-labelled-input';
-import ProjectRow from './elements/project-row';
+import ProjectsRow from './elements/projects-row';
 import { ProjectWithPermissions } from '../../../../src/api/services/permissions-service';
 import Modal from '../modal/modal';
+import ProjectsAddCollaborators from './elements/projects-add-collaborators';
 
 const Projects = () => {
   const [newProjectName, setNewProjectName] = useState('');
@@ -85,12 +86,12 @@ const Projects = () => {
         <h2 className='utility--feature-header'>Your projects</h2>
         {permissionsModal && (
           <Modal label='Add collaborators' close={() => setPermissionsModal(false)}>
-            <p>Hey</p>
+            <ProjectsAddCollaborators />
           </Modal>
         )}
         <div className='projects__container'>
           {projects.map(data => (
-            <ProjectRow
+            <ProjectsRow
               key={data.project.projectId}
               data={data}
               openModal={showPermissionsModal}

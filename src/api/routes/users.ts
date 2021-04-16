@@ -1,9 +1,10 @@
 import express, { NextFunction, Response } from 'express';
-import { postUserToOkta } from '../services/user-service';
+import { authRequired } from '../../middleware/auth-required';
+import { postUserToOkta, getAllAppUsers } from '../services/user-service';
 import { validateSignUpFields } from '../validation-schemas/sign-up-validation';
 import { ControlledError } from '../../classes/controlled-error';
 import RequestJwt from '../../types/request-jwt';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 
 const router = express.Router();
 
@@ -23,6 +24,12 @@ router.post('/', (req: RequestJwt, res: Response, next: NextFunction) => {
       }
       next(err);
     });
+});
+
+router.get('/', authRequired, (req: RequestJwt, res: Response, next: NextFunction) => {
+  getAllAppUsers()
+    .then(userObjects => res.json(userObjects))
+    .catch(() => next(new ControlledError('Could not get users', 500)));
 });
 
 export default router;

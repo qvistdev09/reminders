@@ -2,7 +2,7 @@ import { oktaAxios } from './okta-axios';
 import { ClientUserProfile } from '../validation-schemas/sign-up-validation';
 
 // types
-import { NameObj } from '../../shared-types';
+import { UserObj } from '../../shared-types';
 
 const oktaGroup = process.env.OKTA_GROUP as string;
 
@@ -46,17 +46,18 @@ const postUserToOkta = (userDetails: ClientUserProfile) => {
   return oktaAxios.post('users', newUser);
 };
 
-const getNameFromOkta = (uid: string): Promise<NameObj> => {
+const getNameFromOkta = (uid: string): Promise<UserObj> => {
   return new Promise(async (resolve, reject) => {
     try {
       const userDetailsFromOkta = await oktaAxios.get(`users/${uid}`);
       const {
-        data: { profile },
+        data: { id, profile },
       } = userDetailsFromOkta;
       resolve({
         firstName: profile.firstName,
         lastName: profile.lastName,
         email: profile.email,
+        uid: id,
       });
     } catch (err) {
       reject(err);
@@ -64,4 +65,21 @@ const getNameFromOkta = (uid: string): Promise<NameObj> => {
   });
 };
 
-export { postUserToOkta, getNameFromOkta };
+const getAllAppUsers = (): Promise<UserObj[]> => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const oktaUserObjects = await oktaAxios.get(`groups/${oktaGroup}/users`);
+      const userObjects = oktaUserObjects.data.map((oktaUserObj: any) => ({
+        firstName: oktaUserObj.profile.firstName,
+        lastName: oktaUserObj.profile.lastName,
+        email: oktaUserObj.profile.email,
+        uid: oktaUserObj.id,
+      }));
+      resolve(userObjects);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+export { postUserToOkta, getNameFromOkta, getAllAppUsers };

@@ -4,11 +4,11 @@ import { PermissionInstance } from '../../database/schemas/permission';
 import { getNameFromOkta } from './user-service';
 
 // types
-import { NameObj } from '../../shared-types';
+import { UserObj } from '../../shared-types';
 
 export interface PermissionInstanceWithName {
   userPermission: PermissionInstance;
-  userProfile: NameObj;
+  userProfile: UserObj;
 }
 
 export interface ProjectWithPermissions {

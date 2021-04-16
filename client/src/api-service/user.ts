@@ -1,5 +1,7 @@
 import { apiUrl } from './api-url';
+import { makeOptionsObj } from './axios-auth-options';
 import axios from 'axios';
+import { UserObj } from '../../../src/shared-types/index';
 
 interface SignUpForm {
   firstName: String;
@@ -14,6 +16,12 @@ interface SignUpForm {
 const signUp = (userDetails: SignUpForm) =>
   axios.post(`${apiUrl}/users`, { newUser: userDetails });
 
-const userApi = { signUp };
+const getAllAppUsers = (accesToken: string): Promise<UserObj[]> => {
+  return axios
+    .get(`${apiUrl}/users`, makeOptionsObj(accesToken))
+    .then(response => response.data);
+};
+
+const userApi = { signUp, getAllAppUsers };
 
 export { userApi };

@@ -14,12 +14,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 0.5rem;
 }
 
 .modal__inner {
   background-color: colors.$lightBg;
   border-radius: 0.3rem;
-  min-width: 30%;
+  flex: 1;
+  max-width: 40rem;
   box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.132);
 }
 
@@ -28,6 +30,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem;
+  padding-left: 1rem;
   border-bottom: 1px solid colors.$lightBgBorder;
 }
 
@@ -35,10 +38,6 @@
   color: colors.$black;
   font-size: font-sizes.$modalLabel;
   font-weight: font-weights.$modalLabel;
-}
-
-.modal__content {
-  padding: 0.5rem;
 }
 
 .modal__close-btn {
