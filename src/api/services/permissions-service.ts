@@ -1,7 +1,7 @@
-import { Permission } from '../../database/root';
-import { ProjectInstance } from '../../database/schemas/project';
-import { PermissionInstance } from '../../database/schemas/permission';
-import { getNameFromOkta } from './user-service';
+import { Permission } from 'src/database/root';
+import { ProjectInstance } from 'src/database/schemas/project';
+import { PermissionInstance } from 'src/database/schemas/permission'
+import { getNameFromOkta } from 'src/api/services/user-service';
 
 // types
 import { UserObj } from '../../shared-types';

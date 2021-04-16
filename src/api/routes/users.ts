@@ -1,9 +1,9 @@
 import express, { NextFunction, Response } from 'express';
-import { authRequired } from '../../middleware/auth-required';
-import { postUserToOkta, getAllAppUsers } from '../services/user-service';
-import { validateSignUpFields } from '../validation-schemas/sign-up-validation';
-import { ControlledError } from '../../classes/controlled-error';
-import RequestJwt from '../../types/request-jwt';
+import { authRequired } from 'src/middleware/auth-required';
+import { postUserToOkta, getAllAppUsers } from 'src/api/services/user-service';
+import { validateSignUpFields } from 'src/api/validation-schemas/sign-up-validation';
+import { ControlledError } from 'src/classes/controlled-error';
+import RequestJwt from 'src/types/request-jwt';
 import { AxiosError } from 'axios';
 
 const router = express.Router();

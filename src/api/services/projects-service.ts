@@ -1,4 +1,4 @@
-import { Project } from '../../database/root';
+import { Project } from 'src/database/root';
 
 const getProjectsByUserId = (userId: string) =>
   Project.findAll({

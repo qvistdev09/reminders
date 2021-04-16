@@ -1,5 +1,5 @@
 import { Model, Optional } from 'sequelize';
-import { sequelize } from '../../config/db-config';
+import { sequelize } from 'src/config/db-config';
 import { DataTypes } from 'sequelize';
 
 // types

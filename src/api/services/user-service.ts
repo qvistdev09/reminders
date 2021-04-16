@@ -1,5 +1,5 @@
-import { oktaAxios } from './okta-axios';
-import { ClientUserProfile } from '../validation-schemas/sign-up-validation';
+import { oktaAxios } from 'src/api/services/okta-axios';
+import { ClientUserProfile } from 'src/api/validation-schemas/sign-up-validation';
 
 // types
 import { UserObj } from '../../shared-types';

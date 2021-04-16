@@ -5,18 +5,18 @@ import path from 'path';
 
 // helmet config
 import helmet from 'helmet';
-import { allowedCSPconnect } from './config/helmet-config';
+import { allowedCSPconnect } from 'src/config/helmet-config';
 const appCSPsettings = helmet.contentSecurityPolicy.getDefaultDirectives();
 appCSPsettings['connect-src'] = allowedCSPconnect;
 
 // custom types
-import RequestJwt from './types/request-jwt';
+import RequestJwt from 'src/types/request-jwt';
 
 // classes
-import { ControlledError } from './classes/controlled-error';
+import { ControlledError } from 'src/classes/controlled-error';
 
 // database
-import { authAndSyncDatabase } from './database/root';
+import { authAndSyncDatabase } from 'src/database/root';
 
 authAndSyncDatabase();
 
