@@ -17,6 +17,7 @@ import { ControlledError } from './classes/controlled-error';
 
 // database
 import { authAndSyncDatabase } from './database/root';
+
 authAndSyncDatabase();
 
 // routes

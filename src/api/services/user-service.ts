@@ -42,4 +42,26 @@ const postUserToOkta = (userDetails: ClientUserProfile) => {
   return oktaAxios.post('users', newUser);
 };
 
-export { postUserToOkta, ClientUserProfile };
+interface NameObj {
+  firstName: string;
+  lastName: string;
+}
+
+const getNameFromOkta = (uid: string): Promise<NameObj> => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const userDetailsFromOkta = await oktaAxios.get(`users/${uid}`);
+      const {
+        data: { profile },
+      } = userDetailsFromOkta;
+      resolve({
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+export { postUserToOkta, getNameFromOkta, ClientUserProfile };
