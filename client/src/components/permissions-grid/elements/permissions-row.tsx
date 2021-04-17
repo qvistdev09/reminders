@@ -7,6 +7,13 @@ interface Props {
   final: boolean;
 }
 
+const RoleSelect = () => (
+  <select className='form__input form__input-select'>
+    <option value='viewer'>Viewer</option>
+    <option value='editor'>Editor</option>
+  </select>
+);
+
 const PermissionsRow = ({ data, final }: Props) => {
   const { firstName, lastName, email } = data.userProfile;
 
@@ -23,7 +30,9 @@ const PermissionsRow = ({ data, final }: Props) => {
     <>
       <p className={`${cell} ${text} ${left}`}>{`${firstName} ${lastName}`}</p>
       <p className={`${cell} ${text} ${middle}`}>{email}</p>
-      <p className={`${cell} ${text} ${right}`}>{data.userPermission.permissionRole}</p>
+      <p className={`${cell} ${text} ${right}`}>
+        <RoleSelect />
+      </p>
     </>
   );
 };
