@@ -1,8 +1,8 @@
 import { oktaAxios } from './okta-axios';
-import { ClientUserProfile } from '../validation-schemas/sign-up-validation';
+import { ClientUserProfile } from '../validation/sign-up-validation';
 
 // types
-import { UserObj } from '../../shared-types';
+import { UserObj } from '../../types';
 
 const oktaGroup = process.env.OKTA_GROUP as string;
 

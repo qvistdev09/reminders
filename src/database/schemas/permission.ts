@@ -3,7 +3,7 @@ import { sequelize } from '../../config/db-config';
 import { DataTypes } from 'sequelize';
 
 // types
-import { PermissionRole } from '../../shared-types';
+import { PermissionRole } from '../../types';
 
 interface PermissionAttributes {
   projectId?: number;

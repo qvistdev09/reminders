@@ -1,19 +1,20 @@
 import { UserObj } from '../../../src/types/index';
-import { PermissionOrder } from '../../../src/types/permission-order';
 import { userApi } from '../api-service/user';
 import { useState, useEffect } from 'react';
 import { useAccessToken } from '../hooks/use-access-token';
 
+// filter also by existing permissions in project
+
 interface HookReturn {
   users: UserObj[];
-  selection: PermissionOrder[];
-  addUser: (userProfile: UserObj, projectId: number) => void;
+  selection: UserObj[];
+  addUser: (userProfile: UserObj) => void;
 }
 
-const useAppUsers = (filterString?: string): HookReturn => {
+const useUserCatalog = (filterString?: string): HookReturn => {
   const accessToken = useAccessToken();
   const [users, setUsers] = useState([] as UserObj[]);
-  const [selection, setSelection] = useState([] as PermissionOrder[]);
+  const [selection, setSelection] = useState([] as UserObj[]);
 
   useEffect(() => {
     if (accessToken) {
@@ -21,7 +22,17 @@ const useAppUsers = (filterString?: string): HookReturn => {
     }
   }, [accessToken]);
 
-  const getUsers = () => {
+  const filterBySelected = () => {
+    return users.filter(user => {
+      const match = selection.find(selectedUser => selectedUser.uid === user.uid);
+      if (match) {
+        return false;
+      }
+      return true;
+    });
+  };
+
+  const filterBySearchValue = (array: UserObj[]) => {
     if (filterString) {
       const filteredUsers = users.filter(user => {
         const completeName = `${user.firstName} ${user.lastName}`;
@@ -35,15 +46,12 @@ const useAppUsers = (filterString?: string): HookReturn => {
     return [] as UserObj[];
   };
 
-  const addUser = (userProfile: UserObj, projectId: number) => {
-    const newPermission: PermissionOrder = {
-      userProfile,
-      userPermission: {
-        projectId,
-        permissionRole: 'viewer',
-      },
-    };
-    setSelection(prevstate => [...prevstate, newPermission]);
+  const getUsers = () => {
+    return filterBySearchValue(filterBySelected());
+  };
+
+  const addUser = (newUser: UserObj) => {
+    setSelection(prevstate => [...prevstate, newUser]);
   };
 
   return {
@@ -53,4 +61,4 @@ const useAppUsers = (filterString?: string): HookReturn => {
   };
 };
 
-export { useAppUsers };
+export { useUserCatalog };

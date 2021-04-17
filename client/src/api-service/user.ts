@@ -1,7 +1,7 @@
 import { apiUrl } from './api-url';
 import { makeOptionsObj } from './axios-auth-options';
 import axios from 'axios';
-import { UserObj } from '../../../src/shared-types/index';
+import { UserObj } from '../../../src/types/index';
 
 interface SignUpForm {
   firstName: String;

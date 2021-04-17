@@ -13,4 +13,12 @@ const createNewProject = (userId: string, projectTitle: string) =>
     projectOwner: userId,
   });
 
-export { getProjectsByUserId, createNewProject };
+const userIsOwner = async (projectOwner: string, projectId: number) => {
+  const matchedProject = await Project.findOne({ where: { projectId, projectOwner } });
+  if (matchedProject) {
+    return true;
+  }
+  return false;
+};
+
+export { getProjectsByUserId, createNewProject, userIsOwner };

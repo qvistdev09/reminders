@@ -4,6 +4,7 @@ import RequestJwt from '../types/request-jwt';
 
 import users from './routes/users';
 import projects from './routes/projects';
+import permissions from './routes/permissions';
 
 const router = express.Router();
 
@@ -11,6 +12,7 @@ router.use(express.json());
 
 router.use('/users', users);
 router.use('/projects', projects);
+router.use('/permissions', permissions);
 
 router.get('/secret', authRequired, (req: RequestJwt, res: Response) => {
   res.json({ message: 'You reached path that requires auth' });

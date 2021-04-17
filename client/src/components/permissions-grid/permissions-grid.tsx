@@ -1,11 +1,12 @@
 import { PermissionInstanceWithName } from '../../../../src/api/services/permissions-service';
-import { PermissionOrder } from '../../../../src/shared-types/permission-order';
+import { PermissionOrder } from '../../../../src/types/permission-order';
 import PermissionsRow from './elements/permissions-row';
 import { useAppUserDetails } from '../../hooks/use-app-user-details';
 
 interface Props {
   permissions: PermissionInstanceWithName[] | PermissionOrder[];
   showOwner: boolean;
+  roleChange: (newRole: string, uid: string) => void;
 }
 
 export interface OwnerRow {
@@ -20,7 +21,7 @@ export interface OwnerRow {
   };
 }
 
-const PermissionsGrid = ({ permissions, showOwner = false }: Props) => {
+const PermissionsGrid = ({ permissions, showOwner = false, roleChange }: Props) => {
   const owner = useAppUserDetails();
 
   const permissionsArray =
@@ -62,6 +63,7 @@ const PermissionsGrid = ({ permissions, showOwner = false }: Props) => {
             key={permission.userProfile.uid}
             data={permission}
             final={index === permissionsArray.length - 1}
+            roleChange={roleChange}
           />
         )
       )}

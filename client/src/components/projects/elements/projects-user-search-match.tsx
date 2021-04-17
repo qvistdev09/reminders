@@ -1,5 +1,5 @@
 import { SyntheticEvent } from 'react';
-import { UserObj } from '../../../../../src/shared-types/index';
+import { UserObj } from '../../../../../src/types/index';
 import Icon from '../../icon/icon';
 
 interface Props {

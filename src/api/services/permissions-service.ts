@@ -2,9 +2,10 @@ import { Permission } from '../../database/root';
 import { ProjectInstance } from '../../database/schemas/project';
 import { PermissionInstance } from '../../database/schemas/permission';
 import { getNameFromOkta } from './user-service';
+import { PermissionRole } from '../../types/index';
 
 // types
-import { UserObj } from '../../shared-types';
+import { UserObj } from '../../types';
 
 export interface PermissionInstanceWithName {
   userPermission: PermissionInstance;
@@ -55,4 +56,28 @@ const appendPermissionsToProject = (
   });
 };
 
-export { appendPermissionsToProject };
+// need for try catch block?
+const addPermission = async (
+  permissionUid: string,
+  projectId: number,
+  permissionRole: PermissionRole
+) => {
+  const preExistingMatch = await Permission.findOne({
+    where: {
+      permissionUid,
+      projectId,
+    },
+  });
+  if (preExistingMatch) {
+    preExistingMatch.permissionRole = permissionRole;
+    return preExistingMatch.save();
+  }
+  // check that permissionUid is user that actually exists
+  return Permission.create({
+    permissionUid,
+    projectId,
+    permissionRole,
+  });
+};
+
+export { appendPermissionsToProject, addPermission };

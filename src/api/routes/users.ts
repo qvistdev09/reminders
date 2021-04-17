@@ -1,7 +1,7 @@
 import express, { NextFunction, Response } from 'express';
 import { authRequired } from '../../middleware/auth-required';
 import { postUserToOkta, getAllAppUsers } from '../services/user-service';
-import { validateSignUpFields } from '../validation-schemas/sign-up-validation';
+import { validateSignUpFields } from '../validation/sign-up-validation';
 import { ControlledError } from '../../classes/controlled-error';
 import RequestJwt from '../../types/request-jwt';
 import { AxiosError } from 'axios';
