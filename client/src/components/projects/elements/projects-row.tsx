@@ -6,7 +6,7 @@ import Icon from '../../icon/icon';
 
 interface Props {
   data: ProjectWithPermissions;
-  openModal: () => void;
+  openModal: (projectId: number) => void;
 }
 
 const ProjectsRow = ({ data, openModal }: Props) => {
@@ -33,11 +33,14 @@ const ProjectsRow = ({ data, openModal }: Props) => {
           <div className='projects__settings-section'>
             <div className='projects__settings-header-container'>
               <h4 className='projects__settings-header'>Permissions</h4>
-              <button className='projects__settings-btn' onClick={openModal}>
+              <button
+                className='projects__settings-btn'
+                onClick={() => openModal(data.project.projectId as number)}
+              >
                 Add
               </button>
             </div>
-            <PermissionsGrid permissions={data.projectPermissions} />
+            <PermissionsGrid permissions={data.projectPermissions} showOwner={true} />
           </div>
         </div>
       )}

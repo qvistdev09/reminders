@@ -9,13 +9,20 @@ const Projects = () => {
   const [newProjectName, setNewProjectName] = useState('');
   const [projects, submitProject] = useProjects();
   const [permissionsModal, setPermissionsModal] = useState(false);
+  const [projectInEdit, setProjectInEdit] = useState(null as null | number);
 
-  const showPermissionsModal = () => {
+  const showPermissionsModal = (projectId: number) => {
+    setProjectInEdit(projectId);
     setPermissionsModal(true);
     const html = document.querySelector('html');
     if (html) {
       html.style.overflow = 'hidden';
     }
+  };
+
+  const closePermissionsModal = () => {
+    setProjectInEdit(null);
+    setPermissionsModal(false);
   };
 
   const newProjectSubmit = async (e: SyntheticEvent) => {
@@ -44,9 +51,9 @@ const Projects = () => {
       </div>
       <div className='utility--border-right'>
         <h2 className='utility--feature-header'>Your projects</h2>
-        {permissionsModal && (
-          <Modal label='Add collaborators' close={() => setPermissionsModal(false)}>
-            <ProjectsAddCollaborators />
+        {permissionsModal && projectInEdit && (
+          <Modal label='Add collaborators' close={closePermissionsModal}>
+            <ProjectsAddCollaborators projectId={projectInEdit} />
           </Modal>
         )}
         <div className='projects__container'>

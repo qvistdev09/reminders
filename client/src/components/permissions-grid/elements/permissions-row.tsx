@@ -1,7 +1,8 @@
 import { PermissionInstanceWithName } from '../../../../../src/api/services/permissions-service';
+import { PermissionOrder } from '../../../../../src/shared-types/permission-order';
 
 interface Props {
-  data: PermissionInstanceWithName;
+  data: PermissionInstanceWithName | PermissionOrder;
 }
 
 const PermissionsRow = ({ data }: Props) => {

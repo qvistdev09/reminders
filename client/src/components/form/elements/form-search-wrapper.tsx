@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+
 interface Props {
   suggestions: any[];
   render: any;
