@@ -5,9 +5,10 @@ import { useAppUserDetails } from '../../hooks/use-app-user-details';
 interface Props {
   permissions: UserInPermissionsGrid[];
   showOwner: boolean;
+  changePermission: (change: UserInPermissionsGrid) => void;
 }
 
-const PermissionsGrid = ({ permissions, showOwner = false }: Props) => {
+const PermissionsGrid = ({ permissions, showOwner = false, changePermission }: Props) => {
   const owner = useAppUserDetails();
 
   const permissionsArray: UserInPermissionsGrid[] =
@@ -41,6 +42,7 @@ const PermissionsGrid = ({ permissions, showOwner = false }: Props) => {
           key={permission.uid}
           data={permission}
           final={index === permissionsArray.length - 1}
+          changePermission={changePermission}
         />
       ))}
     </div>

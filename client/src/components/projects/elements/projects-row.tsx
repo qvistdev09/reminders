@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import Icon from '../../icon/icon';
 import { ProjectObject } from '../../../../../src/types/index';
+import { useManagePermissions } from '../../../hooks/use-manage-permissions';
 
 interface Props {
   data: ProjectObject;
@@ -12,6 +13,13 @@ interface Props {
 const ProjectsRow = ({ data, openModal }: Props) => {
   const [expanded, setExpanded] = useState(false);
   const { projectTitle, projectId } = data;
+  const { addPermission, changedPermissions } = useManagePermissions(
+    data.projectId,
+    () => {},
+    data.permissions,
+    false
+  );
+
   const slug = `${projectTitle.toLowerCase().replace(/\s/g, '-')}_${projectId}`;
 
   const icon = expanded ? 'chevronDown' : 'chevronForward';
@@ -40,7 +48,11 @@ const ProjectsRow = ({ data, openModal }: Props) => {
                 Add
               </button>
             </div>
-            <PermissionsGrid permissions={data.permissions} showOwner={true} />
+            <PermissionsGrid
+              permissions={changedPermissions}
+              showOwner={true}
+              changePermission={addPermission}
+            />
           </div>
         </div>
       )}

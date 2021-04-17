@@ -17,7 +17,7 @@ export interface UserInPermissionsGrid {
 
 export interface PermissionOrder {
   permissionUid: string;
-  permissionRole: PermissionRole;
+  permissionRole: PermissionRole | 'Owner';
 }
 
 export interface PermissionOrderSet {

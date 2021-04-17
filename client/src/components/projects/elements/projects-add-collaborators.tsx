@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import FormLabelledInput from '../../form/elements/form-labelled-input';
 import FormSearchWrapper from '../../form/elements/form-search-wrapper';
 import PermissionsGrid from '../../permissions-grid/permissions-grid';
 import { renderSearchMatches } from './projects-user-search-match';
 import { useUserCatalog } from '../../../hooks/use-user-catalog';
-import { UserInPermissionsGrid } from '../../../../../src/types/index';
+import { useManagePermissions } from '../../../hooks/use-manage-permissions';
 
 interface Props {
   projectId: number;
@@ -13,17 +13,19 @@ interface Props {
 const ProjectsAddCollaborators = ({ projectId }: Props) => {
   const [searchValue, setSearchValue] = useState('');
   const { users, selection, addUser } = useUserCatalog(searchValue);
+  const {
+    addPermission,
+    submitPermissionChanges,
+    changedPermissions,
+  } = useManagePermissions(projectId, () => {}, selection, true);
 
-  const addedUsers: UserInPermissionsGrid[] = selection.map(user => ({
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email,
-    uid: user.uid,
-    permissionRole: 'viewer',
-  }));
+  const handleSubmit = (e: SyntheticEvent) => {
+    e.preventDefault();
+    submitPermissionChanges();
+  };
 
   return (
-    <form className='form'>
+    <form className='form' onSubmit={handleSubmit}>
       <FormSearchWrapper
         suggestions={users}
         render={renderSearchMatches(projectId, addUser)}
@@ -38,7 +40,11 @@ const ProjectsAddCollaborators = ({ projectId }: Props) => {
         />
       </FormSearchWrapper>
       {selection.length > 0 && (
-        <PermissionsGrid permissions={addedUsers} showOwner={false} />
+        <PermissionsGrid
+          permissions={changedPermissions}
+          showOwner={false}
+          changePermission={addPermission}
+        />
       )}
       <button className='form__submit-btn utility--margin-top'>Save</button>
     </form>

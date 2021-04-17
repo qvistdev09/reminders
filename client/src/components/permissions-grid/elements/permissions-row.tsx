@@ -4,10 +4,27 @@ import { UserInPermissionsGrid } from '../../../../../src/types/index';
 interface Props {
   data: UserInPermissionsGrid;
   final: boolean;
-}
+  changePermission: (change: UserInPermissionsGrid) => void;
+} 
 
-const PermissionsRow = ({ data, final }: Props) => {
+const PermissionsRow = ({ data, final, changePermission }: Props) => {
   const { firstName, lastName, email, permissionRole } = data;
+
+  const handleChange = (e: SyntheticEvent) => {
+    console.log(e.target);
+    e.preventDefault();
+    if (e.target instanceof HTMLSelectElement) {
+      console.log('here');
+      if (e.target.value === 'editor' || e.target.value === 'viewer') {
+        console.log(e.target.value);
+        const newPermission: UserInPermissionsGrid = {
+          ...data,
+          permissionRole: e.target.value,
+        };
+        changePermission(newPermission);
+      }
+    }
+  };
 
   const finalModifier = final ? '-final' : '';
 
@@ -26,9 +43,13 @@ const PermissionsRow = ({ data, final }: Props) => {
         {permissionRole === 'Owner' ? (
           'Owner'
         ) : (
-          <select className='form__input form__input-select' value={permissionRole}>
-            <option value='Viewer'>Viewer</option>
-            <option value='Editor'>Editor</option>
+          <select
+            className='form__input form__input-select'
+            value={permissionRole}
+            onChange={handleChange}
+          >
+            <option value='viewer'>Viewer</option>
+            <option value='editor'>Editor</option>
           </select>
         )}
       </div>
