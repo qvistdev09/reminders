@@ -28,8 +28,10 @@ const ProjectsAddCollaborators = ({ projectId }: Props) => {
           id='user-search'
         />
       </FormSearchWrapper>
-      <PermissionsGrid permissions={selection} showOwner={false} />
-      <button className='form__submit-btn'>Save</button>
+      {selection.length > 0 && (
+        <PermissionsGrid permissions={selection} showOwner={false} />
+      )}
+      <button className='form__submit-btn utility--margin-top'>Save</button>
     </form>
   );
 };

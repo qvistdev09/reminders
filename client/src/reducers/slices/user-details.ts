@@ -4,17 +4,23 @@ import { RootState } from '../../store/store';
 interface UserDetailsState {
   firstName: string;
   lastName: string;
+  email: string;
+  uid: string;
   retrieved: boolean;
 }
 
-interface NameData {
+interface UserData {
   firstName: string;
   lastName: string;
+  email: string;
+  uid: string;
 }
 
 const initialState: UserDetailsState = {
   firstName: '',
   lastName: '',
+  email: '',
+  uid: '',
   retrieved: false,
 };
 
@@ -22,16 +28,18 @@ const userDetails = createSlice({
   name: 'userDetails',
   initialState,
   reducers: {
-    setName: (state, action: PayloadAction<NameData>) => {
-      const { firstName, lastName } = action.payload;
+    setDetails: (state, action: PayloadAction<UserData>) => {
+      const { firstName, lastName, email, uid } = action.payload;
       state.firstName = firstName;
       state.lastName = lastName;
+      state.email = email;
+      state.uid = uid;
       state.retrieved = true;
     },
   },
 });
 
-export const { setName } = userDetails.actions;
+export const { setDetails } = userDetails.actions;
 
 export const getUserDetails = (state: RootState) => state.userDetails;
 

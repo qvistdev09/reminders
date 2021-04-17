@@ -51,20 +51,36 @@
   border-top-right-radius: 0.45rem;
 }
 
-.permissions-grid__content-last-left {
-  border-bottom-left-radius: 0.45rem;
+.permissions-grid__content-left {
+  border-left: 2px solid colors.$lightBgBorder;
+  border-right: 1px solid colors.$lightBgBorder;
+  border-bottom: 1px solid colors.$lightBgBorder;
+}
+
+.permissions-grid__content-middle {
+  border-right: 1px solid colors.$lightBgBorder;
+  border-bottom: 1px solid colors.$lightBgBorder;
+}
+
+.permissions-grid__content-right {
+  border-right: 2px solid colors.$lightBgBorder;
+  border-bottom: 1px solid colors.$lightBgBorder;
+}
+
+.permissions-grid__content-left-final {
   border-left: 2px solid colors.$lightBgBorder;
   border-bottom: 2px solid colors.$lightBgBorder;
   border-right: 1px solid colors.$lightBgBorder;
+  border-bottom-left-radius: 0.45rem;
 }
 
-.permissions-grid__content-last-middle {
+.permissions-grid__content-middle-final {
   border-bottom: 2px solid colors.$lightBgBorder;
   border-right: 1px solid colors.$lightBgBorder;
 }
 
-.permissions-grid__content-last-right {
-  border-bottom-right-radius: 0.45rem;
+.permissions-grid__content-right-final {
   border-right: 2px solid colors.$lightBgBorder;
   border-bottom: 2px solid colors.$lightBgBorder;
+  border-bottom-right-radius: 0.45rem;
 }
