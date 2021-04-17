@@ -13,7 +13,7 @@ const FormSearchWrapper = ({ suggestions, render, children }: Props) => {
     const show = (e: Event) => {
       const clicked = e.target;
       if (clicked instanceof HTMLElement) {
-        if (clicked.classList.contains('form__input')) {
+        if (clicked.getAttribute('type') === 'search') {
           return setShowSuggestions(true);
         }
         setShowSuggestions(false);

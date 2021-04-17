@@ -23,7 +23,7 @@ const ProjectsAddCollaborators = ({ projectId }: Props) => {
           value={searchValue}
           onChange={setSearchValue}
           required={true}
-          type='text'
+          type='search'
           label='Search for users'
           id='user-search'
         />
