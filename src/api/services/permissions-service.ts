@@ -2,7 +2,7 @@ import { Permission } from '../../database/root';
 import { ProjectInstance } from '../../database/schemas/project';
 import { PermissionInstance } from '../../database/schemas/permission';
 import { getNameFromOkta } from './user-service';
-import { PermissionRole } from '../../types/index';
+import { PermissionRole, ProjectObject, UserInPermissionsGrid } from '../../types/index';
 
 // types
 import { UserObj } from '../../types';
@@ -19,13 +19,16 @@ export interface ProjectWithPermissions {
 
 const appendNameToPermission = (
   userPermission: PermissionInstance
-): Promise<PermissionInstanceWithName> => {
+): Promise<UserInPermissionsGrid> => {
   return new Promise(async (resolve, reject) => {
     try {
       const userProfile = await getNameFromOkta(userPermission.permissionUid);
       resolve({
-        userPermission,
-        userProfile,
+        firstName: userProfile.firstName,
+        lastName: userProfile.lastName,
+        uid: userProfile.uid,
+        email: userProfile.email,
+        permissionRole: userPermission.permissionRole,
       });
     } catch (err) {
       reject(err);
@@ -33,9 +36,7 @@ const appendNameToPermission = (
   });
 };
 
-const appendPermissionsToProject = (
-  project: ProjectInstance
-): Promise<ProjectWithPermissions> => {
+const appendPermissionsToProject = (project: ProjectInstance): Promise<ProjectObject> => {
   return new Promise(async (resolve, reject) => {
     try {
       const rawPermissions = await Permission.findAll({
@@ -47,8 +48,9 @@ const appendPermissionsToProject = (
         rawPermissions.map(permission => appendNameToPermission(permission))
       );
       resolve({
-        project,
-        projectPermissions,
+        projectTitle: project.projectTitle,
+        projectId: project.projectId as number,
+        permissions: projectPermissions,
       });
     } catch (err) {
       reject(err);
@@ -57,7 +59,7 @@ const appendPermissionsToProject = (
 };
 
 // need for try catch block?
-const addPermission = async (
+const handlePermissionChange = async (
   permissionUid: string,
   projectId: number,
   permissionRole: PermissionRole
@@ -69,15 +71,20 @@ const addPermission = async (
     },
   });
   if (preExistingMatch) {
+    if (permissionRole === 'delete') {
+      return preExistingMatch.destroy();
+    }
     preExistingMatch.permissionRole = permissionRole;
     return preExistingMatch.save();
   }
-  // check that permissionUid is user that actually exists
-  return Permission.create({
-    permissionUid,
-    projectId,
-    permissionRole,
-  });
+  if (permissionRole !== 'delete') {
+    return Permission.create({
+      permissionUid,
+      projectId,
+      permissionRole,
+    });
+  }
+  return null;
 };
 
-export { appendPermissionsToProject, addPermission };
+export { appendPermissionsToProject, handlePermissionChange };

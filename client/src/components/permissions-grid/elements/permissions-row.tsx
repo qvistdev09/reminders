@@ -1,16 +1,13 @@
 import { SyntheticEvent } from 'react';
-import { PermissionInstanceWithName } from '../../../../../src/api/services/permissions-service';
-import { PermissionOrder } from '../../../../../src/types/permission-order';
-import { OwnerRow } from '../permissions-grid';
+import { UserInPermissionsGrid } from '../../../../../src/types/index';
 
 interface Props {
-  data: PermissionInstanceWithName | PermissionOrder | OwnerRow;
+  data: UserInPermissionsGrid;
   final: boolean;
-  roleChange: (newRole: string, uid: string) => void;
 }
 
-const PermissionsRow = ({ data, final, roleChange }: Props) => {
-  const { firstName, lastName, email } = data.userProfile;
+const PermissionsRow = ({ data, final }: Props) => {
+  const { firstName, lastName, email, permissionRole } = data;
 
   const finalModifier = final ? '-final' : '';
 
@@ -26,18 +23,10 @@ const PermissionsRow = ({ data, final, roleChange }: Props) => {
       <p className={`${cell} ${text} ${left}`}>{`${firstName} ${lastName}`}</p>
       <p className={`${cell} ${text} ${middle}`}>{email}</p>
       <div className={`${cell} ${text} ${right}`}>
-        {data.userPermission.permissionRole === 'Owner' ? (
+        {permissionRole === 'Owner' ? (
           'Owner'
         ) : (
-          <select
-            className='form__input form__input-select'
-            value={data.userPermission.permissionRole}
-            onChange={(e: SyntheticEvent) => {
-              if (e.target instanceof HTMLInputElement) {
-                roleChange(e.target.value, data.userProfile.uid);
-              }
-            }}
-          >
+          <select className='form__input form__input-select' value={permissionRole}>
             <option value='Viewer'>Viewer</option>
             <option value='Editor'>Editor</option>
           </select>

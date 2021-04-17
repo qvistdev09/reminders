@@ -1,17 +1,17 @@
 import PermissionsGrid from '../../permissions-grid/permissions-grid';
-import { ProjectWithPermissions } from '../../../../../src/api/services/permissions-service';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import Icon from '../../icon/icon';
+import { ProjectObject } from '../../../../../src/types/index';
 
 interface Props {
-  data: ProjectWithPermissions;
+  data: ProjectObject;
   openModal: (projectId: number) => void;
 }
 
 const ProjectsRow = ({ data, openModal }: Props) => {
   const [expanded, setExpanded] = useState(false);
-  const { projectTitle, projectId } = data.project;
+  const { projectTitle, projectId } = data;
   const slug = `${projectTitle.toLowerCase().replace(/\s/g, '-')}_${projectId}`;
 
   const icon = expanded ? 'chevronDown' : 'chevronForward';
@@ -35,12 +35,12 @@ const ProjectsRow = ({ data, openModal }: Props) => {
               <h4 className='projects__settings-header'>Permissions</h4>
               <button
                 className='projects__settings-btn'
-                onClick={() => openModal(data.project.projectId as number)}
+                onClick={() => openModal(projectId as number)}
               >
                 Add
               </button>
             </div>
-            <PermissionsGrid permissions={data.projectPermissions} showOwner={true} />
+            <PermissionsGrid permissions={data.permissions} showOwner={true} />
           </div>
         </div>
       )}

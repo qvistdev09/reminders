@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { useAppUsers } from '../../../hooks/use-app-users';
 import FormLabelledInput from '../../form/elements/form-labelled-input';
 import FormSearchWrapper from '../../form/elements/form-search-wrapper';
 import PermissionsGrid from '../../permissions-grid/permissions-grid';
 import { renderSearchMatches } from './projects-user-search-match';
+import { useUserCatalog } from '../../../hooks/use-user-catalog';
+import { UserInPermissionsGrid } from '../../../../../src/types/index';
 
 interface Props {
   projectId: number;
@@ -11,7 +12,15 @@ interface Props {
 
 const ProjectsAddCollaborators = ({ projectId }: Props) => {
   const [searchValue, setSearchValue] = useState('');
-  const { users, selection, addUser } = useAppUsers(searchValue);
+  const { users, selection, addUser } = useUserCatalog(searchValue);
+
+  const addedUsers: UserInPermissionsGrid[] = selection.map(user => ({
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    uid: user.uid,
+    permissionRole: 'viewer',
+  }));
 
   return (
     <form className='form'>
@@ -29,7 +38,7 @@ const ProjectsAddCollaborators = ({ projectId }: Props) => {
         />
       </FormSearchWrapper>
       {selection.length > 0 && (
-        <PermissionsGrid permissions={selection} showOwner={false} />
+        <PermissionsGrid permissions={addedUsers} showOwner={false} />
       )}
       <button className='form__submit-btn utility--margin-top'>Save</button>
     </form>

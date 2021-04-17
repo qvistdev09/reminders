@@ -22,40 +22,24 @@ const useUserCatalog = (filterString?: string): HookReturn => {
     }
   }, [accessToken]);
 
-  const filterBySelected = () => {
-    return users.filter(user => {
-      const match = selection.find(selectedUser => selectedUser.uid === user.uid);
-      if (match) {
-        return false;
-      }
-      return true;
-    });
-  };
-
-  const filterBySearchValue = (array: UserObj[]) => {
-    if (filterString) {
-      const filteredUsers = users.filter(user => {
-        const completeName = `${user.firstName} ${user.lastName}`;
-        return new RegExp(filterString, 'i').test(completeName);
-      });
-      if (filteredUsers.length >= 4) {
-        return filteredUsers.slice(0, 4);
-      }
-      return filteredUsers;
+  const filteredUsers = users.filter(user => {
+    if (!filterString) {
+      return false;
     }
-    return [] as UserObj[];
-  };
-
-  const getUsers = () => {
-    return filterBySearchValue(filterBySelected());
-  };
+    const match = selection.find(selectedUser => selectedUser.uid === user.uid);
+    if (match) {
+      return false;
+    }
+    const completeName = `${user.firstName} ${user.lastName}`;
+    return new RegExp(filterString, 'i').test(completeName);
+  });
 
   const addUser = (newUser: UserObj) => {
     setSelection(prevstate => [...prevstate, newUser]);
   };
 
   return {
-    users: getUsers(),
+    users: filteredUsers,
     selection,
     addUser,
   };

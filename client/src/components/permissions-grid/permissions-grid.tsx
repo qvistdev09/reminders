@@ -1,43 +1,25 @@
-import { PermissionInstanceWithName } from '../../../../src/api/services/permissions-service';
-import { PermissionOrder } from '../../../../src/types/permission-order';
+import { UserInPermissionsGrid } from '../../../../src/types/index';
 import PermissionsRow from './elements/permissions-row';
 import { useAppUserDetails } from '../../hooks/use-app-user-details';
 
 interface Props {
-  permissions: PermissionInstanceWithName[] | PermissionOrder[];
+  permissions: UserInPermissionsGrid[];
   showOwner: boolean;
-  roleChange: (newRole: string, uid: string) => void;
 }
 
-export interface OwnerRow {
-  userProfile: {
-    firstName: string;
-    lastName: string;
-    uid: string;
-    email: string;
-  };
-  userPermission: {
-    permissionRole: 'Owner';
-  };
-}
-
-const PermissionsGrid = ({ permissions, showOwner = false, roleChange }: Props) => {
+const PermissionsGrid = ({ permissions, showOwner = false }: Props) => {
   const owner = useAppUserDetails();
 
-  const permissionsArray =
+  const permissionsArray: UserInPermissionsGrid[] =
     showOwner && owner.retrieved
       ? [
           {
-            userProfile: {
-              firstName: owner.firstName,
-              lastName: owner.lastName,
-              uid: owner.uid,
-              email: owner.email,
-            },
-            userPermission: {
-              permissionRole: 'Owner',
-            },
-          } as OwnerRow,
+            firstName: owner.firstName,
+            lastName: owner.lastName,
+            email: owner.email,
+            uid: owner.uid,
+            permissionRole: 'Owner',
+          },
           ...permissions,
         ]
       : permissions;
@@ -54,19 +36,13 @@ const PermissionsGrid = ({ permissions, showOwner = false, roleChange }: Props) 
       <p className={`${base} ${left}`}>Name</p>
       <p className={`${base} ${middle}`}>E-mail</p>
       <p className={`${base} ${right}`}>Role</p>
-      {permissionsArray.map(
-        (
-          permission: PermissionInstanceWithName | PermissionOrder | OwnerRow,
-          index: number
-        ) => (
-          <PermissionsRow
-            key={permission.userProfile.uid}
-            data={permission}
-            final={index === permissionsArray.length - 1}
-            roleChange={roleChange}
-          />
-        )
-      )}
+      {permissionsArray.map((permission, index) => (
+        <PermissionsRow
+          key={permission.uid}
+          data={permission}
+          final={index === permissionsArray.length - 1}
+        />
+      ))}
     </div>
   );
 };

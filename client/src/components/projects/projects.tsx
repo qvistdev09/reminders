@@ -59,7 +59,7 @@ const Projects = () => {
         <div className='projects__container'>
           {projects.map(data => (
             <ProjectsRow
-              key={data.project.projectId}
+              key={data.projectId}
               data={data}
               openModal={showPermissionsModal}
             />

@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useAccessToken } from './use-access-token';
-import { ProjectWithPermissions } from '../../../src/api/services/permissions-service';
+import { ProjectObject } from '../../../src/types/index';
 import { getUsersProjects, postNewProject } from '../api-service/projects';
 
-const useProjects = (): [ProjectWithPermissions[], (projectTitle: string) => void] => {
+const useProjects = (): [ProjectObject[], (projectTitle: string) => void] => {
   const accessToken = useAccessToken();
-  const [projects, setProjects] = useState([] as ProjectWithPermissions[]);
+  const [projects, setProjects] = useState([] as ProjectObject[]);
 
   const refetchProjects = () => {
     if (accessToken) {

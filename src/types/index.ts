@@ -7,6 +7,14 @@ export interface UserObj {
   uid: string;
 }
 
+export interface UserInPermissionsGrid {
+  firstName: string;
+  lastName: string;
+  email: string;
+  uid: string;
+  permissionRole: PermissionRole | 'Owner';
+}
+
 export interface PermissionOrder {
   permissionUid: string;
   permissionRole: PermissionRole;
@@ -15,4 +23,10 @@ export interface PermissionOrder {
 export interface PermissionOrderSet {
   projectId: number;
   assignments: PermissionOrder[];
+}
+
+export interface ProjectObject {
+  projectTitle: string;
+  projectId: number;
+  permissions: UserInPermissionsGrid[];
 }
