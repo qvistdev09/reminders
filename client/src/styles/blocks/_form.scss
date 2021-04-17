@@ -87,4 +87,7 @@
   border-bottom-left-radius: 0.45rem;
   border-bottom-right-radius: 0.45rem;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }

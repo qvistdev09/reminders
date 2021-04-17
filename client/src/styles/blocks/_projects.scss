@@ -99,10 +99,28 @@
   margin-top: 1rem;
 }
 
+.projects__user-search-match-name {
+  text-align: left;
+  font-size: font-sizes.$searchMatchName;
+  font-weight: font-weights.$searchMatchName;
+  color: colors.$black;
+}
+
+.projects__user-search-match-email {
+  flex: 1;
+  text-align: left;
+  font-size: font-sizes.$searchMatchEmail;
+  font-weight: font-weights.$searchMatchEmail;
+  color: colors.$lightBgText;
+  margin-left: 0.45rem;
+}
+
 .projects__user-search-match {
   display: flex;
+  align-items: center;
   padding: 0.5rem;
   border-bottom: 1px solid darken(colors.$lightBg, 25%);
+  cursor: pointer;
   &:nth-child(even) {
     background-color: colors.$lightBgDarkened;
   }
@@ -112,8 +130,20 @@
   &:last-child {
     border-bottom: none;
   }
-}
 
-.projects__user-search-match-email {
-  flex: 1;
+  &:hover {
+    .projects__user-search-match-name {
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
+    .projects__user-search-match-email {
+      font-weight: 400;
+    }
+
+    .nofill {
+      fill: colors.$lightBgIcon;
+      stroke: colors.$lightBgIcon;
+    }
+  }
 }

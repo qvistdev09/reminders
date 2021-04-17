@@ -6,7 +6,7 @@ import { renderSearchMatches } from './projects-user-search-match';
 
 const ProjectsAddCollaborators = () => {
   const [searchValue, setSearchValue] = useState('');
-  const users = useAppUsers(searchValue);
+  const { users, selection, addUser } = useAppUsers(searchValue);
 
   return (
     <form className='form'>
