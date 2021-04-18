@@ -1,3 +1,5 @@
+import helmet from 'helmet';
+
 const allowedCSPconnect = [
   "'self'",
   'https://dev-54501397.okta.com/api/v1/authn',
@@ -8,4 +10,10 @@ const allowedCSPconnect = [
   'https://dev-54501397.okta.com/oauth2/default/v1/revoke',
 ];
 
-export { allowedCSPconnect };
+const allowedFrameSrc = ["'self'", 'https://dev-54501397.okta.com/'];
+
+const appCSPsettings = helmet.contentSecurityPolicy.getDefaultDirectives();
+appCSPsettings['connect-src'] = allowedCSPconnect;
+appCSPsettings['frame-src'] = allowedFrameSrc;
+
+export { appCSPsettings };

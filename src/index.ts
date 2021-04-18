@@ -1,13 +1,9 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
+import helmet from 'helmet';
 import express, { NextFunction, Response } from 'express';
 import path from 'path';
-
-// helmet config
-import helmet from 'helmet';
-import { allowedCSPconnect } from './config/helmet-config';
-const appCSPsettings = helmet.contentSecurityPolicy.getDefaultDirectives();
-appCSPsettings['connect-src'] = allowedCSPconnect;
+import { appCSPsettings } from './config/helmet-config';
 
 // custom types
 import RequestJwt from './types/request-jwt';
