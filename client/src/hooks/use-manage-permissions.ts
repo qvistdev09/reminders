@@ -48,15 +48,11 @@ const useManagePermissions = (
     if (accessToken) {
       changePermissionsLocally(projectId, [edit]);
       setNewPermissions([]);
+      const assignments = [{ permissionUid: edit.uid, permissionRole: edit.permissionRole }];
       postPermissionsOrderSet(
         {
           projectId,
-          assignments: [
-            {
-              permissionUid: edit.uid,
-              permissionRole: edit.permissionRole,
-            },
-          ],
+          assignments,
         },
         accessToken
       ).then(() => {
