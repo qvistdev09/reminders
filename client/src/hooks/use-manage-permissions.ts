@@ -34,16 +34,42 @@ const compareChanges = (currentPermissions: UserInPermissionsGrid[], newPermissi
 const useManagePermissions = (
   projectId: number,
   currentPermissions: UserInPermissionsGrid[],
-  submitAll: boolean
+  submitAll: boolean,
+  directEdits: boolean
 ) => {
-  const { modifyPermissions, refetchProjects } = useProjects();
+  const { changePermissionsLocally, syncProjectsWithServer } = useProjects();
   const accessToken = useAccessToken();
   const [newPermissions, setNewPermissions] = useState([] as UserInPermissionsGrid[]);
 
   const unsavedChanges = newPermissions.length > 0;
   const newPermissionsPreview = compareChanges(currentPermissions, newPermissions);
 
+  const submitDirectEdit = (edit: UserInPermissionsGrid) => {
+    if (accessToken) {
+      changePermissionsLocally(projectId, [edit]);
+      setNewPermissions([]);
+      postPermissionsOrderSet(
+        {
+          projectId,
+          assignments: [
+            {
+              permissionUid: edit.uid,
+              permissionRole: edit.permissionRole,
+            },
+          ],
+        },
+        accessToken
+      ).then(() => {
+        console.log('direct order made');
+        syncProjectsWithServer();
+      });
+    }
+  };
+
   const addPermission = (newPermission: UserInPermissionsGrid) => {
+    if (directEdits) {
+      return submitDirectEdit(newPermission);
+    }
     setNewPermissions(prevState => modifyOrAddPermission(prevState, newPermission));
   };
 
@@ -54,7 +80,7 @@ const useManagePermissions = (
   const submitPermissionChanges = () => {
     if (accessToken) {
       const changesToSubmit = submitAll ? newPermissionsPreview : newPermissions;
-      modifyPermissions(projectId, changesToSubmit);
+      changePermissionsLocally(projectId, changesToSubmit);
       setNewPermissions([]);
       const assignments: PermissionOrder[] = changesToSubmit.map(change => ({
         permissionUid: change.uid,
@@ -66,7 +92,7 @@ const useManagePermissions = (
       };
       postPermissionsOrderSet(orderSet, accessToken).then(() => {
         console.log('made it');
-        refetchProjects();
+        syncProjectsWithServer();
       });
     }
   };

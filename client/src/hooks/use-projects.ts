@@ -10,7 +10,7 @@ const useProjects = () => {
   const dispatch = useAppDispatch();
   const { projects, retrieved, locallyChangedProjects } = useAppSelector(getProjects);
 
-  const refetchProjects = () => {
+  const syncProjectsWithServer = () => {
     if (accessToken) {
       getUsersProjects(accessToken).then(({ data: { projects } }) => dispatch(setProjects(projects)));
     }
@@ -25,11 +25,11 @@ const useProjects = () => {
           },
         },
         accessToken
-      ).then(() => refetchProjects());
+      ).then(() => syncProjectsWithServer());
     }
   };
 
-  const modifyPermissions = (projectId: number, permissionChanges: UserInPermissionsGrid[]) => {
+  const changePermissionsLocally = (projectId: number, permissionChanges: UserInPermissionsGrid[]) => {
     dispatch(
       updateOrAddPermissions({
         projectId,
@@ -43,7 +43,7 @@ const useProjects = () => {
       getUsersProjects(accessToken).then(({ data: { projects } }) => dispatch(setProjects(projects)));
     }
   }, [accessToken, dispatch, retrieved]);
-  return { projects, submitProject, modifyPermissions, locallyChangedProjects, refetchProjects };
+  return { projects, submitProject, changePermissionsLocally, locallyChangedProjects, syncProjectsWithServer };
 };
 
 export { useProjects };

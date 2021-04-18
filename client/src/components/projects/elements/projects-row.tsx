@@ -4,7 +4,6 @@ import { useState } from 'react';
 import Icon from '../../icon/icon';
 import { ProjectObject } from '../../../../../src/types/index';
 import { useManagePermissions } from '../../../hooks/use-manage-permissions';
-import { useProjects } from '../../../hooks/use-projects';
 
 interface Props {
   data: ProjectObject;
@@ -12,16 +11,15 @@ interface Props {
 }
 
 const ProjectsRow = ({ data, openModal }: Props) => {
-  const isSavingChanges = useProjects().locallyChangedProjects.includes(data.projectId);
+  // const isSavingChanges = useProjects().locallyChangedProjects.includes(data.projectId);
   const [expanded, setExpanded] = useState(false);
   const { projectTitle, projectId } = data;
-  const {
-    addPermission,
-    newPermissionsPreview,
-    unsavedChanges,
-    removeAllEdits,
-    submitPermissionChanges,
-  } = useManagePermissions(data.projectId, data.permissions, false);
+  const { addPermission, newPermissionsPreview, removeAllEdits } = useManagePermissions(
+    data.projectId,
+    data.permissions,
+    false,
+    true
+  );
 
   const slug = `${projectTitle.toLowerCase().replace(/\s/g, '-')}_${projectId}`;
 
@@ -53,18 +51,6 @@ const ProjectsRow = ({ data, openModal }: Props) => {
                 Add
               </button>
             </div>
-            {unsavedChanges && (
-              <div className='containers__info'>
-                <p className='containers__text'>You have unsaved changes</p>
-                <button className='containers__confirm-btn' onClick={() => submitPermissionChanges()}>
-                  Confirm
-                </button>
-                <button className='containers__cancel-btn' onClick={() => removeAllEdits()}>
-                  Cancel
-                </button>
-              </div>
-            )}
-            {isSavingChanges && <p>Saving changes...</p>}
             <PermissionsGrid permissions={newPermissionsPreview} showOwner={true} changePermission={addPermission} />
           </div>
         </div>

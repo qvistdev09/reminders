@@ -17,7 +17,8 @@ const ProjectsAddCollaborators = ({ projectId, close }: Props) => {
   const { addPermission, submitPermissionChanges, newPermissionsPreview } = useManagePermissions(
     projectId,
     selection,
-    true
+    true,
+    false
   );
 
   const handleSubmit = (e: SyntheticEvent) => {
