@@ -13,7 +13,7 @@ interface Props {
 
 const ProjectsAddCollaborators = ({ projectId, close }: Props) => {
   const [searchValue, setSearchValue] = useState('');
-  const { searchMatches, selection, addUser } = useAddNewUsers(searchValue);
+  const { searchMatches, selection, addUser } = useAddNewUsers(projectId, searchValue);
   const { addPermission, submitPermissionChanges, newPermissionsPreview } = useManagePermissions(
     projectId,
     selection,
@@ -41,9 +41,7 @@ const ProjectsAddCollaborators = ({ projectId, close }: Props) => {
       {selection.length > 0 && (
         <PermissionsGrid permissions={newPermissionsPreview} showOwner={false} changePermission={addPermission} />
       )}
-      <button className='form__submit-btn utility--margin-top'>
-        Save
-      </button>
+      <button className='form__submit-btn utility--margin-top'>Save</button>
     </form>
   );
 };

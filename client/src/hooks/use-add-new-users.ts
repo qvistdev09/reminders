@@ -1,10 +1,11 @@
-import { UserObj, UserInPermissionsGrid } from '../../../src/types/index';
+import { UserObj, UserInPermissionsGrid, ProjectObject } from '../../../src/types/index';
 import { userApi } from '../api-service/user';
 import { useState, useEffect } from 'react';
 import { useAccessToken } from './use-access-token';
 import { useAppUserDetails } from './use-app-user-details';
+import { useProjects } from './use-projects';
 
-const filterMatches = (all: UserObj[], selected: UserObj[], searchValue: string | undefined) => {
+const filterBySearchAndSelection = (all: UserObj[], selected: UserObj[], searchValue: string | undefined) => {
   const arrayWithoutSelected = all.filter(user => {
     const match = selected.find(selectedUser => selectedUser.uid === user.uid);
     if (match) {
@@ -47,9 +48,32 @@ const removeProjectOwner = (uid: string | undefined, matches: UserObj[]) => {
   return matches;
 };
 
-const filterAndLimit = (all: UserObj[], selected: UserObj[], searchValue: string | undefined) => {
-  const filtered = filterMatches(all, selected, searchValue);
-  return limitSearchResults(4, filtered);
+const removeUsersAlreadyInProject = (matches: UserObj[], projects: ProjectObject[], projectId: number) => {
+  const matchedProject = projects.find(project => project.projectId === projectId);
+  if (!matchedProject) {
+    return matches;
+  }
+  return matches.filter(user => {
+    const foundUser = matchedProject.permissions.find(permission => permission.uid === user.uid);
+    if (foundUser) {
+      return false;
+    }
+    return true;
+  });
+};
+
+const filterAndLimit = (
+  all: UserObj[],
+  selected: UserObj[],
+  searchValue: string | undefined,
+  projects: ProjectObject[],
+  projectId: number,
+  projectOwner: string
+) => {
+  const filtered = filterBySearchAndSelection(all, selected, searchValue);
+  const withoutAlreadyAdded = removeUsersAlreadyInProject(filtered, projects, projectId);
+  const withoutOwner = removeProjectOwner(projectOwner, withoutAlreadyAdded);
+  return limitSearchResults(5, withoutOwner);
 };
 
 // filter also by existing permissions in project
@@ -62,7 +86,8 @@ interface HookReturn {
 
 let mounted = true;
 
-const useAddNewUsers = (searchValue?: string): HookReturn => {
+const useAddNewUsers = (projectId: number, searchValue?: string): HookReturn => {
+  const { projects } = useProjects();
   const accessToken = useAccessToken();
   const appUser = useAppUserDetails();
   const [usersCatalog, setUsersCatalog] = useState([] as UserObj[]);
@@ -82,9 +107,13 @@ const useAddNewUsers = (searchValue?: string): HookReturn => {
     };
   }, [accessToken]);
 
-  const searchMatches: UserObj[] = removeProjectOwner(
-    appUser.uid,
-    filterAndLimit(usersCatalog, selectedUsers, searchValue)
+  const searchMatches: UserObj[] = filterAndLimit(
+    usersCatalog,
+    selectedUsers,
+    searchValue,
+    projects,
+    projectId,
+    appUser.uid
   );
 
   const addUser = (newUser: UserObj) => {
