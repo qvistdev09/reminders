@@ -55,8 +55,8 @@ const useManagePermissions = (
           assignments,
         },
         accessToken
-      ).then(() => {
-        console.log('direct order made');
+      ).catch(() => {
+        console.log('Direct edit could not be made, resyncing with server');
         syncProjectsWithServer();
       });
     }
@@ -86,8 +86,8 @@ const useManagePermissions = (
         projectId,
         assignments,
       };
-      postPermissionsOrderSet(orderSet, accessToken).then(() => {
-        console.log('made it');
+      postPermissionsOrderSet(orderSet, accessToken).catch(() => {
+        console.log('The request to change permissions could not be made, resyncing with server');
         syncProjectsWithServer();
       });
     }

@@ -1,11 +1,10 @@
 import { Permission } from '../../database/root';
-import { ProjectInstance } from '../../database/schemas/project';
 import { PermissionInstance } from '../../database/schemas/permission';
-import { getNameFromOkta } from './user-service';
-import { PermissionRole, ProjectObject, UserInPermissionsGrid } from '../../types/index';
-
+import { ProjectInstance } from '../../database/schemas/project';
 // types
 import { UserObj } from '../../types';
+import { PermissionRole, ProjectObject, UserInPermissionsGrid } from '../../types/index';
+import { getAllAppUsers } from './user-service';
 
 export interface PermissionInstanceWithName {
   userPermission: PermissionInstance;
@@ -17,17 +16,27 @@ export interface ProjectWithPermissions {
   projectPermissions: PermissionInstanceWithName[];
 }
 
-const appendNameToPermission = (userPermission: PermissionInstance): Promise<UserInPermissionsGrid> => {
+const userIsDefined = (user: UserInPermissionsGrid | undefined): user is UserInPermissionsGrid => {
+  return user !== undefined;
+};
+
+const appendNames = (permissions: PermissionInstance[]): Promise<UserInPermissionsGrid[]> => {
   return new Promise(async (resolve, reject) => {
     try {
-      const userProfile = await getNameFromOkta(userPermission.permissionUid);
-      resolve({
-        firstName: userProfile.firstName,
-        lastName: userProfile.lastName,
-        uid: userProfile.uid,
-        email: userProfile.email,
-        permissionRole: userPermission.permissionRole,
+      const allUsers = await getAllAppUsers();
+      const usersInProject = allUsers.map(user => {
+        const match = permissions.find(permission => permission.permissionUid === user.uid);
+        if (match) {
+          const preparedObject: UserInPermissionsGrid = {
+            ...user,
+            permissionRole: match.permissionRole,
+          };
+          return preparedObject;
+        }
+        return undefined;
       });
+      const noNulls = usersInProject.filter(userIsDefined);
+      resolve(noNulls);
     } catch (err) {
       reject(err);
     }
@@ -43,9 +52,7 @@ const appendPermissionsToProject = (project: ProjectInstance): Promise<ProjectOb
         },
         order: [['createdAt', 'ASC']],
       });
-      const projectPermissions = await Promise.all(
-        rawPermissions.map(permission => appendNameToPermission(permission))
-      );
+      const projectPermissions = await appendNames(rawPermissions);
       resolve({
         projectTitle: project.projectTitle,
         projectId: project.projectId as number,
