@@ -39,6 +39,11 @@
   border-radius: 0.25rem;
   border: none;
   background-color: transparent;
+
+  &:disabled {
+    opacity: 0.3;
+  }
+
 }
 
 .form__input:focus {

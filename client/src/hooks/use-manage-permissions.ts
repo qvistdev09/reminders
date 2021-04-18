@@ -4,6 +4,32 @@ import { useAccessToken } from '../hooks/use-access-token';
 import { postPermissionsOrderSet } from '../api-service/permissions';
 import { UserInPermissionsGrid } from '../../../src/types/index';
 
+const modifyOrAddPermission = (currentPermissions: UserInPermissionsGrid[], newPermission: UserInPermissionsGrid) => {
+  const match = currentPermissions.find(prev => prev.uid === newPermission.uid);
+  if (match) {
+    return currentPermissions.map(prev => {
+      if (prev.uid === newPermission.uid) {
+        return {
+          ...prev,
+          permissionRole: newPermission.permissionRole,
+        };
+      }
+      return prev;
+    });
+  }
+  return [...currentPermissions, newPermission];
+};
+
+const compareChanges = (currentPermissions: UserInPermissionsGrid[], newPermissions: UserInPermissionsGrid[]) => {
+  return currentPermissions.map(oldPermission => {
+    const match = newPermissions.find(changedPermission => changedPermission.uid === oldPermission.uid);
+    if (match) {
+      return match;
+    }
+    return oldPermission;
+  });
+};
+
 const useManagePermissions = (
   projectId: number,
   callback: () => void,
@@ -14,37 +40,15 @@ const useManagePermissions = (
   const [newPermissions, setNewPermissions] = useState([] as UserInPermissionsGrid[]);
 
   const addPermission = (newPermission: UserInPermissionsGrid) => {
-    setNewPermissions(prevState => {
-      const match = prevState.find(prevUser => prevUser.uid === newPermission.uid);
-      if (match) {
-        return prevState.map(prev => {
-          if (prev.uid === newPermission.uid) {
-            return {
-              ...prev,
-              permissionRole: newPermission.permissionRole,
-            };
-          }
-          return prev;
-        });
-      }
-      return [...prevState, newPermission];
-    });
+    setNewPermissions(prevState => modifyOrAddPermission(prevState, newPermission));
   };
 
-  const changedPermissions = currentPermissions.map(oldPermission => {
-    const match = newPermissions.find(
-      changedPermission => changedPermission.uid === oldPermission.uid
-    );
-    if (match) {
-      return match;
-    }
-    return oldPermission;
-  });
+  const unsavedPermissionChanges = compareChanges(currentPermissions, newPermissions);
 
   const submitPermissionChanges = () => {
     if (accessToken) {
       const assignments: PermissionOrder[] = submitAll
-        ? changedPermissions.map(user => ({
+        ? unsavedPermissionChanges.map(user => ({
             permissionUid: user.uid,
             permissionRole: user.permissionRole,
           }))
@@ -67,7 +71,7 @@ const useManagePermissions = (
   return {
     addPermission,
     submitPermissionChanges,
-    changedPermissions,
+    unsavedPermissionChanges,
   };
 };
 

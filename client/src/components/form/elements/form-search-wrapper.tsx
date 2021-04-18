@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 
 interface Props {
   suggestions: any[];
-  render: any;
+  renderFunction: any;
   children: React.ReactNode;
 }
 
-const FormSearchWrapper = ({ suggestions, render, children }: Props) => {
+const FormSearchWrapper = ({ suggestions, renderFunction, children }: Props) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const FormSearchWrapper = ({ suggestions, render, children }: Props) => {
     >
       {children}
       {suggestions.length > 0 && showSuggestions && (
-        <div className='form__search-wrapper-suggestions'>{render(suggestions)}</div>
+        <div className='form__search-wrapper-suggestions'>{renderFunction(suggestions)}</div>
       )}
     </div>
   );

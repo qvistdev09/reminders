@@ -24,16 +24,11 @@ const ProjectsUserSearchMatch = ({ user, onClick }: Props) => {
   );
 };
 
-const renderSearchMatches = (
-  projectId: number,
-  onClick: (userObj: UserObj, projectId: number) => void
-) => (matches: UserObj[]) =>
+const getSearchMatchRenderFunction = (projectId: number, onClick: (userObj: UserObj, projectId: number) => void) => (
+  matches: UserObj[]
+) =>
   matches.map(match => (
-    <ProjectsUserSearchMatch
-      key={match.uid}
-      user={match}
-      onClick={() => onClick(match, projectId)}
-    />
+    <ProjectsUserSearchMatch key={match.uid} user={match} onClick={() => onClick(match, projectId)} />
   ));
 
-export { renderSearchMatches };
+export { getSearchMatchRenderFunction };

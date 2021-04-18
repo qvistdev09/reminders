@@ -2,8 +2,8 @@ import { SyntheticEvent, useState } from 'react';
 import FormLabelledInput from '../../form/elements/form-labelled-input';
 import FormSearchWrapper from '../../form/elements/form-search-wrapper';
 import PermissionsGrid from '../../permissions-grid/permissions-grid';
-import { renderSearchMatches } from './projects-user-search-match';
-import { useUserCatalog } from '../../../hooks/use-user-catalog';
+import { getSearchMatchRenderFunction } from './projects-user-search-match';
+import { useAddNewUsers } from '../../../hooks/use-add-new-users';
 import { useManagePermissions } from '../../../hooks/use-manage-permissions';
 
 interface Props {
@@ -12,12 +12,13 @@ interface Props {
 
 const ProjectsAddCollaborators = ({ projectId }: Props) => {
   const [searchValue, setSearchValue] = useState('');
-  const { users, selection, addUser } = useUserCatalog(searchValue);
-  const {
-    addPermission,
-    submitPermissionChanges,
-    changedPermissions,
-  } = useManagePermissions(projectId, () => {}, selection, true);
+  const { searchMatches, selection, addUser } = useAddNewUsers(searchValue);
+  const { addPermission, submitPermissionChanges, unsavedPermissionChanges } = useManagePermissions(
+    projectId,
+    () => {},
+    selection,
+    true
+  );
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -26,10 +27,7 @@ const ProjectsAddCollaborators = ({ projectId }: Props) => {
 
   return (
     <form className='form' onSubmit={handleSubmit}>
-      <FormSearchWrapper
-        suggestions={users}
-        render={renderSearchMatches(projectId, addUser)}
-      >
+      <FormSearchWrapper suggestions={searchMatches} renderFunction={getSearchMatchRenderFunction(projectId, addUser)}>
         <FormLabelledInput
           value={searchValue}
           onChange={setSearchValue}
@@ -40,11 +38,7 @@ const ProjectsAddCollaborators = ({ projectId }: Props) => {
         />
       </FormSearchWrapper>
       {selection.length > 0 && (
-        <PermissionsGrid
-          permissions={changedPermissions}
-          showOwner={false}
-          changePermission={addPermission}
-        />
+        <PermissionsGrid permissions={unsavedPermissionChanges} showOwner={false} changePermission={addPermission} />
       )}
       <button className='form__submit-btn utility--margin-top'>Save</button>
     </form>

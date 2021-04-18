@@ -5,7 +5,7 @@ interface Props {
   data: UserInPermissionsGrid;
   final: boolean;
   changePermission: (change: UserInPermissionsGrid) => void;
-} 
+}
 
 const PermissionsRow = ({ data, final, changePermission }: Props) => {
   const { firstName, lastName, email, permissionRole } = data;
@@ -40,18 +40,16 @@ const PermissionsRow = ({ data, final, changePermission }: Props) => {
       <p className={`${cell} ${text} ${left}`}>{`${firstName} ${lastName}`}</p>
       <p className={`${cell} ${text} ${middle}`}>{email}</p>
       <div className={`${cell} ${text} ${right}`}>
-        {permissionRole === 'Owner' ? (
-          'Owner'
-        ) : (
-          <select
-            className='form__input form__input-select'
-            value={permissionRole}
-            onChange={handleChange}
-          >
-            <option value='viewer'>Viewer</option>
-            <option value='editor'>Editor</option>
-          </select>
-        )}
+        <select
+          className='form__input form__input-select'
+          value={permissionRole}
+          onChange={handleChange}
+          disabled={permissionRole === 'Owner'}
+        >
+          {permissionRole === 'Owner' && <option value='owner'>Owner</option>}
+          <option value='viewer'>Viewer</option>
+          <option value='editor'>Editor</option>
+        </select>
       </div>
     </>
   );
