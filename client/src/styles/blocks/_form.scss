@@ -61,6 +61,10 @@
   color: colors.$white;
   background-color: colors.$action;
   cursor: pointer;
+
+  &:disabled {
+    opacity: 0.25;
+  }
 }
 
 .form__submit-btn:hover {

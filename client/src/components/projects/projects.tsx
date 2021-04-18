@@ -53,7 +53,7 @@ const Projects = () => {
         <h2 className='utility--feature-header'>Your projects</h2>
         {permissionsModal && projectInEdit && (
           <Modal label='Add collaborators' close={closePermissionsModal}>
-            <ProjectsAddCollaborators projectId={projectInEdit} />
+            <ProjectsAddCollaborators projectId={projectInEdit} close={closePermissionsModal} />
           </Modal>
         )}
         <div className='projects__container'>

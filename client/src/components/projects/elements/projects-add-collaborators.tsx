@@ -8,20 +8,23 @@ import { useManagePermissions } from '../../../hooks/use-manage-permissions';
 
 interface Props {
   projectId: number;
+  close: () => void;
 }
 
-const ProjectsAddCollaborators = ({ projectId }: Props) => {
+const ProjectsAddCollaborators = ({ projectId, close }: Props) => {
   const [searchValue, setSearchValue] = useState('');
+  const [statusMessage, setStatusMessage] = useState('');
   const { searchMatches, selection, addUser } = useAddNewUsers(searchValue);
   const { addPermission, submitPermissionChanges, unsavedPermissionChanges } = useManagePermissions(
     projectId,
-    () => {},
+    close,
     selection,
     true
   );
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+    setStatusMessage('Adding new permissions...');
     submitPermissionChanges();
   };
 
@@ -31,7 +34,7 @@ const ProjectsAddCollaborators = ({ projectId }: Props) => {
         <FormLabelledInput
           value={searchValue}
           onChange={setSearchValue}
-          required={true}
+          required={false}
           type='search'
           label='Search for users'
           id='user-search'
@@ -40,7 +43,10 @@ const ProjectsAddCollaborators = ({ projectId }: Props) => {
       {selection.length > 0 && (
         <PermissionsGrid permissions={unsavedPermissionChanges} showOwner={false} changePermission={addPermission} />
       )}
-      <button className='form__submit-btn utility--margin-top'>Save</button>
+      {statusMessage !== '' && <p>{statusMessage}</p>}
+      <button className='form__submit-btn utility--margin-top' disabled={statusMessage !== ''}>
+        Save
+      </button>
     </form>
   );
 };
