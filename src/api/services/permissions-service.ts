@@ -41,6 +41,7 @@ const appendPermissionsToProject = (project: ProjectInstance): Promise<ProjectOb
         where: {
           projectId: project.projectId,
         },
+        order: [['createdAt', 'ASC']],
       });
       const projectPermissions = await Promise.all(
         rawPermissions.map(permission => appendNameToPermission(permission))

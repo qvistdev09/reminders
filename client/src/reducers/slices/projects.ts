@@ -27,14 +27,21 @@ const projects = createSlice({
       const { projectId, permissionChanges } = action.payload;
       const matchedProject = state.projects.find(project => project.projectId === projectId);
       if (matchedProject) {
-        matchedProject.permissions = matchedProject.permissions.filter(permission => {
-          const foundNewVersion = permissionChanges.find(newPermission => newPermission.uid === permission.uid);
-          if (foundNewVersion) {
+        const updatedPermissions = matchedProject.permissions.map(oldPermission => {
+          const updatedVersion = permissionChanges.find(newPermission => newPermission.uid === oldPermission.uid);
+          if (updatedVersion) {
+            return updatedVersion;
+          }
+          return oldPermission;
+        });
+        const newPermissions = permissionChanges.filter(newPermission => {
+          const existingObject = updatedPermissions.find(permission => permission.uid === newPermission.uid);
+          if (existingObject) {
             return false;
           }
           return true;
         });
-        matchedProject.permissions = [...matchedProject.permissions, ...permissionChanges];
+        matchedProject.permissions = [...updatedPermissions, ...newPermissions];
       }
     },
   },
