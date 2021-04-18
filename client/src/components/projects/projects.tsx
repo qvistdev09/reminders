@@ -21,6 +21,10 @@ const Projects = () => {
   };
 
   const closePermissionsModal = () => {
+    const html = document.querySelector('html');
+    if (html) {
+      html.style.overflow = 'auto';
+    }
     setProjectInEdit(null);
     setPermissionsModal(false);
   };

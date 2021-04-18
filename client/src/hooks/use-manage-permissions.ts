@@ -33,23 +33,29 @@ const compareChanges = (currentPermissions: UserInPermissionsGrid[], newPermissi
 
 const useManagePermissions = (
   projectId: number,
-  callback: () => void,
   currentPermissions: UserInPermissionsGrid[],
   submitAll: boolean
 ) => {
-  const { modifyPermissions } = useProjects();
+  const { modifyPermissions, refetchProjects } = useProjects();
   const accessToken = useAccessToken();
   const [newPermissions, setNewPermissions] = useState([] as UserInPermissionsGrid[]);
+
+  const unsavedChanges = newPermissions.length > 0;
+  const newPermissionsPreview = compareChanges(currentPermissions, newPermissions);
 
   const addPermission = (newPermission: UserInPermissionsGrid) => {
     setNewPermissions(prevState => modifyOrAddPermission(prevState, newPermission));
   };
 
-  const unsavedPermissionChanges = compareChanges(currentPermissions, newPermissions);
+  const removeAllEdits = () => {
+    setNewPermissions([]);
+  };
 
   const submitPermissionChanges = () => {
     if (accessToken) {
-      const changesToSubmit = submitAll ? unsavedPermissionChanges : newPermissions;
+      const changesToSubmit = submitAll ? newPermissionsPreview : newPermissions;
+      modifyPermissions(projectId, changesToSubmit);
+      setNewPermissions([]);
       const assignments: PermissionOrder[] = changesToSubmit.map(change => ({
         permissionUid: change.uid,
         permissionRole: change.permissionRole,
@@ -59,10 +65,8 @@ const useManagePermissions = (
         assignments,
       };
       postPermissionsOrderSet(orderSet, accessToken).then(() => {
-        modifyPermissions(projectId, changesToSubmit);
-        setNewPermissions([]);
         console.log('made it');
-        callback();
+        refetchProjects();
       });
     }
   };
@@ -70,7 +74,9 @@ const useManagePermissions = (
   return {
     addPermission,
     submitPermissionChanges,
-    unsavedPermissionChanges,
+    newPermissionsPreview,
+    removeAllEdits,
+    unsavedChanges,
   };
 };
 

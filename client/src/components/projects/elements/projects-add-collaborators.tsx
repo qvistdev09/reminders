@@ -13,19 +13,17 @@ interface Props {
 
 const ProjectsAddCollaborators = ({ projectId, close }: Props) => {
   const [searchValue, setSearchValue] = useState('');
-  const [statusMessage, setStatusMessage] = useState('');
   const { searchMatches, selection, addUser } = useAddNewUsers(searchValue);
-  const { addPermission, submitPermissionChanges, unsavedPermissionChanges } = useManagePermissions(
+  const { addPermission, submitPermissionChanges, newPermissionsPreview } = useManagePermissions(
     projectId,
-    close,
     selection,
     true
   );
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    setStatusMessage('Adding new permissions...');
     submitPermissionChanges();
+    close();
   };
 
   return (
@@ -41,10 +39,9 @@ const ProjectsAddCollaborators = ({ projectId, close }: Props) => {
         />
       </FormSearchWrapper>
       {selection.length > 0 && (
-        <PermissionsGrid permissions={unsavedPermissionChanges} showOwner={false} changePermission={addPermission} />
+        <PermissionsGrid permissions={newPermissionsPreview} showOwner={false} changePermission={addPermission} />
       )}
-      {statusMessage !== '' && <p>{statusMessage}</p>}
-      <button className='form__submit-btn utility--margin-top' disabled={statusMessage !== ''}>
+      <button className='form__submit-btn utility--margin-top'>
         Save
       </button>
     </form>

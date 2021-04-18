@@ -8,7 +8,7 @@ import { UserInPermissionsGrid } from '../../../src/types/index';
 const useProjects = () => {
   const accessToken = useAccessToken();
   const dispatch = useAppDispatch();
-  const { projects, retrieved } = useAppSelector(getProjects);
+  const { projects, retrieved, locallyChangedProjects } = useAppSelector(getProjects);
 
   const refetchProjects = () => {
     if (accessToken) {
@@ -36,7 +36,6 @@ const useProjects = () => {
         permissionChanges,
       })
     );
-    refetchProjects();
   };
 
   useEffect(() => {
@@ -44,7 +43,7 @@ const useProjects = () => {
       getUsersProjects(accessToken).then(({ data: { projects } }) => dispatch(setProjects(projects)));
     }
   }, [accessToken, dispatch, retrieved]);
-  return { projects, submitProject, modifyPermissions };
+  return { projects, submitProject, modifyPermissions, locallyChangedProjects, refetchProjects };
 };
 
 export { useProjects };

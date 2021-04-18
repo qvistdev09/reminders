@@ -5,11 +5,13 @@ import { ProjectObject, UserInPermissionsGrid } from '../../../../src/types/inde
 interface ProjectsState {
   projects: ProjectObject[];
   retrieved: boolean;
+  locallyChangedProjects: number[];
 }
 
 const initialState: ProjectsState = {
   projects: [],
   retrieved: false,
+  locallyChangedProjects: [],
 };
 
 const projects = createSlice({
@@ -19,6 +21,7 @@ const projects = createSlice({
     setProjects: (state, action: PayloadAction<ProjectObject[]>) => {
       state.projects = action.payload;
       state.retrieved = true;
+      state.locallyChangedProjects = [];
     },
     updateOrAddPermissions: (
       state,
@@ -27,6 +30,7 @@ const projects = createSlice({
       const { projectId, permissionChanges } = action.payload;
       const matchedProject = state.projects.find(project => project.projectId === projectId);
       if (matchedProject) {
+        state.locallyChangedProjects.push(projectId);
         const updatedPermissions = matchedProject.permissions.map(oldPermission => {
           const updatedVersion = permissionChanges.find(newPermission => newPermission.uid === oldPermission.uid);
           if (updatedVersion) {
