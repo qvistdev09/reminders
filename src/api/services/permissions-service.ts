@@ -17,9 +17,7 @@ export interface ProjectWithPermissions {
   projectPermissions: PermissionInstanceWithName[];
 }
 
-const appendNameToPermission = (
-  userPermission: PermissionInstance
-): Promise<UserInPermissionsGrid> => {
+const appendNameToPermission = (userPermission: PermissionInstance): Promise<UserInPermissionsGrid> => {
   return new Promise(async (resolve, reject) => {
     try {
       const userProfile = await getNameFromOkta(userPermission.permissionUid);
@@ -62,8 +60,11 @@ const appendPermissionsToProject = (project: ProjectInstance): Promise<ProjectOb
 const handlePermissionChange = async (
   permissionUid: string,
   projectId: number,
-  permissionRole: PermissionRole
+  permissionRole: PermissionRole | 'Owner'
 ) => {
+  if (permissionRole === 'Owner') {
+    return null;
+  }
   const preExistingMatch = await Permission.findOne({
     where: {
       permissionUid,

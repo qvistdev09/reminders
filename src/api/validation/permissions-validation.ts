@@ -23,22 +23,16 @@ const confirmUsers = async (array: PermissionOrder[]) => {
   return checkedUsers;
 };
 
-const validatePermissions = async (
-  clientInput: any
-): Promise<PermissionOrderSet | null> => {
+const validatePermissions = async (clientInput: any): Promise<PermissionOrderSet | null> => {
   const { orderSet } = clientInput;
   if (!orderSet) {
     return null;
   }
   const { projectId, assignments } = orderSet;
-  if (
-    typeof projectId !== 'number' ||
-    !Array.isArray(assignments) ||
-    assignments.length === 0
-  ) {
+  if (typeof projectId !== 'number' || !Array.isArray(assignments) || assignments.length === 0) {
     return null;
   }
-  const matchedProject = Project.findOne({ where: { projectId } });
+  const matchedProject = await Project.findOne({ where: { projectId } });
   if (!matchedProject) {
     return null;
   }
@@ -64,9 +58,13 @@ const validatePermissions = async (
   if (confirmedUsers.length === 0) {
     return null;
   }
+  // remove owner
+  const confirmedUsersWithoutProjectOwner = confirmedUsers.filter(
+    user => user.permissionUid !== matchedProject.projectOwner
+  );
   return {
     projectId,
-    assignments: confirmedUsers,
+    assignments: confirmedUsersWithoutProjectOwner,
   };
 };
 
