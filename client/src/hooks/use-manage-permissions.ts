@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useAccessToken } from '../hooks/use-access-token';
 import { postPermissionsOrderSet } from '../api-service/permissions';
 import { UserInPermissionsGrid } from '../../../src/types/index';
+import { useProjects } from './use-projects';
 
 const modifyOrAddPermission = (currentPermissions: UserInPermissionsGrid[], newPermission: UserInPermissionsGrid) => {
   const match = currentPermissions.find(prev => prev.uid === newPermission.uid);
@@ -36,6 +37,7 @@ const useManagePermissions = (
   currentPermissions: UserInPermissionsGrid[],
   submitAll: boolean
 ) => {
+  const { modifyPermissions } = useProjects();
   const accessToken = useAccessToken();
   const [newPermissions, setNewPermissions] = useState([] as UserInPermissionsGrid[]);
 
@@ -47,20 +49,17 @@ const useManagePermissions = (
 
   const submitPermissionChanges = () => {
     if (accessToken) {
-      const assignments: PermissionOrder[] = submitAll
-        ? unsavedPermissionChanges.map(user => ({
-            permissionUid: user.uid,
-            permissionRole: user.permissionRole,
-          }))
-        : newPermissions.map(user => ({
-            permissionUid: user.uid,
-            permissionRole: user.permissionRole,
-          }));
+      const changesToSubmit = submitAll ? unsavedPermissionChanges : newPermissions;
+      const assignments: PermissionOrder[] = changesToSubmit.map(change => ({
+        permissionUid: change.uid,
+        permissionRole: change.permissionRole,
+      }));
       const orderSet = {
         projectId,
         assignments,
       };
       postPermissionsOrderSet(orderSet, accessToken).then(() => {
+        modifyPermissions(projectId, changesToSubmit);
         setNewPermissions([]);
         console.log('made it');
         callback();

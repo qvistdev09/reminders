@@ -69,6 +69,7 @@ const useAddNewUsers = (searchValue?: string): HookReturn => {
   const [selectedUsers, setSelectedUsers] = useState([] as UserObj[]);
 
   useEffect(() => {
+    mounted = true;
     if (accessToken) {
       userApi.getAllAppUsers(accessToken).then(users => {
         if (mounted) {
