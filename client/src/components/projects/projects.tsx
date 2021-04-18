@@ -7,7 +7,7 @@ import { useProjects } from '../../hooks/use-projects';
 
 const Projects = () => {
   const [newProjectName, setNewProjectName] = useState('');
-  const [projects, submitProject] = useProjects();
+  const { projects, submitProject } = useProjects();
   const [permissionsModal, setPermissionsModal] = useState(false);
   const [projectInEdit, setProjectInEdit] = useState(null as null | number);
 
@@ -58,11 +58,7 @@ const Projects = () => {
         )}
         <div className='projects__container'>
           {projects.map(data => (
-            <ProjectsRow
-              key={data.projectId}
-              data={data}
-              openModal={showPermissionsModal}
-            />
+            <ProjectsRow key={data.projectId} data={data} openModal={showPermissionsModal} />
           ))}
         </div>
       </div>

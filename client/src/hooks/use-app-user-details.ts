@@ -19,7 +19,6 @@ const useAppUserDetails = (): AppUser => {
   useEffect(() => {
     if (authState.isAuthenticated && !appUser.retrieved) {
       oktaAuth.token.getUserInfo().then(info => {
-        console.log(info);
         const { given_name: firstName, family_name: lastName, email, sub: uid } = info;
         if (firstName && lastName && email && uid) {
           dispatch(

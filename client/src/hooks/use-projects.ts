@@ -1,17 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useAccessToken } from './use-access-token';
-import { ProjectObject } from '../../../src/types/index';
 import { getUsersProjects, postNewProject } from '../api-service/projects';
+import { useAppDispatch, useAppSelector } from './redux-hooks';
+import { getProjects, setProjects, updateOrAddPermissions } from '../reducers/slices/projects';
+import { UserInPermissionsGrid } from '../../../src/types/index';
 
-const useProjects = (): [ProjectObject[], (projectTitle: string) => void] => {
+const useProjects = () => {
   const accessToken = useAccessToken();
-  const [projects, setProjects] = useState([] as ProjectObject[]);
+  const dispatch = useAppDispatch();
+  const { projects, retrieved } = useAppSelector(getProjects);
 
   const refetchProjects = () => {
     if (accessToken) {
-      getUsersProjects(accessToken).then(({ data: { projects } }) =>
-        setProjects(projects)
-      );
+      getUsersProjects(accessToken).then(({ data: { projects } }) => dispatch(setProjects(projects)));
     }
   };
 
@@ -28,14 +29,22 @@ const useProjects = (): [ProjectObject[], (projectTitle: string) => void] => {
     }
   };
 
+  const modifyPermissions = (projectId: number, permissionChanges: UserInPermissionsGrid[]) => {
+    dispatch(
+      updateOrAddPermissions({
+        projectId,
+        permissionChanges,
+      })
+    );
+    refetchProjects();
+  };
+
   useEffect(() => {
-    if (accessToken) {
-      getUsersProjects(accessToken).then(({ data: { projects } }) =>
-        setProjects(projects)
-      );
+    if (accessToken && !retrieved) {
+      getUsersProjects(accessToken).then(({ data: { projects } }) => dispatch(setProjects(projects)));
     }
-  }, [accessToken]);
-  return [projects, submitProject];
+  }, [accessToken, dispatch, retrieved]);
+  return { projects, submitProject, modifyPermissions };
 };
 
 export { useProjects };

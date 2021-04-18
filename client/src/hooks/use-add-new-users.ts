@@ -60,6 +60,8 @@ interface HookReturn {
   addUser: (userProfile: UserObj) => void;
 }
 
+let mounted = true;
+
 const useAddNewUsers = (searchValue?: string): HookReturn => {
   const accessToken = useAccessToken();
   const appUser = useAppUserDetails();
@@ -68,8 +70,15 @@ const useAddNewUsers = (searchValue?: string): HookReturn => {
 
   useEffect(() => {
     if (accessToken) {
-      userApi.getAllAppUsers(accessToken).then(users => setUsersCatalog(users));
+      userApi.getAllAppUsers(accessToken).then(users => {
+        if (mounted) {
+          setUsersCatalog(users);
+        }
+      });
     }
+    return () => {
+      mounted = false;
+    };
   }, [accessToken]);
 
   const searchMatches: UserObj[] = removeProjectOwner(
