@@ -50,3 +50,8 @@ export interface ProjectAccessResponse {
   role: PermissionRole | 'Owner' | 'none';
   visibility: ProjectVisibility;
 }
+
+export interface SocketStatus {
+  authenticated: boolean;
+  role: PermissionRole | 'Owner' | null;
+}

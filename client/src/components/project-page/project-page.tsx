@@ -26,7 +26,7 @@ const ProjectPage = () => {
     return <ProjectPageUnauthorized />;
   }
 
-  return <ProjectPageEditor />;
+  return <ProjectPageEditor projectId={projectId} />;
 };
 
 export default ProjectPage;
