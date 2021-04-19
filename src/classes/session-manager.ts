@@ -8,6 +8,7 @@ import {
   LiveUserPublicIdentity,
   SocketStatus,
 } from '../types/index';
+import { e } from '../../client/shared-socket-events/shared-socket-events';
 
 const createPublicUserList = (users: LiveUser[]): LiveUserPublicIdentity[] => {
   return users.map(
@@ -44,14 +45,14 @@ class SessionManager {
   emitNewUserlist(projectId: number) {
     const session = this.findSession(projectId);
     if (session) {
-      this.emitToRoom(projectId.toString(), 'new-user-list', createPublicUserList(session.users));
+      this.emitToRoom(projectId.toString(), e.newUserList, createPublicUserList(session.users));
     }
   }
 
   giveClientSessionTasks(client: Socket, projectId: number) {
     const session = this.findSession(projectId);
     if (session) {
-      this.emitToSocket(client, 'task-list', session.tasks);
+      this.emitToSocket(client, e.taskList, session.tasks);
     }
   }
 
@@ -61,8 +62,8 @@ class SessionManager {
       authenticated: true,
       role: client.permissionRole,
     };
-    this.emitToSocket(socket, 'auth-response', authResponse);
-    
+    this.emitToSocket(socket, e.authResponse, authResponse);
+
     const room = projectId.toString();
     socket.join(room);
 
@@ -77,7 +78,7 @@ class SessionManager {
       color: newLiveUser.color,
     };
 
-    this.emitToSocket(socket, 'identity', newPublicIdentity);
+    this.emitToSocket(socket, e.identity, newPublicIdentity);
 
     const matchedSession = this.findSession(projectId);
     if (matchedSession) {
