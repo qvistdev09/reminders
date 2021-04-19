@@ -6,8 +6,10 @@ interface Params {
 }
 
 const ProjectPage = () => {
-  const { serverMessage } = useWebSocket();
   const { slug } = useParams() as Params;
+  const projectId = slug.split('_')[1];
+  const { serverMessage } = useWebSocket(projectId);
+
   return (
     <div>
       <p>{serverMessage}</p>

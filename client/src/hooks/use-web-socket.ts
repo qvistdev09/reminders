@@ -4,7 +4,7 @@ import { useAccessToken } from './use-access-token';
 import { server } from '../config/websocket-server';
 import { Socket } from 'socket.io-client';
 
-const useWebSocket = () => {
+const useWebSocket = (projectid: string) => {
   const client = useRef<Socket>();
   const accessToken = useAccessToken();
   const [serverMessage, setServerMessage] = useState('Nothing from server yet');
@@ -13,7 +13,8 @@ const useWebSocket = () => {
     if (accessToken) {
       client.current = io(server, {
         extraHeaders: {
-          'Authorization': `Bearer ${accessToken}`,
+          authorization: `Bearer ${accessToken}`,
+          projectid,
         },
       });
       const socket = client.current;
@@ -22,7 +23,7 @@ const useWebSocket = () => {
         socket.on('greeting', message => setServerMessage(message));
       });
     }
-  }, [accessToken]);
+  }, [accessToken, projectid]);
 
   return {
     serverMessage,

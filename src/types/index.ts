@@ -1,4 +1,4 @@
-export type PermissionRole = 'viewer' | 'editor' | 'delete';
+export type PermissionRole = 'viewer' | 'editor';
 
 export interface UserObj {
   firstName: string;
@@ -29,4 +29,8 @@ export interface ProjectObject {
   projectTitle: string;
   projectId: number;
   permissions: UserInPermissionsGrid[];
+}
+
+export interface AuthedSocketObj extends UserObj {
+  permissionRole: PermissionRole | 'Owner';
 }

@@ -1,8 +1,11 @@
 import { Jwt } from '@okta/jwt-verifier';
 import appJwtVerifier, { aud } from '../config/okta-config';
 import { extractAccessToken } from '../modules/auth-functions';
+import { Project, Permission } from '../database/root';
+import { AuthedSocketObj, PermissionRole } from '../types/index';
+import { getNameFromOkta } from '../api/services/user-service';
 
-const authSocket = (authHeader: any): Promise<Jwt> => {
+const authenticateSocket = (authHeader: any): Promise<Jwt> => {
   return new Promise((resolve, reject) => {
     const accessToken = extractAccessToken(authHeader);
     if (!accessToken) {
@@ -15,4 +18,53 @@ const authSocket = (authHeader: any): Promise<Jwt> => {
   });
 };
 
-export { authSocket };
+const authorizeSocket = async (uid: string, projectId: number): Promise<AuthedSocketObj> => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const matchedProject = await Project.findOne({ where: { projectId } });
+      if (!matchedProject) {
+        return reject();
+      }
+      let permissionRole: PermissionRole | 'Owner' | '' = '';
+      if (matchedProject.projectOwner === uid) {
+        permissionRole = 'Owner';
+      } else {
+        const projectPermissions = await Permission.findAll({ where: { projectId } });
+        const matchedPermission = projectPermissions.find(permission => permission.permissionUid === uid);
+        if (matchedPermission) {
+          permissionRole = matchedPermission.permissionRole;
+        }
+      }
+      if (!permissionRole) {
+        return reject();
+      }
+      const userDetails = await getNameFromOkta(uid);
+      const authedSocket: AuthedSocketObj = {
+        ...userDetails,
+        permissionRole,
+      };
+      resolve(authedSocket);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+const authenticateAndAuthorizeSocket = (authHeader: string, projectHeader: string): Promise<AuthedSocketObj> => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const clientJwt = await authenticateSocket(authHeader);
+      const { uid } = clientJwt.claims;
+      if (!uid || typeof uid !== 'string') {
+        return reject();
+      }
+      const projectId = parseInt(projectHeader, 10);
+      const authedSocketObj = await authorizeSocket(uid, projectId);
+      resolve(authedSocketObj);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+export { authenticateAndAuthorizeSocket };
