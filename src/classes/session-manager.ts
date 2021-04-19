@@ -1,6 +1,13 @@
 import randomColor from 'randomcolor';
 import { Server, Socket } from 'socket.io';
-import { LiveUser, SocketEvent, AuthedSocketObj, Session, LiveUserPublicIdentity } from '../types/index';
+import {
+  LiveUser,
+  SocketEvent,
+  AuthedSocketObj,
+  Session,
+  LiveUserPublicIdentity,
+  SocketStatus,
+} from '../types/index';
 
 const createPublicUserList = (users: LiveUser[]): LiveUserPublicIdentity[] => {
   return users.map(
@@ -48,8 +55,14 @@ class SessionManager {
     }
   }
 
-  handleUserConnect(client: AuthedSocketObj, projectId: number) {
-    const { socket } = client;
+  handleUserConnect(client: AuthedSocketObj) {
+    const { socket, projectId } = client;
+    const authResponse: SocketStatus = {
+      authenticated: true,
+      role: client.permissionRole,
+    };
+    this.emitToSocket(socket, 'auth-response', authResponse);
+    
     const room = projectId.toString();
     socket.join(room);
 

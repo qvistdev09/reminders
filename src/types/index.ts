@@ -36,6 +36,7 @@ export interface ProjectObject {
 export interface AuthedSocketObj extends UserObj {
   permissionRole: PermissionRole | 'Owner';
   socket: Socket;
+  projectId: number;
 }
 
 export interface LiveUser extends AuthedSocketObj {
@@ -63,7 +64,7 @@ export interface SocketStatus {
   role: PermissionRole | 'Owner' | null;
 }
 
-export type SocketEvent = 'new-user-list' | 'identity' | 'task-list';
+export type SocketEvent = 'new-user-list' | 'identity' | 'task-list' | 'auth-response';
 
 export interface TaskLiveModel {
   label: string;

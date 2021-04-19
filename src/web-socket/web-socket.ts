@@ -17,11 +17,7 @@ io.on('connection', socket => {
   }
   authenticateAndAuthorizeSocket(authorization, projectid, socket)
     .then(authedSocket => {
-      const authResponse: SocketStatus = {
-        authenticated: true,
-        role: authedSocket.permissionRole,
-      };
-      socket.emit('auth-response', authResponse);
+      sessionManager.handleUserConnect(authedSocket);
     })
     .catch(() => {
       socket.disconnect();

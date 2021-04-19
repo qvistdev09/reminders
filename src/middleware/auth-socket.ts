@@ -44,6 +44,7 @@ const authorizeSocket = async (uid: string, projectId: number, socket: Socket): 
         ...userDetails,
         permissionRole,
         socket,
+        projectId
       };
       resolve(authedSocket);
     } catch (err) {
