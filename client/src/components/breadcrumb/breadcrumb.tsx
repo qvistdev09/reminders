@@ -16,6 +16,7 @@ const Breadcrumb = () => {
             <Link to={breadcrumb.link} className='breadcrumb__link'>
               {breadcrumb.beautifiedLink}
             </Link>
+            <Icon icon='chevronForward' color='semiDark' size='tiny' />
           </div>
         ))}
       </div>

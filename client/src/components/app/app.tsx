@@ -40,7 +40,7 @@ const App = () => {
             <Route exact path='/sign-up' component={SignUp} />
             <Route exact path='/login' component={Login} />
             <SecureRoute exact path='/projects' component={Projects} />
-            <SecureRoute path='/projects/:slug' component={ProjectPage} />
+            <Route path='/projects/:slug' component={ProjectPage} />
             <Route path='/login/callback' component={LoginCallback} />
           </Switch>
         </div>

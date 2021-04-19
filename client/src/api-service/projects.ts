@@ -8,4 +8,12 @@ const postNewProject = (project: NewProjectFields, accessToken: string) =>
 
 const getUsersProjects = (accessToken: string) => axios.get(`${apiUrl}/projects`, makeOptionsObj(accessToken));
 
-export { postNewProject, getUsersProjects };
+const getSpecificProject = (projectId: string, accesToken?: string) => {
+  const path = `${apiUrl}/projects/${projectId}`;
+  if (accesToken) {
+    return axios.get(path, makeOptionsObj(accesToken));
+  }
+  return axios.get(path);
+}
+
+export { postNewProject, getUsersProjects, getSpecificProject };

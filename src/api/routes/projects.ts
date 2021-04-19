@@ -38,13 +38,11 @@ router.post('/', authRequired, (req: RequestJwt, res: Response, next: NextFuncti
     });
 });
 
-const projectRequestHandler = new ProjectRequestHandler();
-
 router.get('/:projectIdString', authAppend, async (req: RequestJwt, res: Response, next: NextFunction) => {
   try {
     // prettier-ignore
-    const handler = await projectRequestHandler
-      .prepareNewRequest(req, res)
+    const handler = await new ProjectRequestHandler(req, res)
+      .prepareNewRequest()
       .validateParam()
       .findProject();
 

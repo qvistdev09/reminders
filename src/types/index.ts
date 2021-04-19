@@ -45,3 +45,8 @@ export interface NewProjectFields {
 export interface NewProject extends NewProjectFields {
   projectOwner: string;
 }
+
+export interface ProjectAccessResponse {
+  role: PermissionRole | 'Owner' | 'none';
+  visibility: ProjectVisibility;
+}

@@ -1,29 +1,32 @@
 import { useParams } from 'react-router-dom';
-import { useWebSocket } from '../../hooks/use-web-socket';
+import { useAccessProject } from '../../hooks/use-access-project';
 import ProjectPageViewer from './elements/project-page-viewer';
 import ProjectPageEditor from './elements/project-page-editor';
-import { useAuthenticationStatus } from '../../hooks/use-authentication-status';
-import { useState } from 'react';
+import ProjectPageUnauthorized from './elements/project-page-unauthorized';
 
 interface Params {
   slug: string;
 }
 
-type AccessStatus = 'pending' | 'somePermission' | 'noPermission';
-
 const ProjectPage = () => {
-  const [accessStatus, setAccessStatus] = useState<AccessStatus>('pending');
-  const { authenticated } = useAuthenticationStatus();
   const { slug } = useParams() as Params;
   const projectId = slug.split('_')[1];
-  const { serverMessage } = useWebSocket(projectId);
+  const { response } = useAccessProject(projectId);
 
-  return (
-    <div>
-      <p>{serverMessage}</p>
-      <p>{slug}</p>
-    </div>
-  );
+  if (!response) {
+    return <p>Retrieving project...</p>;
+  }
+
+  const { visibility, role } = response;
+
+  if (role === 'none') {
+    if (visibility === 'public') {
+      return <ProjectPageViewer />;
+    }
+    return <ProjectPageUnauthorized />;
+  }
+
+  return <ProjectPageEditor />;
 };
 
 export default ProjectPage;

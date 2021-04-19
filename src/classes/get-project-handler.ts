@@ -4,7 +4,7 @@ import { PermissionInstance } from '../database/schemas/permission';
 import { Project, Permission } from '../database/root';
 import RequestJwt from '../types/request-jwt';
 import { ControlledError } from './controlled-error';
-import { PermissionRole, ProjectVisibility } from '../types';
+import { PermissionRole, ProjectAccessResponse } from '../types';
 
 class ProjectRequestHandler {
   req: RequestJwt | null;
@@ -12,14 +12,14 @@ class ProjectRequestHandler {
   uid: string | any;
   idParam: string | null;
   processed: {
-    role: PermissionRole | 'none' | null;
+    role: PermissionRole | 'none' | 'Owner' | null;
     projectId: number | null;
     project: ProjectInstance | null;
     permissions: PermissionInstance[] | null;
   };
-  constructor() {
-    this.req = null;
-    this.res = null;
+  constructor(req: RequestJwt, res: Response) {
+    this.req = req;
+    this.res = res;
     this.uid = null;
     this.idParam = null;
     this.processed = {
@@ -30,28 +30,15 @@ class ProjectRequestHandler {
     };
   }
 
-  clearAll() {
-    this.req = null;
-    this.res = null;
-    this.uid = null;
-    this.processed = {
-      role: null,
-      projectId: null,
-      project: null,
-      permissions: null,
-    };
-  }
-
-  prepareNewRequest(req: RequestJwt, res: Response) {
-    this.clearAll();
-
-    const { projectIdString } = req.params;
-    let uid: any = null;
-    if (req.jwt && req.jwt.claims.uid) {
-      uid = req.jwt.claims.uid;
+  prepareNewRequest() {
+    if (!this.req) {
+      throw new ControlledError('Server functions called in wrong order', 500);
     }
-    this.req = req;
-    this.res = res;
+    const { projectIdString } = this.req.params;
+    let uid: any = null;
+    if (this.req.jwt && this.req.jwt.claims.uid) {
+      uid = this.req.jwt.claims.uid;
+    }
     this.idParam = projectIdString;
     this.uid = uid;
     return this;
@@ -95,6 +82,10 @@ class ProjectRequestHandler {
       this.processed.role = 'none';
       return this;
     }
+    if (this.processed.project.projectOwner === this.uid) {
+      this.processed.role = 'Owner';
+      return this;
+    }
     const { permissions } = this.processed;
     const matchedPermission = permissions.find(permission => permission.permissionUid === this.uid);
     if (!matchedPermission) {
@@ -111,10 +102,13 @@ class ProjectRequestHandler {
     }
     const visibility = this.processed.project.projectVisibility;
     const { role } = this.processed;
-    this.res.json({
-      visibility,
+
+    const resObject: ProjectAccessResponse = {
       role,
-    });
+      visibility
+    };
+
+    this.res.json(resObject);
   }
 }
 
