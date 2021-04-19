@@ -69,6 +69,7 @@ export type SocketEvent = 'newUserList' | 'identity' | 'taskList' | 'authRespons
 export interface TaskLiveModel {
   label: string;
   finished: boolean;
+  id: number;
 }
 
 export interface Session {
@@ -81,4 +82,5 @@ export interface LiveUserPublicIdentity {
   fullName: string;
   role: PermissionRole | 'Owner';
   color: string;
+  uid: string;
 }

@@ -1,7 +1,6 @@
 import { Server } from 'socket.io';
 import { app } from '../express-main/app';
 import { authenticateAndAuthorizeSocket } from '../middleware/auth-socket';
-import { SocketStatus } from '../types/index';
 import http from 'http';
 import { SessionManager } from '../classes/session-manager';
 
@@ -11,6 +10,7 @@ const io = new Server(httpServer);
 const sessionManager = new SessionManager(io);
 
 io.on('connection', socket => {
+  console.log('Connect');
   const { authorization, projectid } = socket.handshake.headers;
   if (!authorization || !projectid || typeof authorization !== 'string' || typeof projectid !== 'string') {
     return socket.disconnect();
@@ -18,6 +18,9 @@ io.on('connection', socket => {
   authenticateAndAuthorizeSocket(authorization, projectid, socket)
     .then(authedSocket => {
       sessionManager.handleUserConnect(authedSocket);
+      authedSocket.socket.on('disconnect', () => {
+        sessionManager.handleSocketDisconnect(authedSocket);
+      });
     })
     .catch(() => {
       socket.disconnect();

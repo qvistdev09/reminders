@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useAccessToken } from './use-access-token';
 import { server } from '../config/websocket-server';
 import { Socket } from 'socket.io-client';
-import { SocketStatus, TaskLiveModel } from '../../../src/types/index';
+import { SocketStatus, TaskLiveModel, LiveUserPublicIdentity } from '../../../src/types/index';
 import { e } from '../shared-socket-events/shared-socket-events';
 
 const useWebSocket = (projectid: string) => {
@@ -14,6 +14,7 @@ const useWebSocket = (projectid: string) => {
     role: null,
   });
   const [tasks, setTasks] = useState<TaskLiveModel[]>([]);
+  const [users, setUsers] = useState<LiveUserPublicIdentity[]>([]);
 
   useEffect(() => {
     if (accessToken) {
@@ -28,12 +29,20 @@ const useWebSocket = (projectid: string) => {
         setSocketStatus(authResponse);
       });
       socket.on(e.taskList, (tasks: TaskLiveModel[]) => setTasks(tasks));
+      socket.on(e.newUserList, (users: LiveUserPublicIdentity[]) => setUsers(users));
     }
+
+    return () => {
+      if (client.current) {
+        client.current.close();
+      }
+    };
   }, [accessToken, projectid]);
 
   return {
     socketStatus,
     tasks,
+    users,
   };
 };
 

@@ -8,7 +8,7 @@ import {
   LiveUserPublicIdentity,
   SocketStatus,
 } from '../types/index';
-import { e } from '../../client/shared-socket-events/shared-socket-events';
+import { e } from '../web-socket/events';
 
 const createPublicUserList = (users: LiveUser[]): LiveUserPublicIdentity[] => {
   return users.map(
@@ -17,6 +17,7 @@ const createPublicUserList = (users: LiveUser[]): LiveUserPublicIdentity[] => {
         fullName: `${user.firstName} ${user.lastName}`,
         role: user.permissionRole,
         color: user.color,
+        uid: user.uid,
       }
   );
 };
@@ -76,13 +77,20 @@ class SessionManager {
       fullName: `${client.firstName} ${client.lastName}`,
       role: client.permissionRole,
       color: newLiveUser.color,
+      uid: client.uid,
     };
 
     this.emitToSocket(socket, e.identity, newPublicIdentity);
 
     const matchedSession = this.findSession(projectId);
     if (matchedSession) {
-      matchedSession.users.push(newLiveUser);
+
+      const existingUser = matchedSession.users.find(user => user.uid === client.uid);
+      if (existingUser) {
+        existingUser.socket = client.socket;
+      } else {
+        matchedSession.users.push(newLiveUser);
+      }
       this.giveClientSessionTasks(socket, projectId);
       return this.emitNewUserlist(projectId);
     }
@@ -95,6 +103,15 @@ class SessionManager {
     // populate new session with data from database and send to client
 
     this.sessions.push(newSession);
+    this.emitNewUserlist(projectId);
+  }
+
+  handleSocketDisconnect(client: AuthedSocketObj) {
+    const matchedSession = this.findSession(client.projectId);
+    if (matchedSession) {
+      matchedSession.users = matchedSession.users.filter(user => user.uid !== client.uid);
+      this.emitNewUserlist(client.projectId);
+    }
   }
 }
 
