@@ -1,10 +1,10 @@
 import express, { NextFunction, Response } from 'express';
-import RequestJwt from '../../types/request-jwt';
-import { authRequired } from '../../middleware/auth-required';
+import { ProjectRequestHandler } from '../../classes/get-project-handler';
 import { authAppend } from '../../middleware/auth-append';
-import { createNewProject, getProjectsByUserId } from '../services/projects-service';
+import { authRequired } from '../../middleware/auth-required';
+import RequestJwt from '../../types/request-jwt';
 import { appendPermissionsToProject } from '../services/permissions-service';
-import { Project } from '../../database/root';
+import { createNewProject, getProjectsByUserId } from '../services/projects-service';
 import { validateProjectFields } from '../validation/project-validation';
 
 const router = express.Router();
@@ -38,15 +38,22 @@ router.post('/', authRequired, (req: RequestJwt, res: Response, next: NextFuncti
     });
 });
 
+const projectRequestHandler = new ProjectRequestHandler();
+
 router.get('/:projectIdString', authAppend, async (req: RequestJwt, res: Response, next: NextFunction) => {
-  const { projectIdString } = req.params;
-  const projectId = parseInt(projectIdString, 10);
-  if (isNaN(projectId)) {
-    return res.status(404).end();
-  }
-  const matchedProject = await Project.findOne({ where: { projectId } });
-  if (!matchedProject) {
-    return res.status(404).end();
+  try {
+    // prettier-ignore
+    const handler = await projectRequestHandler
+      .prepareNewRequest(req, res)
+      .validateParam()
+      .findProject();
+
+    // prettier-ignore
+    handler
+      .establishRole()
+      .sendResponse();
+  } catch (err) {
+    next(err);
   }
 });
 
@@ -60,7 +67,9 @@ router.get('/', authRequired, async (req: RequestJwt, res: Response, next: NextF
   }
   try {
     const rawProjects = await getProjectsByUserId(uid);
-    const projectsWithPermissions = await Promise.all(rawProjects.map(project => appendPermissionsToProject(project)));
+    const projectsWithPermissions = await Promise.all(
+      rawProjects.map(project => appendPermissionsToProject(project))
+    );
     res.json({ projects: projectsWithPermissions });
   } catch (err) {
     console.log(err);
