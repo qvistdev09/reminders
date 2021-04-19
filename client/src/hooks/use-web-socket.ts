@@ -11,7 +11,11 @@ const useWebSocket = () => {
 
   useEffect(() => {
     if (accessToken) {
-      client.current = io(server);
+      client.current = io(server, {
+        extraHeaders: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
       const socket = client.current;
       socket.on('hello', hello => setServerMessage(hello));
       socket.emit('authenticate', { token: accessToken }).on('authenticated', () => {
