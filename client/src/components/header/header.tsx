@@ -2,6 +2,7 @@ import { useHistory } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import { Link } from 'react-router-dom';
 import { useAppUserDetails } from '../../hooks/use-app-user-details';
+import { useAuthenticationStatus } from '../../hooks/use-authentication-status';
 
 // components
 import Icon from '../icon/icon';
@@ -9,13 +10,12 @@ import UserIcon from '../user-icon/user-icon';
 import HeaderNavItem from './elements/header-nav-item';
 
 const Header = () => {
+  const { authenticated } = useAuthenticationStatus();
   const appUserDetails = useAppUserDetails();
-  const { authState, oktaAuth } = useOktaAuth();
+  const { oktaAuth } = useOktaAuth();
   const history = useHistory();
 
-  const authed = authState.isAuthenticated;
-
-  const loginOrLogout = authed ? (
+  const loginOrLogout = authenticated ? (
     <button className='header__btn' onClick={() => oktaAuth.signOut()}>
       Log out
     </button>
@@ -34,7 +34,7 @@ const Header = () => {
           </h1>
         </Link>
         <div className='header__nav-items-container'>
-          {authed && (
+          {authenticated && (
             <HeaderNavItem
               label='Projects'
               icon={<Icon icon='grid' color='white' size='small' padding={0} />}
@@ -43,20 +43,14 @@ const Header = () => {
           )}
         </div>
         <div className='header__login'>
-          {!authed && (
-            <button
-              className='header__btn header__btn--action'
-              onClick={() => history.push('/sign-up')}
-            >
+          {!authenticated && (
+            <button className='header__btn header__btn--action' onClick={() => history.push('/sign-up')}>
               Sign up
             </button>
           )}
           {loginOrLogout}
           {appUserDetails.retrieved && (
-            <UserIcon
-              firstName={appUserDetails.firstName}
-              lastName={appUserDetails.lastName}
-            />
+            <UserIcon firstName={appUserDetails.firstName} lastName={appUserDetails.lastName} />
           )}
         </div>
       </nav>
