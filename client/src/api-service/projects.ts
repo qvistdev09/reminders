@@ -1,17 +1,11 @@
 import { apiUrl } from './api-url';
 import { makeOptionsObj } from './axios-auth-options';
 import axios from 'axios';
+import { NewProjectFields } from '../../../src/types/index';
 
-interface NewProject {
-  project: {
-    projectTitle: string;
-  };
-}
+const postNewProject = (project: NewProjectFields, accessToken: string) =>
+  axios.post(`${apiUrl}/projects`, { project }, makeOptionsObj(accessToken));
 
-const postNewProject = (projectDetails: NewProject, accessToken: string) =>
-  axios.post(`${apiUrl}/projects`, projectDetails, makeOptionsObj(accessToken));
-
-const getUsersProjects = (accessToken: string) =>
-  axios.get(`${apiUrl}/projects`, makeOptionsObj(accessToken));
+const getUsersProjects = (accessToken: string) => axios.get(`${apiUrl}/projects`, makeOptionsObj(accessToken));
 
 export { postNewProject, getUsersProjects };

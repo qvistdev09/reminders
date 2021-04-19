@@ -20,9 +20,8 @@ const useProjects = () => {
     if (accessToken) {
       postNewProject(
         {
-          project: {
-            projectTitle,
-          },
+          projectTitle,
+          projectVisibility: 'authorizedOnly',
         },
         accessToken
       ).then(() => syncProjectsWithServer());

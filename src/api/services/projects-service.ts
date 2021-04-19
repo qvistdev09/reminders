@@ -1,4 +1,5 @@
 import { Project } from '../../database/root';
+import { NewProject } from '../../types/index';
 
 const getProjectsByUserId = (userId: string) =>
   Project.findAll({
@@ -7,11 +8,14 @@ const getProjectsByUserId = (userId: string) =>
     },
   });
 
-const createNewProject = (userId: string, projectTitle: string) =>
-  Project.create({
+const createNewProject = (newProject: NewProject) => {
+  const { projectTitle, projectOwner, projectVisibility } = newProject;
+  return Project.create({
     projectTitle,
-    projectOwner: userId,
+    projectOwner,
+    projectVisibility,
   });
+};
 
 const userIsOwner = async (projectOwner: string, projectId: number) => {
   const matchedProject = await Project.findOne({ where: { projectId, projectOwner } });

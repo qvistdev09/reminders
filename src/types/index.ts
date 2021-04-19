@@ -34,3 +34,14 @@ export interface ProjectObject {
 export interface AuthedSocketObj extends UserObj {
   permissionRole: PermissionRole | 'Owner';
 }
+
+export type ProjectVisibility = 'authorizedOnly' | 'public' | 'private';
+
+export interface NewProjectFields {
+  projectTitle: string;
+  projectVisibility: ProjectVisibility;
+}
+
+export interface NewProject extends NewProjectFields {
+  projectOwner: string;
+}

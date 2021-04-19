@@ -1,18 +1,18 @@
 import { Model, Optional } from 'sequelize';
 import { sequelize } from '../../config/db-config';
 import { DataTypes } from 'sequelize';
+import { ProjectVisibility } from '../../types/index';
 
 interface ProjectAttributes {
   projectId?: number;
   projectTitle: string;
   projectOwner: string;
+  projectVisibility: ProjectVisibility;
 }
 
 interface ProjectCreationAttributes extends Optional<ProjectAttributes, 'projectId'> {}
 
-export interface ProjectInstance
-  extends Model<ProjectAttributes, ProjectCreationAttributes>,
-    ProjectAttributes {
+export interface ProjectInstance extends Model<ProjectAttributes, ProjectCreationAttributes>, ProjectAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -30,6 +30,10 @@ const Project = sequelize.define<ProjectInstance>('Project', {
   },
   projectOwner: {
     type: DataTypes.STRING,
+    allowNull: false,
+  },
+  projectVisibility: {
+    type: DataTypes.ENUM('authorizedOnly', 'public', 'private'),
     allowNull: false,
   },
 });
