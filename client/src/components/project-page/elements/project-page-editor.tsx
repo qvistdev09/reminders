@@ -1,13 +1,22 @@
 import { useWebSocket } from '../../../hooks/use-web-socket';
 
+import EditableText from './project-page-editable-text';
+
 interface Props {
   projectId: string;
 }
 
 const ProjectPageEditor = ({ projectId }: Props) => {
-  const { socketStatus, tasks, users, newTask, updateTask, submitNewTask, deleteTask } = useWebSocket(
-    projectId
-  );
+  const {
+    socketStatus,
+    tasks,
+    users,
+    newTask,
+    updateTask,
+    submitNewTask,
+    deleteTask,
+    liveChange,
+  } = useWebSocket(projectId);
   return (
     <div>
       <div>
@@ -19,7 +28,7 @@ const ProjectPageEditor = ({ projectId }: Props) => {
         <h3>Tasks</h3>
         {tasks.map(task => (
           <div key={task.taskId} style={{ border: '1px solid black', padding: '0.5rem', margin: '0.5rem' }}>
-            <p>{task.taskLabel}</p>
+            <EditableText task={task} commit={() => {}} liveChange={liveChange} />
             <button className='form__submit-btn' onClick={() => deleteTask(task.taskId)}>
               Delete task
             </button>

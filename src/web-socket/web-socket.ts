@@ -28,6 +28,9 @@ io.on('connection', socket => {
       socket.on('deleteTask', (taskId: number) => {
         sessionManager.handleTaskDelete(authedSocket, taskId);
       });
+      socket.on('liveChange', (changeObj: any) => {
+        sessionManager.handleLiveChange(authedSocket, changeObj);
+      });
     })
     .catch(() => {
       socket.disconnect();

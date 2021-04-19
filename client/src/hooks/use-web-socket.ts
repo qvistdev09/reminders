@@ -64,6 +64,12 @@ const useWebSocket = (projectid: string) => {
     }
   };
 
+  const liveChange = (taskId: number, string: string) => {
+    if (client.current) {
+      client.current.emit('liveChange', { taskId, string });
+    }
+  };
+
   return {
     socketStatus,
     tasks,
@@ -72,6 +78,7 @@ const useWebSocket = (projectid: string) => {
     updateTask,
     submitNewTask,
     deleteTask,
+    liveChange,
   };
 };
 

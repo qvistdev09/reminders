@@ -150,6 +150,19 @@ class SessionManager {
       });
     }
   }
+
+  handleLiveChange(client: AuthedSocketObj, changeObj: any) {
+    console.log('performing live change')
+    const matchedSession = this.findSession(client.projectId);
+    if (matchedSession) {
+      const { taskId, string } = changeObj;
+      const matchedTask = matchedSession.tasks.find(task => task.taskId === taskId);
+      if (matchedTask) {
+        matchedTask.taskLabel = string;
+        this.emitToRoom(client.projectId.toString(), e.taskList, matchedSession.tasks);
+      }
+    }
+  }
 }
 
 export { SessionManager };
