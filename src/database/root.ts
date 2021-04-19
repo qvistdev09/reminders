@@ -3,6 +3,7 @@ import { sequelize } from '../config/db-config';
 // schemas
 import { Project } from './schemas/project';
 import { Permission } from './schemas/permission';
+import { Task } from './schemas/task';
 
 Project.hasMany(Permission, {
   foreignKey: {
@@ -12,6 +13,20 @@ Project.hasMany(Permission, {
 });
 
 Permission.belongsTo(Project, {
+  foreignKey: {
+    name: 'projectId',
+    allowNull: false,
+  },
+});
+
+Project.hasMany(Task, {
+  foreignKey: {
+    name: 'projectId',
+    allowNull: false,
+  },
+});
+
+Task.belongsTo(Project, {
   foreignKey: {
     name: 'projectId',
     allowNull: false,
@@ -30,4 +45,4 @@ const authAndSyncDatabase = async () => {
   }
 };
 
-export { Project, Permission, authAndSyncDatabase };
+export { Project, Permission, Task, authAndSyncDatabase };
