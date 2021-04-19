@@ -4,6 +4,7 @@ import { extractAccessToken } from '../modules/auth-functions';
 import { Project, Permission } from '../database/root';
 import { AuthedSocketObj, PermissionRole } from '../types/index';
 import { getNameFromOkta } from '../api/services/user-service';
+import { Socket } from 'socket.io';
 
 const authenticateSocket = (authHeader: any): Promise<Jwt> => {
   return new Promise((resolve, reject) => {
@@ -18,7 +19,7 @@ const authenticateSocket = (authHeader: any): Promise<Jwt> => {
   });
 };
 
-const authorizeSocket = async (uid: string, projectId: number): Promise<AuthedSocketObj> => {
+const authorizeSocket = async (uid: string, projectId: number, socket: Socket): Promise<AuthedSocketObj> => {
   return new Promise(async (resolve, reject) => {
     try {
       const matchedProject = await Project.findOne({ where: { projectId } });
@@ -42,6 +43,7 @@ const authorizeSocket = async (uid: string, projectId: number): Promise<AuthedSo
       const authedSocket: AuthedSocketObj = {
         ...userDetails,
         permissionRole,
+        socket,
       };
       resolve(authedSocket);
     } catch (err) {
@@ -50,7 +52,11 @@ const authorizeSocket = async (uid: string, projectId: number): Promise<AuthedSo
   });
 };
 
-const authenticateAndAuthorizeSocket = (authHeader: string, projectHeader: string): Promise<AuthedSocketObj> => {
+const authenticateAndAuthorizeSocket = (
+  authHeader: string,
+  projectHeader: string,
+  socket: Socket
+): Promise<AuthedSocketObj> => {
   return new Promise(async (resolve, reject) => {
     try {
       const clientJwt = await authenticateSocket(authHeader);
@@ -59,7 +65,7 @@ const authenticateAndAuthorizeSocket = (authHeader: string, projectHeader: strin
         return reject();
       }
       const projectId = parseInt(projectHeader, 10);
-      const authedSocketObj = await authorizeSocket(uid, projectId);
+      const authedSocketObj = await authorizeSocket(uid, projectId, socket);
       resolve(authedSocketObj);
     } catch (err) {
       reject(err);

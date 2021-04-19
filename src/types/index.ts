@@ -1,3 +1,5 @@
+import { Socket } from 'socket.io';
+
 export type PermissionRole = 'viewer' | 'editor';
 
 export interface UserObj {
@@ -33,6 +35,11 @@ export interface ProjectObject {
 
 export interface AuthedSocketObj extends UserObj {
   permissionRole: PermissionRole | 'Owner';
+  socket: Socket;
+}
+
+export interface LiveUser extends AuthedSocketObj {
+  color: string;
 }
 
 export type ProjectVisibility = 'authorizedOnly' | 'public' | 'private';
@@ -54,4 +61,23 @@ export interface ProjectAccessResponse {
 export interface SocketStatus {
   authenticated: boolean;
   role: PermissionRole | 'Owner' | null;
+}
+
+export type SocketEvent = 'new-user-list' | 'identity' | 'task-list';
+
+export interface TaskLiveModel {
+  label: string;
+  finished: boolean;
+}
+
+export interface Session {
+  users: LiveUser[];
+  projectId: number;
+  tasks: TaskLiveModel[];
+}
+
+export interface LiveUserPublicIdentity {
+  fullName: string;
+  role: PermissionRole | 'Owner';
+  color: string;
 }
