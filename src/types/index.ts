@@ -67,9 +67,9 @@ export interface SocketStatus {
 export type SocketEvent = 'newUserList' | 'identity' | 'taskList' | 'authResponse';
 
 export interface TaskLiveModel {
-  label: string;
-  finished: boolean;
-  id: number;
+  taskLabel: string;
+  taskFinished: boolean;
+  taskId: number;
 }
 
 export interface Session {

@@ -7,6 +7,7 @@ import {
   Session,
   LiveUserPublicIdentity,
   SocketStatus,
+  TaskLiveModel,
 } from '../types/index';
 import { e } from '../web-socket/events';
 
@@ -29,6 +30,12 @@ class SessionManager {
   constructor(io: Server) {
     this.sessions = [];
     this.io = io;
+  }
+
+  makeId(array: any[], idKey: string) {
+    return array.length < 1
+      ? 0
+      : array.map(item => item[idKey]).reduce((acc, curr) => (acc > curr ? acc : curr)) + 1;
   }
 
   findSession(projectId: number) {
@@ -84,7 +91,6 @@ class SessionManager {
 
     const matchedSession = this.findSession(projectId);
     if (matchedSession) {
-
       const existingUser = matchedSession.users.find(user => user.uid === client.uid);
       if (existingUser) {
         existingUser.socket = client.socket;
@@ -111,6 +117,20 @@ class SessionManager {
     if (matchedSession) {
       matchedSession.users = matchedSession.users.filter(user => user.uid !== client.uid);
       this.emitNewUserlist(client.projectId);
+    }
+  }
+
+  handleNewTask(client: AuthedSocketObj, newTask: any) {
+    const matchedSession = this.findSession(client.projectId);
+    if (matchedSession) {
+      const { taskLabel } = newTask;
+      const newTaskObj: TaskLiveModel = {
+        taskLabel,
+        taskFinished: false,
+        taskId: this.makeId(matchedSession.tasks, 'taskId'),
+      };
+      matchedSession.tasks.push(newTaskObj);
+      this.emitToRoom(client.projectId.toString(), e.taskList, matchedSession.tasks);
     }
   }
 }

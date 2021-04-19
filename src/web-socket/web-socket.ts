@@ -18,8 +18,12 @@ io.on('connection', socket => {
   authenticateAndAuthorizeSocket(authorization, projectid, socket)
     .then(authedSocket => {
       sessionManager.handleUserConnect(authedSocket);
-      authedSocket.socket.on('disconnect', () => {
+      const { socket } = authedSocket;
+      socket.on('disconnect', () => {
         sessionManager.handleSocketDisconnect(authedSocket);
+      });
+      socket.on('newTask', (taskObj: any) => {
+        sessionManager.handleNewTask(authedSocket, taskObj);
       });
     })
     .catch(() => {
