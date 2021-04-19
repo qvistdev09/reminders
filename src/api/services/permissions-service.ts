@@ -80,20 +80,14 @@ const handlePermissionChange = async (
     },
   });
   if (preExistingMatch) {
-    if (permissionRole === 'delete') {
-      return preExistingMatch.destroy();
-    }
     preExistingMatch.permissionRole = permissionRole;
     return preExistingMatch.save();
   }
-  if (permissionRole !== 'delete') {
-    return Permission.create({
-      permissionUid,
-      projectId,
-      permissionRole,
-    });
-  }
-  return null;
+  return Permission.create({
+    permissionUid,
+    projectId,
+    permissionRole,
+  });
 };
 
 export { appendPermissionsToProject, handlePermissionChange };
