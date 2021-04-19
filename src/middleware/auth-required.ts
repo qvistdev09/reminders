@@ -2,19 +2,16 @@ import { NextFunction, Response } from 'express';
 import { Jwt } from '@okta/jwt-verifier';
 import RequestJwt from '../types/request-jwt';
 import { ControlledError } from '../classes/controlled-error';
-import appJwtVerifier from '../config/okta-config';
+import appJwtVerifier, { aud } from '../config/okta-config';
+import { extractAccessToken } from '../modules/auth-functions';
 
 const authRequired = (req: RequestJwt, res: Response, next: NextFunction) => {
-  const authHeader = req.headers.authorization || '';
-  const match = authHeader.match(/Bearer (.+)/);
-  const aud = 'api://default';
+  const accessToken = extractAccessToken(req.headers.authorization);
 
-  if (!match) {
+  if (!accessToken) {
     const noCredentialsError = new ControlledError('Missing credentials', 401);
     return next(noCredentialsError);
   }
-
-  const accessToken = match[1];
 
   return appJwtVerifier
     .verifyAccessToken(accessToken, aud)

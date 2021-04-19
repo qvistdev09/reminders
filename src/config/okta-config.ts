@@ -17,4 +17,6 @@ const appJwtVerifier = new OktaJwtVerifier({
   issuer,
 });
 
+export const aud = 'api://default';
+
 export default appJwtVerifier;
