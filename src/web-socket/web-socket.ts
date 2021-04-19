@@ -25,6 +25,9 @@ io.on('connection', socket => {
       socket.on('newTask', (taskObj: any) => {
         sessionManager.handleNewTask(authedSocket, taskObj);
       });
+      socket.on('deleteTask', (taskId: number) => {
+        sessionManager.handleTaskDelete(authedSocket, taskId);
+      });
     })
     .catch(() => {
       socket.disconnect();

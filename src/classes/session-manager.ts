@@ -9,6 +9,7 @@ import {
   SocketStatus,
   TaskLiveModel,
 } from '../types/index';
+import { Task } from '../database/root';
 import { e } from '../web-socket/events';
 
 const createPublicUserList = (users: LiveUser[]): LiveUserPublicIdentity[] => {
@@ -124,13 +125,29 @@ class SessionManager {
     const matchedSession = this.findSession(client.projectId);
     if (matchedSession) {
       const { taskLabel } = newTask;
-      const newTaskObj: TaskLiveModel = {
-        taskLabel,
-        taskFinished: false,
-        taskId: this.makeId(matchedSession.tasks, 'taskId'),
-      };
-      matchedSession.tasks.push(newTaskObj);
-      this.emitToRoom(client.projectId.toString(), e.taskList, matchedSession.tasks);
+      Task.create({ taskLabel, taskFinished: false, projectId: client.projectId }).then(createdTask => {
+        const newTaskObj: TaskLiveModel = {
+          taskLabel,
+          taskFinished: false,
+          taskId: createdTask.taskId as number,
+        };
+        matchedSession.tasks.push(newTaskObj);
+        this.emitToRoom(client.projectId.toString(), e.taskList, matchedSession.tasks);
+      });
+    }
+  }
+
+  handleTaskDelete(client: AuthedSocketObj, taskId: number) {
+    const matchedSession = this.findSession(client.projectId);
+    if (matchedSession) {
+      Task.findOne({ where: { taskId } }).then(foundTask => {
+        if (foundTask) {
+          foundTask.destroy().then(() => {
+            matchedSession.tasks = matchedSession.tasks.filter(task => task.taskId !== taskId);
+            this.emitToRoom(client.projectId.toString(), e.taskList, matchedSession.tasks);
+          });
+        }
+      });
     }
   }
 }

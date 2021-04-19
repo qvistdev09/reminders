@@ -58,6 +58,12 @@ const useWebSocket = (projectid: string) => {
     }
   };
 
+  const deleteTask = (taskId: number) => {
+    if (client.current) {
+      client.current.emit('deleteTask', taskId);
+    }
+  };
+
   return {
     socketStatus,
     tasks,
@@ -65,6 +71,7 @@ const useWebSocket = (projectid: string) => {
     newTask,
     updateTask,
     submitNewTask,
+    deleteTask,
   };
 };
 
