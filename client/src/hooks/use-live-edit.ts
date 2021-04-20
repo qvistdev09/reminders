@@ -1,12 +1,12 @@
 import { io } from 'socket.io-client';
-import { SyntheticEvent, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAccessToken } from './use-access-token';
 import { server } from '../config/websocket-server';
 import { Socket } from 'socket.io-client';
 import { SocketStatus, TaskLiveModel, LiveUserPublicIdentity } from 'reminders-shared/sharedTypes';
 import { s } from 'reminders-shared/socketEvents';
 
-const useWebSocket = (projectid: string) => {
+const useLiveEdit = (projectid: string) => {
   const client = useRef<Socket>();
   const accessToken = useAccessToken();
   const [socketStatus, setSocketStatus] = useState<SocketStatus>({
@@ -15,7 +15,6 @@ const useWebSocket = (projectid: string) => {
   });
   const [tasks, setTasks] = useState<TaskLiveModel[]>([]);
   const [users, setUsers] = useState<LiveUserPublicIdentity[]>([]);
-  const [newTask, setNewTask] = useState('');
 
   useEffect(() => {
     if (accessToken) {
@@ -30,7 +29,6 @@ const useWebSocket = (projectid: string) => {
         setSocketStatus(authResponse);
       });
       socket.on(s.taskList, (tasks: TaskLiveModel[]) => {
-        console.log(tasks);
         setTasks(tasks);
       });
       socket.on(s.newUserList, (users: LiveUserPublicIdentity[]) => setUsers(users));
@@ -43,17 +41,9 @@ const useWebSocket = (projectid: string) => {
     };
   }, [accessToken, projectid]);
 
-  const updateTask = (e: SyntheticEvent) => {
-    if (e.target instanceof HTMLInputElement) {
-      setNewTask(e.target.value);
-    }
-  };
-
-  const submitNewTask = (e: SyntheticEvent) => {
-    e.preventDefault();
+  const submitNewTask = (taskLabel: string) => {
     if (client.current) {
-      client.current.emit(s.newTask, { taskLabel: newTask });
-      setNewTask('');
+      client.current.emit(s.newTask, { taskLabel });
     }
   };
 
@@ -69,16 +59,22 @@ const useWebSocket = (projectid: string) => {
     }
   };
 
-  return {
-    socketStatus,
+  const session = {
     tasks,
     users,
-    newTask,
-    updateTask,
-    submitNewTask,
-    deleteTask,
+  };
+
+  const taskActions = {
     liveChange,
+    deleteTask,
+  };
+
+  return {
+    socketStatus,
+    session,
+    submitNewTask,
+    taskActions,
   };
 };
 
-export { useWebSocket };
+export { useLiveEdit };

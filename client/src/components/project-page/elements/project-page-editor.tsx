@@ -1,22 +1,27 @@
-import { useWebSocket } from '../../../hooks/use-web-socket';
+import { useLiveEdit } from '../../../hooks/use-live-edit';
+import { SyntheticEvent, useState } from 'react';
 
-import EditableText from './project-page-editable-text';
+import Task from '../task';
 
 interface Props {
   projectId: string;
 }
 
 const ProjectPageEditor = ({ projectId }: Props) => {
+  const [newTaskInput, setNewTaskInput] = useState('');
   const {
     socketStatus,
-    tasks,
-    users,
-    newTask,
-    updateTask,
+    session: { tasks, users },
     submitNewTask,
-    deleteTask,
-    liveChange,
-  } = useWebSocket(projectId);
+    taskActions,
+  } = useLiveEdit(projectId);
+
+  const handleNewSubmit = (e: SyntheticEvent) => {
+    e.preventDefault();
+    submitNewTask(newTaskInput);
+    setNewTaskInput('');
+  };
+
   return (
     <div>
       <div>
@@ -26,16 +31,16 @@ const ProjectPageEditor = ({ projectId }: Props) => {
       </div>
       <div>
         <h3>Tasks</h3>
-        {tasks.map(task => (
-          <div key={task.taskId} style={{ border: '1px solid black', padding: '0.5rem', margin: '0.5rem' }}>
-            <EditableText task={task} commit={() => {}} liveChange={liveChange} />
-            <button className='form__submit-btn' onClick={() => deleteTask(task.taskId)}>
-              Delete task
-            </button>
-          </div>
+        {tasks.map(taskObj => (
+          <Task key={taskObj.taskId} taskObj={taskObj} taskActions={taskActions} />
         ))}
-        <form className='form' onSubmit={submitNewTask}>
-          <input className='form__input' type='text' value={newTask} onChange={updateTask} />
+        <form className='form' onSubmit={handleNewSubmit}>
+          <input
+            className='form__input'
+            type='text'
+            value={newTaskInput}
+            onChange={({ target: { value } }) => setNewTaskInput(value)}
+          />
           <button className='form__submit-btn'>Add todo</button>
         </form>
       </div>
