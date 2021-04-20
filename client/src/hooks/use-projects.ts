@@ -3,7 +3,7 @@ import { useAccessToken } from './use-access-token';
 import { getUsersProjects, postNewProject } from '../api-service/projects';
 import { useAppDispatch, useAppSelector } from './redux-hooks';
 import { getProjects, setProjects, updateOrAddPermissions } from '../reducers/slices/projects';
-import { UserInPermissionsGrid } from '../../../src/types/index';
+import { UserInPermissionsGrid } from 'reminders-shared/sharedTypes';
 
 const useProjects = () => {
   const accessToken = useAccessToken();

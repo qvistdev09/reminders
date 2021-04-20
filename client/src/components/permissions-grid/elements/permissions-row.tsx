@@ -1,5 +1,5 @@
 import { SyntheticEvent } from 'react';
-import { UserInPermissionsGrid } from '../../../../../src/types/index';
+import { UserInPermissionsGrid } from 'reminders-shared/sharedTypes';
 
 interface Props {
   data: UserInPermissionsGrid;

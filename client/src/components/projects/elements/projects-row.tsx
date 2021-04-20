@@ -2,7 +2,7 @@ import PermissionsGrid from '../../permissions-grid/permissions-grid';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import Icon from '../../icon/icon';
-import { ProjectObject } from '../../../../../src/types/index';
+import { ProjectObject } from 'reminders-shared/sharedTypes';
 import { useManagePermissions } from '../../../hooks/use-manage-permissions';
 
 interface Props {

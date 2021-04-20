@@ -24,18 +24,14 @@ const App = () => {
     history.replace(toRelativeUrl(originalUri, window.location.origin));
   };
   return (
-    <Security
-      oktaAuth={clientAuth}
-      restoreOriginalUri={restoreOriginalUri}
-      onAuthRequired={onAuthRequired}
-    >
+    <Security oktaAuth={clientAuth} restoreOriginalUri={restoreOriginalUri} onAuthRequired={onAuthRequired}>
       <Header />
       <Breadcrumb />
       <main className='main'>
         <div className='main__inner'>
           <Switch>
             <Route exact path='/'>
-              <p>This is the Home route - yet to be filled with content!</p>
+              <p>This is the home route</p>
             </Route>
             <Route exact path='/sign-up' component={SignUp} />
             <Route exact path='/login' component={Login} />

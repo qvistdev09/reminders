@@ -1,4 +1,4 @@
-import { UserObj, ProjectObject } from '../../../src/types/index';
+import { UserObj, ProjectObject } from 'reminders-shared/sharedTypes';
 
 class UserObjFilterer {
   userObjects: UserObj[] = [];

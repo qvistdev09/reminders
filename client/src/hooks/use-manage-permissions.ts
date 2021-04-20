@@ -1,8 +1,7 @@
-import { PermissionOrder } from '../../../src/types/index';
+import { PermissionOrder, UserInPermissionsGrid } from 'reminders-shared/sharedTypes';
 import { useState } from 'react';
 import { useAccessToken } from '../hooks/use-access-token';
 import { postPermissionsOrderSet } from '../api-service/permissions';
-import { UserInPermissionsGrid } from '../../../src/types/index';
 import { useProjects } from './use-projects';
 
 const modifyOrAddPermission = (currentPermissions: UserInPermissionsGrid[], newPermission: UserInPermissionsGrid) => {

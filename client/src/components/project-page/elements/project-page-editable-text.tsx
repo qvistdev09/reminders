@@ -1,4 +1,4 @@
-import { TaskLiveModel } from '../../../../../src/types';
+import { TaskLiveModel } from 'reminders-shared/sharedTypes';
 import { SyntheticEvent, useState } from 'react';
 
 interface Props {

@@ -1,6 +1,6 @@
 import { apiUrl } from './api-url';
 import { makeOptionsObj } from './axios-auth-options';
-import { PermissionOrderSet } from '../../../src/types/index';
+import { PermissionOrderSet } from 'reminders-shared/sharedTypes';
 
 import axios from 'axios';
 

@@ -1,12 +1,13 @@
 import { apiUrl } from './api-url';
 import { makeOptionsObj } from './axios-auth-options';
 import axios from 'axios';
-import { NewProjectFields } from '../../../src/types/index';
+import { NewProjectFields } from 'reminders-shared/sharedTypes';
 
 const postNewProject = (project: NewProjectFields, accessToken: string) =>
   axios.post(`${apiUrl}/projects`, { project }, makeOptionsObj(accessToken));
 
-const getUsersProjects = (accessToken: string) => axios.get(`${apiUrl}/projects`, makeOptionsObj(accessToken));
+const getUsersProjects = (accessToken: string) =>
+  axios.get(`${apiUrl}/projects`, makeOptionsObj(accessToken));
 
 const getSpecificProject = (projectId: string, accesToken?: string) => {
   const path = `${apiUrl}/projects/${projectId}`;
@@ -14,6 +15,6 @@ const getSpecificProject = (projectId: string, accesToken?: string) => {
     return axios.get(path, makeOptionsObj(accesToken));
   }
   return axios.get(path);
-}
+};
 
 export { postNewProject, getUsersProjects, getSpecificProject };

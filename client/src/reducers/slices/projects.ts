@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../store/store';
-import { ProjectObject, UserInPermissionsGrid } from '../../../../src/types/index';
+import { ProjectObject, UserInPermissionsGrid } from 'reminders-shared/sharedTypes';
 
 interface ProjectsState {
   projects: ProjectObject[];

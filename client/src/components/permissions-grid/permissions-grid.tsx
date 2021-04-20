@@ -1,4 +1,4 @@
-import { UserInPermissionsGrid } from '../../../../src/types/index';
+import { UserInPermissionsGrid } from 'reminders-shared/sharedTypes';
 import PermissionsRow from './elements/permissions-row';
 import { useAppUserDetails } from '../../hooks/use-app-user-details';
 

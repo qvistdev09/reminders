@@ -3,8 +3,8 @@ import { SyntheticEvent, useEffect, useRef, useState } from 'react';
 import { useAccessToken } from './use-access-token';
 import { server } from '../config/websocket-server';
 import { Socket } from 'socket.io-client';
-import { SocketStatus, TaskLiveModel, LiveUserPublicIdentity } from '../../../src/types/index';
-import { e } from '../shared-socket-events/shared-socket-events';
+import { SocketStatus, TaskLiveModel, LiveUserPublicIdentity } from 'reminders-shared/sharedTypes';
+import { s } from 'reminders-shared/socketEvents';
 
 const useWebSocket = (projectid: string) => {
   const client = useRef<Socket>();
@@ -26,14 +26,14 @@ const useWebSocket = (projectid: string) => {
         },
       });
       const socket = client.current;
-      socket.on(e.authResponse, (authResponse: SocketStatus) => {
+      socket.on(s.authResponse, (authResponse: SocketStatus) => {
         setSocketStatus(authResponse);
       });
-      socket.on(e.taskList, (tasks: TaskLiveModel[]) => {
+      socket.on(s.taskList, (tasks: TaskLiveModel[]) => {
         console.log(tasks);
         setTasks(tasks);
       });
-      socket.on(e.newUserList, (users: LiveUserPublicIdentity[]) => setUsers(users));
+      socket.on(s.newUserList, (users: LiveUserPublicIdentity[]) => setUsers(users));
     }
 
     return () => {
@@ -52,21 +52,20 @@ const useWebSocket = (projectid: string) => {
   const submitNewTask = (e: SyntheticEvent) => {
     e.preventDefault();
     if (client.current) {
-      console.log('will submit');
-      client.current.emit('newTask', { taskLabel: newTask });
+      client.current.emit(s.newTask, { taskLabel: newTask });
       setNewTask('');
     }
   };
 
   const deleteTask = (taskId: number) => {
     if (client.current) {
-      client.current.emit('deleteTask', taskId);
+      client.current.emit(s.deleteTask, taskId);
     }
   };
 
   const liveChange = (taskId: number, string: string) => {
     if (client.current) {
-      client.current.emit('liveChange', { taskId, string });
+      client.current.emit(s.liveChange, { taskId, string });
     }
   };
 

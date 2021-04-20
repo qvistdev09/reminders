@@ -1,4 +1,4 @@
-import { UserObj, UserInPermissionsGrid } from '../../../src/types/index';
+import { UserObj, UserInPermissionsGrid } from 'reminders-shared/sharedTypes';
 import { userApi } from '../api-service/user';
 import { useState, useEffect } from 'react';
 import { useAccessToken } from './use-access-token';
