@@ -9,8 +9,8 @@
     "node": "14.x"
   },
   "scripts": {
-    "build": "cd server && tsc && cd ../client && yarn build",
+    "build": "yarn workspace server build && yarn workspace client build",
     "start": "node server/build/index.js",
-    "dev": "cd server && yarn dev"
+    "dev": "yarn workspace server dev"
   }
 }
