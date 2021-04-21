@@ -13,6 +13,8 @@ import {
 } from 'reminders-shared/sharedTypes';
 import { s } from 'reminders-shared/socketEvents';
 
+let taskLastEdited: number | null = null;
+
 const useLiveEdit = (projectid: string) => {
   const client = useRef<Socket>();
   const accessToken = useAccessToken();
@@ -51,31 +53,29 @@ const useLiveEdit = (projectid: string) => {
 
   const taskActions = {
     [s.submitNewTask]: (packet: PktTaskLabel) => {
-      if (client.current) {
-        client.current.emit(s.submitNewTask, packet);
-      }
+      client.current?.emit(s.submitNewTask, packet);
     },
     [s.deleteTask]: (packet: PktTaskIdentifier) => {
-      if (client.current) {
-        client.current.emit(s.deleteTask, packet);
-      }
+      client.current?.emit(s.deleteTask, packet);
     },
     [s.liveChange]: (packet: PktLiveChange) => {
-      if (client.current) {
-        client.current.emit(s.liveChange, packet);
-      }
+      taskLastEdited = packet.taskId;
+      client.current?.emit(s.liveChange, packet);
     },
     [s.taskEditStart]: (packet: PktTaskIdentifier) => {
-      if (client.current) {
-        client.current.emit(s.taskEditStart, packet);
-      }
+      taskLastEdited = packet.taskId;
+      client.current?.emit(s.taskEditStart, packet);
     },
     [s.taskEditStop]: (packet: PktTaskIdentifier) => {
-      if (client.current) {
-        client.current.emit(s.taskEditStop, packet);
-      }
+      client.current?.emit(s.taskEditStop, packet);
     },
     [s.stopUserEdit]: () => {
+      if (taskLastEdited) {
+        const packet: PktTaskIdentifier = {
+          taskId: taskLastEdited,
+        };
+        return client.current?.emit(s.stopUserEdit, packet);
+      }
       client.current?.emit(s.stopUserEdit);
     },
   };

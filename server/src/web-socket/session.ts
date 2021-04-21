@@ -44,10 +44,16 @@ class Session {
     }
   }
 
-  stopUserEditOnAllTasks(uid: string) {
+  stopUserEditOnAllTasks(uid: string, packet: PktTaskIdentifier | undefined) {
     this.tasks.forEach(task => {
       this.filterInEditByArray(task, uid);
     });
+    if (packet) {
+      const matchedTask = this.findTask(packet.taskId);
+      if (matchedTask) {
+        this.commitLabelChange(matchedTask);
+      }
+    }
     this.emitTasks();
   }
 

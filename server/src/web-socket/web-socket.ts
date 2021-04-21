@@ -1,9 +1,5 @@
 import http from 'http';
-import {
-  PktLiveChange,
-  PktTaskIdentifier,
-  PktTaskLabel,
-} from 'reminders-shared/sharedTypes';
+import { PktLiveChange, PktTaskIdentifier, PktTaskLabel } from 'reminders-shared/sharedTypes';
 import { s } from 'reminders-shared/socketEvents';
 import { Server } from 'socket.io';
 import { LiveEditManager } from './live-edit-manager';
@@ -42,8 +38,8 @@ io.on('connection', socket => {
       socket.on(s.taskEditStop, (packet: PktTaskIdentifier) => {
         liveEditManager.handleEditStatusChange(newEntry, packet, 'remove');
       });
-      socket.on(s.stopUserEdit, () => {
-        liveEditManager.handleEditStop(newEntry);
+      socket.on(s.stopUserEdit, (packet: PktTaskIdentifier | undefined) => {
+        liveEditManager.handleEditStop(newEntry, packet);
       });
     })
     .catch(() => {

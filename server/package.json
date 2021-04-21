@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev-client": "cd ../client && yarn start",
-    "dev-server": "nodemon build/index.js",
+    "dev-server": "nodemon --delay 500ms build/index.js",
     "build": "tsc",
     "ts-watch": "tsc --watch",
     "dev": "concurrently --kill-others-on-fail \"yarn ts-watch\" \"yarn dev-client\" \"yarn dev-server\""

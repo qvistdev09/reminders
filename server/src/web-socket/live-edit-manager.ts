@@ -74,10 +74,10 @@ class LiveEditManager {
     }
   }
 
-  handleEditStop(client: AuthorizedEntry) {
+  handleEditStop(client: AuthorizedEntry, packet: PktTaskIdentifier | undefined) {
     const matchedSession = this.sessionManager.findSession(client.projectId);
     if (matchedSession) {
-      matchedSession.stopUserEditOnAllTasks(client.userObj.uid);
+      matchedSession.stopUserEditOnAllTasks(client.userObj.uid, packet);
     }
   }
 }
