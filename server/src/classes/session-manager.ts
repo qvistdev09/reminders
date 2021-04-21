@@ -1,6 +1,13 @@
 import randomColor from 'randomcolor';
 import { Server, Socket } from 'socket.io';
-import { LiveUserPublicIdentity, SocketStatus, TaskLiveModel } from 'reminders-shared/sharedTypes';
+import {
+  LiveUserPublicIdentity,
+  PktLiveChange,
+  PktTaskIdentifier,
+  PktTaskLabel,
+  SocketStatus,
+  TaskLiveModel,
+} from 'reminders-shared/sharedTypes';
 import { LiveUser, AuthedSocketObj, Session } from '../types';
 import { Task } from '../database/root';
 import { s } from 'reminders-shared/socketEvents';
@@ -28,6 +35,29 @@ class SessionManager {
 
   findSession(projectId: number) {
     return this.sessions.find(session => session.projectId === projectId);
+  }
+
+  findUser(uid: string, session: Session) {
+    return session.users.find(user => user.uid === uid);
+  }
+
+  findTask(taskId: number, session: Session) {
+    return session.tasks.find(task => task.taskId === taskId);
+  }
+
+  filterInEditByArray(task: TaskLiveModel, uid: string) {
+    task.inEditBy = task.inEditBy.filter(prevUid => prevUid !== uid);
+  }
+
+  addToInEditByArray(task: TaskLiveModel, uid: string) {
+    if (!task.inEditBy.includes(uid)) {
+      task.inEditBy.push(uid);
+    }
+  }
+
+  emitSessionTasks(session: Session) {
+    const { projectId } = session;
+    this.io.to(projectId.toString()).emit(s.taskList, session.tasks);
   }
 
   emitNewUserlist(projectId: number) {
@@ -100,15 +130,16 @@ class SessionManager {
     }
   }
 
-  handleNewTask(client: AuthedSocketObj, newTask: any) {
+  handleNewTask(client: AuthedSocketObj, packet: PktTaskLabel) {
     const matchedSession = this.findSession(client.projectId);
     if (matchedSession) {
-      const { taskLabel } = newTask;
+      const { taskLabel } = packet;
       Task.create({ taskLabel, taskFinished: false, projectId: client.projectId }).then(createdTask => {
         const newTaskObj: TaskLiveModel = {
           taskLabel,
           taskFinished: false,
           taskId: createdTask.taskId as number,
+          inEditBy: [],
         };
         matchedSession.tasks.push(newTaskObj);
         this.io.to(client.projectId.toString()).emit(s.taskList, matchedSession.tasks);
@@ -116,9 +147,10 @@ class SessionManager {
     }
   }
 
-  handleTaskDelete(client: AuthedSocketObj, taskId: number) {
+  handleTaskDelete(client: AuthedSocketObj, packet: PktTaskIdentifier) {
     const matchedSession = this.findSession(client.projectId);
     if (matchedSession) {
+      const { taskId } = packet;
       Task.findOne({ where: { taskId } }).then(foundTask => {
         if (foundTask) {
           foundTask.destroy().then(() => {
@@ -130,15 +162,32 @@ class SessionManager {
     }
   }
 
-  handleLiveChange(client: AuthedSocketObj, changeObj: any) {
+  handleLiveChange(client: AuthedSocketObj, packet: PktLiveChange) {
     const matchedSession = this.findSession(client.projectId);
     if (matchedSession) {
-      const { taskId, string } = changeObj;
+      const { taskId, taskLabel } = packet;
       const matchedTask = matchedSession.tasks.find(task => task.taskId === taskId);
       if (matchedTask) {
-        matchedTask.taskLabel = string;
+        matchedTask.taskLabel = taskLabel;
         this.io.to(client.projectId.toString()).emit(s.taskList, matchedSession.tasks);
       }
+    }
+  }
+
+  handleEditStatusChange(client: AuthedSocketObj, packet: PktTaskIdentifier, operation: 'add' | 'remove') {
+    const matchedSession = this.findSession(client.projectId);
+    if (matchedSession) {
+      const matchedTask = this.findTask(packet.taskId, matchedSession);
+      const matchedUser = this.findUser(client.uid, matchedSession);
+      if (!matchedTask || !matchedUser) {
+        return;
+      }
+      if (operation === 'remove') {
+        this.filterInEditByArray(matchedTask, matchedUser.uid);
+      } else {
+        this.addToInEditByArray(matchedTask, matchedUser.uid);
+      }
+      this.emitSessionTasks(matchedSession);
     }
   }
 }

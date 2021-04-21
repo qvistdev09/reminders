@@ -4,6 +4,7 @@ import { authenticateAndAuthorizeSocket } from '../middleware/auth-socket';
 import http from 'http';
 import { SessionManager } from '../classes/session-manager';
 import { s } from 'reminders-shared/socketEvents';
+import { PktLiveChange, PktTaskIdentifier, PktTaskLabel } from 'reminders-shared/sharedTypes';
 
 const httpServer = http.createServer(app);
 const io = new Server(httpServer);
@@ -22,14 +23,20 @@ io.on('connection', socket => {
       socket.on(s.disconnect, () => {
         sessionManager.handleSocketDisconnect(authedSocket);
       });
-      socket.on(s.newTask, (taskObj: any) => {
-        sessionManager.handleNewTask(authedSocket, taskObj);
+      socket.on(s.submitNewTask, (packet: PktTaskLabel) => {
+        sessionManager.handleNewTask(authedSocket, packet);
       });
-      socket.on(s.deleteTask, (taskId: number) => {
-        sessionManager.handleTaskDelete(authedSocket, taskId);
+      socket.on(s.deleteTask, (packet: PktTaskIdentifier) => {
+        sessionManager.handleTaskDelete(authedSocket, packet);
       });
-      socket.on(s.liveChange, (changeObj: any) => {
-        sessionManager.handleLiveChange(authedSocket, changeObj);
+      socket.on(s.liveChange, (packet: PktLiveChange) => {
+        sessionManager.handleLiveChange(authedSocket, packet);
+      });
+      socket.on(s.taskEditStart, (packet: PktTaskIdentifier) => {
+        sessionManager.handleEditStatusChange(authedSocket, packet, 'add');
+      });
+      socket.on(s.taskEditStop, (packet: PktTaskIdentifier) => {
+        sessionManager.handleEditStatusChange(authedSocket, packet, 'remove');
       });
     })
     .catch(() => {

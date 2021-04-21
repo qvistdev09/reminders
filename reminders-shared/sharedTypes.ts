@@ -52,6 +52,7 @@ export interface TaskLiveModel {
   taskLabel: string;
   taskFinished: boolean;
   taskId: number;
+  inEditBy: string[];
 }
 
 export interface LiveUserPublicIdentity {
@@ -60,3 +61,15 @@ export interface LiveUserPublicIdentity {
   color: string;
   uid: string;
 }
+
+// sockets packets
+
+export interface PktTaskLabel {
+  taskLabel: string;
+}
+
+export interface PktTaskIdentifier {
+  taskId: number;
+}
+
+export interface PktLiveChange extends PktTaskLabel, PktTaskIdentifier {}

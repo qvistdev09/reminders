@@ -9,16 +9,11 @@ interface Props {
 
 const ProjectPageEditor = ({ projectId }: Props) => {
   const [newTaskInput, setNewTaskInput] = useState('');
-  const {
-    socketStatus,
-    session: { tasks, users },
-    submitNewTask,
-    taskActions,
-  } = useLiveEdit(projectId);
+  const { socketStatus, session, taskActions } = useLiveEdit(projectId);
 
   const handleNewSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    submitNewTask(newTaskInput);
+    taskActions.submitNewTask({ taskLabel: newTaskInput });
     setNewTaskInput('');
   };
 
@@ -31,7 +26,7 @@ const ProjectPageEditor = ({ projectId }: Props) => {
       </div>
       <div>
         <h3>Tasks</h3>
-        {tasks.map(taskObj => (
+        {session.tasks.map(taskObj => (
           <Task key={taskObj.taskId} taskObj={taskObj} taskActions={taskActions} />
         ))}
         <form className='form' onSubmit={handleNewSubmit}>
@@ -46,7 +41,7 @@ const ProjectPageEditor = ({ projectId }: Props) => {
       </div>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <h3>Collaborators</h3>
-        {users.map(user => (
+        {session.users.map(user => (
           <p
             key={user.uid}
             style={{

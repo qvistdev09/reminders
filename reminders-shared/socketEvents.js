@@ -5,9 +5,11 @@ const s = {
   authResponse: 'authResponse',
   liveChange: 'liveChange',
   deleteTask: 'deleteTask',
-  newTask: 'newTask',
+  submitNewTask: 'submitNewTask',
   disconnect: 'disconnect',
   connection: 'connection',
+  taskEditStart: 'taskEditStart',
+  taskEditStop: 'taskEditStop',
 };
 
 module.exports = { s };

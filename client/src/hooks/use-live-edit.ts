@@ -3,7 +3,14 @@ import { useEffect, useRef, useState } from 'react';
 import { useAccessToken } from './use-access-token';
 import { server } from '../config/websocket-server';
 import { Socket } from 'socket.io-client';
-import { SocketStatus, TaskLiveModel, LiveUserPublicIdentity } from 'reminders-shared/sharedTypes';
+import {
+  SocketStatus,
+  TaskLiveModel,
+  LiveUserPublicIdentity,
+  PktTaskLabel,
+  PktTaskIdentifier,
+  PktLiveChange,
+} from 'reminders-shared/sharedTypes';
 import { s } from 'reminders-shared/socketEvents';
 
 const useLiveEdit = (projectid: string) => {
@@ -41,22 +48,32 @@ const useLiveEdit = (projectid: string) => {
     };
   }, [accessToken, projectid]);
 
-  const submitNewTask = (taskLabel: string) => {
-    if (client.current) {
-      client.current.emit(s.newTask, { taskLabel });
-    }
-  };
-
-  const deleteTask = (taskId: number) => {
-    if (client.current) {
-      client.current.emit(s.deleteTask, taskId);
-    }
-  };
-
-  const liveChange = (taskId: number, string: string) => {
-    if (client.current) {
-      client.current.emit(s.liveChange, { taskId, string });
-    }
+  const taskActions = {
+    [s.submitNewTask]: (packet: PktTaskLabel) => {
+      if (client.current) {
+        client.current.emit(s.submitNewTask, packet);
+      }
+    },
+    [s.deleteTask]: (packet: PktTaskIdentifier) => {
+      if (client.current) {
+        client.current.emit(s.deleteTask, packet);
+      }
+    },
+    [s.liveChange]: (packet: PktLiveChange) => {
+      if (client.current) {
+        client.current.emit(s.liveChange, packet);
+      }
+    },
+    [s.taskEditStart]: (packet: PktTaskIdentifier) => {
+      if (client.current) {
+        client.current.emit(s.taskEditStart, packet);
+      }
+    },
+    [s.taskEditStop]: (packet: PktTaskIdentifier) => {
+      if (client.current) {
+        client.current.emit(s.taskEditStop, packet);
+      }
+    },
   };
 
   const session = {
@@ -64,15 +81,9 @@ const useLiveEdit = (projectid: string) => {
     users,
   };
 
-  const taskActions = {
-    liveChange,
-    deleteTask,
-  };
-
   return {
     socketStatus,
     session,
-    submitNewTask,
     taskActions,
   };
 };

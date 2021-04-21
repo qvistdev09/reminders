@@ -20,7 +20,7 @@ const Task = ({ taskObj, taskActions }: Props) => {
 
   const handleChange = ({ target: { value } }: { target: HTMLInputElement }) => {
     setInput(value);
-    liveChange(taskObj.taskId, value);
+    liveChange({ taskId: taskObj.taskId, taskLabel: value });
   };
 
   const editableText = inEdit ? (
@@ -34,7 +34,7 @@ const Task = ({ taskObj, taskActions }: Props) => {
   return (
     <div>
       {editableText}
-      <button onClick={() => deleteTask(taskObj.taskId)}>Delete</button>
+      <button onClick={() => deleteTask({ taskId: taskObj.taskId })}>Delete</button>
     </div>
   );
 };
