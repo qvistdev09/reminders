@@ -2,6 +2,7 @@ import { useLiveEdit } from '../../../hooks/use-live-edit';
 import { SyntheticEvent, useState } from 'react';
 import Task from '../task';
 import { TaskLiveModel } from 'reminders-shared/sharedTypes';
+import { useTaskClickListener } from '../../../hooks/use-task-click-listener';
 
 const inEdit = (task: TaskLiveModel, uid: string | null) => {
   if (!uid) {
@@ -17,6 +18,7 @@ interface Props {
 const ProjectPageEditor = ({ projectId }: Props) => {
   const [newTaskInput, setNewTaskInput] = useState('');
   const { socketStatus, session, taskActions } = useLiveEdit(projectId);
+  useTaskClickListener(taskActions.stopUserEdit, parseInt(projectId, 10));
 
   const handleNewSubmit = (e: SyntheticEvent) => {
     e.preventDefault();

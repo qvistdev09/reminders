@@ -3,6 +3,7 @@ import { Server, Socket } from 'socket.io';
 import {
   LiveUserPublicIdentity,
   PktLiveChange,
+  PktProjectIdentifier,
   PktTaskIdentifier,
   PktTaskLabel,
   SocketStatus,
@@ -188,6 +189,18 @@ class SessionManager {
       } else {
         this.addToInEditByArray(matchedTask, matchedUser.uid);
       }
+      this.emitSessionTasks(matchedSession);
+    }
+  }
+
+  handleUserStopEdit(client: AuthedSocketObj, packet: PktProjectIdentifier) {
+    const matchedSession = this.findSession(packet.projectId);
+    const { uid } = client;
+    if (matchedSession) {
+      matchedSession.tasks.forEach(task => {
+        // commit changes if there were any
+        this.filterInEditByArray(task, uid);
+      });
       this.emitSessionTasks(matchedSession);
     }
   }

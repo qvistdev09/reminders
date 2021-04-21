@@ -10,7 +10,7 @@ interface Props {
 
 const Task = ({ taskObj, inEdit, taskActions }: Props) => {
   const { taskLabel, taskId } = taskObj;
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState(taskLabel);
   const { liveChange, deleteTask, taskEditStop, taskEditStart } = taskActions;
 
   const handleCommit = (e?: SyntheticEvent) => {
@@ -25,14 +25,19 @@ const Task = ({ taskObj, inEdit, taskActions }: Props) => {
 
   const editableText = inEdit ? (
     <form onSubmit={handleCommit} onBlur={handleCommit}>
-      <input type='text' value={input} onChange={handleChange} />
+      <input
+        type='text'
+        value={input}
+        onChange={handleChange}
+        className='task__input'
+      />
     </form>
   ) : (
-    <button onClick={() => taskEditStart({ taskId })}>{taskLabel}</button>
+    <button onClick={() => taskEditStart({ taskId })} className='task__label-btn'>{taskLabel}</button>
   );
 
   return (
-    <div id={`task-${taskObj.taskId}`}>
+    <div className='task'>
       {editableText}
       <button onClick={() => deleteTask({ taskId })}>Delete</button>
     </div>

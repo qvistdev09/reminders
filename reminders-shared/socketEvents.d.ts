@@ -10,6 +10,7 @@ interface Events {
   connection: 'connection';
   taskEditStart: 'taskEditStart';
   taskEditStop: 'taskEditStop';
+  stopUserEdit: 'stopUserEdit';
 }
 
 export const s: Events;

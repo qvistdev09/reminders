@@ -4,7 +4,12 @@ import { authenticateAndAuthorizeSocket } from '../middleware/auth-socket';
 import http from 'http';
 import { SessionManager } from '../classes/session-manager';
 import { s } from 'reminders-shared/socketEvents';
-import { PktLiveChange, PktTaskIdentifier, PktTaskLabel } from 'reminders-shared/sharedTypes';
+import {
+  PktLiveChange,
+  PktProjectIdentifier,
+  PktTaskIdentifier,
+  PktTaskLabel,
+} from 'reminders-shared/sharedTypes';
 
 const httpServer = http.createServer(app);
 const io = new Server(httpServer);
@@ -37,6 +42,9 @@ io.on('connection', socket => {
       });
       socket.on(s.taskEditStop, (packet: PktTaskIdentifier) => {
         sessionManager.handleEditStatusChange(authedSocket, packet, 'remove');
+      });
+      socket.on(s.stopUserEdit, (packet: PktProjectIdentifier) => {
+        sessionManager.handleUserStopEdit(authedSocket, packet);
       });
     })
     .catch(() => {

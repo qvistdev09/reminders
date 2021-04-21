@@ -10,6 +10,7 @@ import {
   PktTaskLabel,
   PktTaskIdentifier,
   PktLiveChange,
+  PktProjectIdentifier,
 } from 'reminders-shared/sharedTypes';
 import { s } from 'reminders-shared/socketEvents';
 
@@ -74,6 +75,9 @@ const useLiveEdit = (projectid: string) => {
       if (client.current) {
         client.current.emit(s.taskEditStop, packet);
       }
+    },
+    [s.stopUserEdit]: (packet: PktProjectIdentifier) => {
+      client.current?.emit(s.stopUserEdit, packet);
     },
   };
 

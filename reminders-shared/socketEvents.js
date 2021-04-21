@@ -10,6 +10,7 @@ const s = {
   connection: 'connection',
   taskEditStart: 'taskEditStart',
   taskEditStop: 'taskEditStop',
+  stopUserEdit: 'stopUserEdit',
 };
 
 module.exports = { s };
