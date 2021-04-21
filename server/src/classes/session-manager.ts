@@ -9,7 +9,7 @@ import {
   SocketStatus,
   TaskLiveModel,
 } from 'reminders-shared/sharedTypes';
-import { LiveUser, AuthedSocketObj, Session } from '../types';
+import { LiveUser, Session, AuthorizedEntry, Connection } from '../types';
 import { Task } from '../database/root';
 import { s } from 'reminders-shared/socketEvents';
 
@@ -17,19 +17,20 @@ const createPublicUserList = (users: LiveUser[]): LiveUserPublicIdentity[] => {
   return users.map(
     user =>
       <LiveUserPublicIdentity>{
-        fullName: `${user.firstName} ${user.lastName}`,
-        role: user.permissionRole,
+        fullName: `${user.userObj.firstName} ${user.userObj.lastName}`,
         color: user.color,
-        uid: user.uid,
+        uid: user.userObj.uid,
       }
   );
 };
 
 class SessionManager {
+  users: LiveUser[];
   sessions: Session[];
   io: Server;
 
   constructor(io: Server) {
+    this.users = [];
     this.sessions = [];
     this.io = io;
   }
@@ -38,8 +39,8 @@ class SessionManager {
     return this.sessions.find(session => session.projectId === projectId);
   }
 
-  findUser(uid: string, session: Session) {
-    return session.users.find(user => user.uid === uid);
+  findUser(uid: string) {
+    return this.users.find(user => user.userObj.uid === uid);
   }
 
   findTask(taskId: number, session: Session) {
@@ -61,10 +62,23 @@ class SessionManager {
     this.io.to(projectId.toString()).emit(s.taskList, session.tasks);
   }
 
+  getUsersInProject(projectId: number) {
+    const activeUsers = this.users.filter(user => {
+      const matchedConnection = user.connections.find(connection => connection.projectId === projectId);
+      if (matchedConnection) {
+        return true;
+      }
+      return false;
+    });
+    return activeUsers;
+  }
+
   emitNewUserlist(projectId: number) {
     const session = this.findSession(projectId);
     if (session) {
-      this.io.to(projectId.toString()).emit(s.newUserList, createPublicUserList(session.users));
+      const users = this.getUsersInProject(projectId);
+      const publicList = createPublicUserList(users);
+      this.io.to(projectId.toString()).emit(s.newUserList, publicList);
     }
   }
 
@@ -75,64 +89,91 @@ class SessionManager {
     }
   }
 
-  handleUserConnect(client: AuthedSocketObj) {
-    const { socket, projectId } = client;
-    const authResponse: SocketStatus = {
-      authenticated: true,
-      role: client.permissionRole,
-      uid: client.uid,
-    };
-    socket.emit(s.authResponse, authResponse);
+  createSessionIfNeeded(projectId: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const matchedSession = this.findSession(projectId);
+      if (matchedSession) {
+        return resolve();
+      }
+      console.log('Retrieving database entries to create new session');
+      const retrievedTasks = Task.findAll({ where: { projectId } })
+        .then(dbTasks => {
+          const tasks: TaskLiveModel[] = dbTasks.map(dbEntry => ({
+            taskLabel: dbEntry.taskLabel,
+            taskId: dbEntry.taskId as number,
+            taskFinished: dbEntry.taskFinished,
+            inEditBy: [],
+          }));
+          const session: Session = {
+            tasks,
+            projectId,
+          };
+          this.sessions.push(session);
+          resolve();
+        })
+        .catch(() => reject());
+    });
+  }
 
-    const room = projectId.toString();
-    socket.join(room);
-
-    const newLiveUser: LiveUser = {
-      ...client,
-      color: randomColor(),
-    };
-
-    const newPublicIdentity: LiveUserPublicIdentity = {
-      fullName: `${client.firstName} ${client.lastName}`,
-      role: client.permissionRole,
-      color: newLiveUser.color,
-      uid: client.uid,
-    };
-
-    socket.emit(s.identity, newPublicIdentity);
-
+  destroySessionIfNeeded(projectId: number) {
     const matchedSession = this.findSession(projectId);
     if (matchedSession) {
-      const existingUser = matchedSession.users.find(user => user.uid === client.uid);
-      if (existingUser) {
-        existingUser.socket = client.socket;
-      } else {
-        matchedSession.users.push(newLiveUser);
+      const activeUsers = this.getUsersInProject(projectId);
+      if (activeUsers.length === 0) {
+        console.log('destroying session with no users');
+        this.sessions = this.sessions.filter(session => session.projectId !== projectId);
       }
-      this.giveClientSessionTasks(socket, projectId);
-      return this.emitNewUserlist(projectId);
-    }
-
-    const newSession: Session = {
-      users: [newLiveUser],
-      projectId,
-      tasks: [],
-    };
-    // populate new session with data from database and send to client
-
-    this.sessions.push(newSession);
-    this.emitNewUserlist(projectId);
-  }
-
-  handleSocketDisconnect(client: AuthedSocketObj) {
-    const matchedSession = this.findSession(client.projectId);
-    if (matchedSession) {
-      matchedSession.users = matchedSession.users.filter(user => user.uid !== client.uid);
-      this.emitNewUserlist(client.projectId);
     }
   }
 
-  handleNewTask(client: AuthedSocketObj, packet: PktTaskLabel) {
+  handleUserConnect(newEntry: AuthorizedEntry) {
+    this.createSessionIfNeeded(newEntry.projectId).then(() => {
+      const newConnection: Connection = {
+        socket: newEntry.socket,
+        permissionRole: newEntry.permissionRole,
+        projectId: newEntry.projectId,
+      };
+      newConnection.socket.join(newConnection.projectId.toString());
+      const existingUser = this.findUser(newEntry.userObj.uid);
+      if (existingUser) {
+        existingUser.connections.push(newConnection);
+      } else {
+        const newLiveUser: LiveUser = {
+          userObj: newEntry.userObj,
+          color: randomColor(),
+          connections: [newConnection],
+        };
+        this.users.push(newLiveUser);
+      }
+      this.emitNewUserlist(newConnection.projectId);
+      this.giveClientSessionTasks(newConnection.socket, newConnection.projectId);
+      const authResponse: SocketStatus = {
+        authenticated: true,
+        role: newEntry.permissionRole,
+        uid: newEntry.userObj.uid,
+      };
+      newEntry.socket.emit(s.authResponse, authResponse);
+    });
+  }
+
+  handleSocketDisconnect(client: AuthorizedEntry) {
+    const { uid } = client.userObj;
+    const matchedUser = this.findUser(uid);
+    if (matchedUser) {
+      matchedUser.connections = matchedUser.connections.filter(connection => {
+        return connection.socket.id !== client.socket.id;
+      });
+      if (matchedUser.connections.length === 0) {
+        this.emitNewUserlist(client.projectId);
+      }
+      this.destroySessionIfNeeded(client.projectId);
+    }
+  }
+
+  handleNewTask(client: AuthorizedEntry, packet: PktTaskLabel) {
+    if (client.permissionRole === 'viewer') {
+      return;
+    }
     const matchedSession = this.findSession(client.projectId);
     if (matchedSession) {
       const { taskLabel } = packet;
@@ -149,7 +190,10 @@ class SessionManager {
     }
   }
 
-  handleTaskDelete(client: AuthedSocketObj, packet: PktTaskIdentifier) {
+  handleTaskDelete(client: AuthorizedEntry, packet: PktTaskIdentifier) {
+    if (client.permissionRole === 'viewer') {
+      return;
+    }
     const matchedSession = this.findSession(client.projectId);
     if (matchedSession) {
       const { taskId } = packet;
@@ -164,7 +208,10 @@ class SessionManager {
     }
   }
 
-  handleLiveChange(client: AuthedSocketObj, packet: PktLiveChange) {
+  handleLiveChange(client: AuthorizedEntry, packet: PktLiveChange) {
+    if (client.permissionRole === 'viewer') {
+      return;
+    }
     const matchedSession = this.findSession(client.projectId);
     if (matchedSession) {
       const { taskId, taskLabel } = packet;
@@ -176,30 +223,31 @@ class SessionManager {
     }
   }
 
-  handleEditStatusChange(client: AuthedSocketObj, packet: PktTaskIdentifier, operation: 'add' | 'remove') {
+  handleEditStatusChange(client: AuthorizedEntry, packet: PktTaskIdentifier, operation: 'add' | 'remove') {
+    if (client.permissionRole === 'viewer') {
+      return;
+    }
     const matchedSession = this.findSession(client.projectId);
     if (matchedSession) {
       const matchedTask = this.findTask(packet.taskId, matchedSession);
-      const matchedUser = this.findUser(client.uid, matchedSession);
-      if (!matchedTask || !matchedUser) {
+      if (!matchedTask) {
         return;
       }
       if (operation === 'remove') {
-        this.filterInEditByArray(matchedTask, matchedUser.uid);
+        this.filterInEditByArray(matchedTask, client.userObj.uid);
       } else {
-        this.addToInEditByArray(matchedTask, matchedUser.uid);
+        this.addToInEditByArray(matchedTask, client.userObj.uid);
       }
       this.emitSessionTasks(matchedSession);
     }
   }
 
-  handleUserStopEdit(client: AuthedSocketObj, packet: PktProjectIdentifier) {
+  handleUserStopEdit(client: AuthorizedEntry, packet: PktProjectIdentifier) {
     const matchedSession = this.findSession(packet.projectId);
-    const { uid } = client;
     if (matchedSession) {
       matchedSession.tasks.forEach(task => {
         // commit changes if there were any
-        this.filterInEditByArray(task, uid);
+        this.filterInEditByArray(task, client.userObj.uid);
       });
       this.emitSessionTasks(matchedSession);
     }

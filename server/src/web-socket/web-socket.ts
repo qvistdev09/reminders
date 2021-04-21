@@ -1,15 +1,15 @@
-import { Server } from 'socket.io';
-import { app } from '../express-main/app';
-import { authenticateAndAuthorizeSocket } from '../middleware/auth-socket';
 import http from 'http';
-import { SessionManager } from '../classes/session-manager';
-import { s } from 'reminders-shared/socketEvents';
 import {
   PktLiveChange,
   PktProjectIdentifier,
   PktTaskIdentifier,
   PktTaskLabel,
 } from 'reminders-shared/sharedTypes';
+import { s } from 'reminders-shared/socketEvents';
+import { Server } from 'socket.io';
+import { SessionManager } from '../classes/session-manager';
+import { app } from '../express-main/app';
+import { authenticateAndAuthorizeSocket } from '../middleware/auth-socket';
 
 const httpServer = http.createServer(app);
 const io = new Server(httpServer);
@@ -22,29 +22,29 @@ io.on('connection', socket => {
     return socket.disconnect();
   }
   authenticateAndAuthorizeSocket(authorization, projectid, socket)
-    .then(authedSocket => {
-      sessionManager.handleUserConnect(authedSocket);
-      const { socket } = authedSocket;
+    .then(newEntry => {
+      sessionManager.handleUserConnect(newEntry);
+      const { socket } = newEntry;
       socket.on(s.disconnect, () => {
-        sessionManager.handleSocketDisconnect(authedSocket);
+        sessionManager.handleSocketDisconnect(newEntry);
       });
       socket.on(s.submitNewTask, (packet: PktTaskLabel) => {
-        sessionManager.handleNewTask(authedSocket, packet);
+        sessionManager.handleNewTask(newEntry, packet);
       });
       socket.on(s.deleteTask, (packet: PktTaskIdentifier) => {
-        sessionManager.handleTaskDelete(authedSocket, packet);
+        sessionManager.handleTaskDelete(newEntry, packet);
       });
       socket.on(s.liveChange, (packet: PktLiveChange) => {
-        sessionManager.handleLiveChange(authedSocket, packet);
+        sessionManager.handleLiveChange(newEntry, packet);
       });
       socket.on(s.taskEditStart, (packet: PktTaskIdentifier) => {
-        sessionManager.handleEditStatusChange(authedSocket, packet, 'add');
+        sessionManager.handleEditStatusChange(newEntry, packet, 'add');
       });
       socket.on(s.taskEditStop, (packet: PktTaskIdentifier) => {
-        sessionManager.handleEditStatusChange(authedSocket, packet, 'remove');
+        sessionManager.handleEditStatusChange(newEntry, packet, 'remove');
       });
       socket.on(s.stopUserEdit, (packet: PktProjectIdentifier) => {
-        sessionManager.handleUserStopEdit(authedSocket, packet);
+        sessionManager.handleUserStopEdit(newEntry, packet);
       });
     })
     .catch(() => {
