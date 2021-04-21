@@ -18,7 +18,7 @@ interface Props {
 const ProjectPageEditor = ({ projectId }: Props) => {
   const [newTaskInput, setNewTaskInput] = useState('');
   const { socketStatus, session, taskActions } = useLiveEdit(projectId);
-  useTaskClickListener(taskActions.stopUserEdit, parseInt(projectId, 10));
+  useTaskClickListener(taskActions.stopUserEdit);
 
   const handleNewSubmit = (e: SyntheticEvent) => {
     e.preventDefault();

@@ -3,7 +3,7 @@ import { TaskActions } from '../@types/src/components/project-page/task';
 
 type StopUserEdit = Pick<TaskActions, 'stopUserEdit'>['stopUserEdit'];
 
-const useTaskClickListener = (stopUserEdit: StopUserEdit, projectId: number) => {
+const useTaskClickListener = (stopUserEdit: StopUserEdit) => {
   useEffect(() => {
     const click = (e: MouseEvent) => {
       const { target } = e;
@@ -11,7 +11,7 @@ const useTaskClickListener = (stopUserEdit: StopUserEdit, projectId: number) => 
         if (target.classList.contains('task__input') || target.classList.contains('task__label-btn')) {
           return;
         }
-        stopUserEdit({ projectId });
+        stopUserEdit();
       }
     };
 
@@ -20,7 +20,7 @@ const useTaskClickListener = (stopUserEdit: StopUserEdit, projectId: number) => 
     return () => {
       document.body.removeEventListener('click', click);
     };
-  }, [projectId, stopUserEdit]);
+  }, [stopUserEdit]);
 };
 
 export { useTaskClickListener };

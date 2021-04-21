@@ -22,11 +22,6 @@ export interface LiveUser {
   connections: Connection[];
 }
 
-export interface Session {
-  projectId: number;
-  tasks: TaskLiveModel[];
-}
-
 // Projects route
 
 export interface NewProject extends NewProjectFields {
