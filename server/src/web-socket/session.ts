@@ -16,6 +16,16 @@ class Session {
     this.room = projectId.toString();
   }
 
+  commitLabelChange(task: TaskLiveModel) {
+    const { taskLabel, taskId } = task;
+    Task.findOne({ where: { taskId } }).then(dbEntry => {
+      if (dbEntry) {
+        dbEntry.taskLabel = taskLabel;
+        dbEntry.save();
+      }
+    });
+  }
+
   emitTasks() {
     io.to(this.room).emit(s.taskList, this.tasks);
   }
@@ -55,6 +65,7 @@ class Session {
     }
     if (operation === 'remove') {
       this.filterInEditByArray(matchedTask, client.userObj.uid);
+      this.commitLabelChange(matchedTask);
     } else {
       this.addToInEditByArray(matchedTask, client.userObj.uid);
     }
