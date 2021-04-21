@@ -74,3 +74,7 @@ export interface PktTaskIdentifier {
 }
 
 export interface PktLiveChange extends PktTaskLabel, PktTaskIdentifier {}
+
+export interface PktTaskStatus extends PktTaskIdentifier {
+  taskFinished: boolean;
+}

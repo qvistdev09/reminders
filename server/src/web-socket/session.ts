@@ -1,4 +1,10 @@
-import { PktLiveChange, PktTaskIdentifier, PktTaskLabel, TaskLiveModel } from 'reminders-shared/sharedTypes';
+import {
+  PktLiveChange,
+  PktTaskIdentifier,
+  PktTaskLabel,
+  PktTaskStatus,
+  TaskLiveModel,
+} from 'reminders-shared/sharedTypes';
 import { io } from './web-socket';
 import { s } from 'reminders-shared/socketEvents';
 import { Socket } from 'socket.io';
@@ -21,6 +27,16 @@ class Session {
     Task.findOne({ where: { taskId } }).then(dbEntry => {
       if (dbEntry) {
         dbEntry.taskLabel = taskLabel;
+        dbEntry.save();
+      }
+    });
+  }
+
+  commitStatusChange(task: TaskLiveModel, newStatus: boolean) {
+    const { taskId } = task;
+    Task.findOne({ where: { taskId } }).then(dbEntry => {
+      if (dbEntry) {
+        dbEntry.taskFinished = newStatus;
         dbEntry.save();
       }
     });
@@ -109,6 +125,16 @@ class Session {
     const matchedTask = this.findTask(taskId);
     if (matchedTask) {
       matchedTask.taskLabel = taskLabel;
+      this.emitTasks();
+    }
+  }
+
+  setTaskStatus(packet: PktTaskStatus) {
+    const { taskId, taskFinished } = packet;
+    const matchedTask = this.findTask(taskId);
+    if (matchedTask) {
+      matchedTask.taskFinished = taskFinished;
+      this.commitStatusChange(matchedTask, taskFinished);
       this.emitTasks();
     }
   }

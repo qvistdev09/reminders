@@ -1,4 +1,10 @@
-import { PktLiveChange, PktTaskIdentifier, PktTaskLabel, SocketStatus } from 'reminders-shared/sharedTypes';
+import {
+  PktLiveChange,
+  PktTaskIdentifier,
+  PktTaskLabel,
+  PktTaskStatus,
+  SocketStatus,
+} from 'reminders-shared/sharedTypes';
 import { s } from 'reminders-shared/socketEvents';
 import { AuthorizedEntry } from '../types';
 import { SessionManager } from './session-manager';
@@ -78,6 +84,13 @@ class LiveEditManager {
     const matchedSession = this.sessionManager.findSession(client.projectId);
     if (matchedSession) {
       matchedSession.stopUserEditOnAllTasks(client.userObj.uid, packet);
+    }
+  }
+
+  handleTaskStatusChange(client: AuthorizedEntry, packet: PktTaskStatus) {
+    const matchedSession = this.sessionManager.findSession(client.projectId);
+    if (matchedSession) {
+      matchedSession.setTaskStatus(packet);
     }
   }
 }

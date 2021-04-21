@@ -11,6 +11,7 @@ const s = {
   taskEditStart: 'taskEditStart',
   taskEditStop: 'taskEditStop',
   stopUserEdit: 'stopUserEdit',
+  setTaskStatus: 'setTaskStatus',
 };
 
 module.exports = { s };

@@ -11,6 +11,7 @@ interface Events {
   taskEditStart: 'taskEditStart';
   taskEditStop: 'taskEditStop';
   stopUserEdit: 'stopUserEdit';
+  setTaskStatus: 'setTaskStatus';
 }
 
 export const s: Events;
