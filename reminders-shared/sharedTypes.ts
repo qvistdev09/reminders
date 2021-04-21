@@ -46,6 +46,7 @@ export interface ProjectAccessResponse {
 export interface SocketStatus {
   authenticated: boolean;
   role: PermissionRole | 'Owner' | null;
+  uid: string | null;
 }
 
 export interface TaskLiveModel {

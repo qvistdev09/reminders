@@ -1,7 +1,14 @@
 import { useLiveEdit } from '../../../hooks/use-live-edit';
 import { SyntheticEvent, useState } from 'react';
-
 import Task from '../task';
+import { TaskLiveModel } from 'reminders-shared/sharedTypes';
+
+const inEdit = (task: TaskLiveModel, uid: string | null) => {
+  if (!uid) {
+    return false;
+  }
+  return task.inEditBy.includes(uid);
+};
 
 interface Props {
   projectId: string;
@@ -27,7 +34,12 @@ const ProjectPageEditor = ({ projectId }: Props) => {
       <div>
         <h3>Tasks</h3>
         {session.tasks.map(taskObj => (
-          <Task key={taskObj.taskId} taskObj={taskObj} taskActions={taskActions} />
+          <Task
+            key={taskObj.taskId}
+            taskObj={taskObj}
+            inEdit={inEdit(taskObj, socketStatus.uid)}
+            taskActions={taskActions}
+          />
         ))}
         <form className='form' onSubmit={handleNewSubmit}>
           <input

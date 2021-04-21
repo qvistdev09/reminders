@@ -19,6 +19,7 @@ const useLiveEdit = (projectid: string) => {
   const [socketStatus, setSocketStatus] = useState<SocketStatus>({
     authenticated: false,
     role: null,
+    uid: null,
   });
   const [tasks, setTasks] = useState<TaskLiveModel[]>([]);
   const [users, setUsers] = useState<LiveUserPublicIdentity[]>([]);

@@ -79,6 +79,7 @@ class SessionManager {
     const authResponse: SocketStatus = {
       authenticated: true,
       role: client.permissionRole,
+      uid: client.uid,
     };
     socket.emit(s.authResponse, authResponse);
 

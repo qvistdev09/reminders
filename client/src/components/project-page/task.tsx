@@ -1,26 +1,26 @@
-import { SyntheticEvent } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import { TaskLiveModel } from 'reminders-shared/sharedTypes';
 import { TaskActions } from '../../@types/src/components/project-page/task';
-import { useTaskLabel } from '../../hooks/use-task-label';
 
 interface Props {
   taskObj: TaskLiveModel;
+  inEdit: boolean;
   taskActions: TaskActions;
 }
 
-const Task = ({ taskObj, taskActions }: Props) => {
-  const { taskLabel } = taskObj;
-  const { inEdit, turnEdit, input, setInput } = useTaskLabel(taskLabel);
-  const { liveChange, deleteTask } = taskActions;
+const Task = ({ taskObj, inEdit, taskActions }: Props) => {
+  const { taskLabel, taskId } = taskObj;
+  const [input, setInput] = useState('');
+  const { liveChange, deleteTask, taskEditStop, taskEditStart } = taskActions;
 
   const handleCommit = (e?: SyntheticEvent) => {
     e?.preventDefault();
-    turnEdit.off();
+    taskEditStop({ taskId: taskObj.taskId });
   };
 
   const handleChange = ({ target: { value } }: { target: HTMLInputElement }) => {
     setInput(value);
-    liveChange({ taskId: taskObj.taskId, taskLabel: value });
+    liveChange({ taskId, taskLabel: value });
   };
 
   const editableText = inEdit ? (
@@ -28,13 +28,13 @@ const Task = ({ taskObj, taskActions }: Props) => {
       <input type='text' value={input} onChange={handleChange} />
     </form>
   ) : (
-    <button onClick={() => turnEdit.on()}>{taskLabel}</button>
+    <button onClick={() => taskEditStart({ taskId })}>{taskLabel}</button>
   );
 
   return (
-    <div>
+    <div id={`task-${taskObj.taskId}`}>
       {editableText}
-      <button onClick={() => deleteTask({ taskId: taskObj.taskId })}>Delete</button>
+      <button onClick={() => deleteTask({ taskId })}>Delete</button>
     </div>
   );
 };
