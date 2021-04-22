@@ -3,6 +3,7 @@ import { SyntheticEvent, useState } from 'react';
 import Task from '../task';
 import { TaskLiveModel } from 'reminders-shared/sharedTypes';
 import { useTaskClickListener } from '../../../hooks/use-task-click-listener';
+import { useTaskFilterer } from '../../../hooks/use-task-filterer';
 
 const inEdit = (task: TaskLiveModel, uid: string | null) => {
   if (!uid) {
@@ -18,6 +19,7 @@ interface Props {
 const ProjectPageEditor = ({ projectId }: Props) => {
   const [newTaskInput, setNewTaskInput] = useState('');
   const { socketStatus, session, taskActions } = useLiveEdit(projectId);
+  const { nextFilter, filteredTasks, currentFilter } = useTaskFilterer(session.tasks);
   useTaskClickListener(taskActions.stopUserEdit);
 
   const handleNewSubmit = (e: SyntheticEvent) => {
@@ -35,7 +37,8 @@ const ProjectPageEditor = ({ projectId }: Props) => {
       </div>
       <div>
         <h3>Tasks</h3>
-        {session.tasks.map(taskObj => (
+        <button onClick={() => nextFilter()}>({currentFilter})</button>
+        {filteredTasks.map(taskObj => (
           <Task
             key={taskObj.taskId}
             taskObj={taskObj}
