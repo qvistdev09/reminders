@@ -1,25 +1,23 @@
 import { useState, useEffect } from 'react';
-import { useAuthenticationStatus } from './use-authentication-status';
-import { useAccessToken } from './use-access-token';
 import { getSpecificProject } from '../api-service/projects';
 import { ProjectAccessResponse } from 'reminders-shared/sharedTypes';
+import { useOktaAuth } from '@okta/okta-react';
 
 const useAccessProject = (projectId: string) => {
+  const { authState } = useOktaAuth();
   const [response, setResponse] = useState<ProjectAccessResponse | null>(null);
-  const { authenticated } = useAuthenticationStatus();
-  const accessToken = useAccessToken();
 
   useEffect(() => {
-    if (authenticated && accessToken) {
-      getSpecificProject(projectId, accessToken).then(res => {
-        setResponse(res.data);
+    const accessToken = authState.accessToken?.accessToken;
+    getSpecificProject(projectId, accessToken).then(res => {
+      setResponse(prev => {
+        if (!prev || prev.role === 'none') {
+          return res.data;
+        }
+        return prev;
       });
-    } else {
-      getSpecificProject(projectId).then(res => {
-        setResponse(res.data);
-      });
-    }
-  }, [authenticated, accessToken, projectId]);
+    });
+  }, [projectId, authState.accessToken]);
 
   return {
     response,
