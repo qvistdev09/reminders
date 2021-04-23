@@ -1,4 +1,4 @@
-import { UserObj, UserInPermissionsGrid } from 'reminders-shared/sharedTypes';
+import { UserObj, UserInPermissionsGrid, PermissionOrder } from 'reminders-shared/sharedTypes';
 import { userApi } from '../api-service/user';
 import { useState, useEffect } from 'react';
 import { useAccessToken } from './use-access-token';
@@ -6,29 +6,14 @@ import { useAppUserDetails } from './use-app-user-details';
 import { useProjects } from './use-projects';
 import { UserObjFilterer } from '../classes/user-obj-filterer';
 
-const setDefaultRoles = (users: UserObj[]) =>
-  users.map(
-    user =>
-      ({
-        ...user,
-        permissionRole: 'viewer',
-      } as UserInPermissionsGrid)
-  );
-
-interface HookReturn {
-  searchMatches: UserObj[];
-  selection: UserInPermissionsGrid[];
-  addUser: (userProfile: UserObj) => void;
-}
-
 let mounted = true;
 
-const useAddNewUsers = (projectId: number, searchValue?: string): HookReturn => {
+const useAddNewUsers = (projectId: number, searchValue?: string) => {
   const { projects } = useProjects();
   const accessToken = useAccessToken();
   const appUser = useAppUserDetails();
   const [usersCatalog, setUsersCatalog] = useState([] as UserObj[]);
-  const [selectedUsers, setSelectedUsers] = useState([] as UserObj[]);
+  const [selectedUsers, setSelectedUsers] = useState([] as UserInPermissionsGrid[]);
 
   useEffect(() => {
     mounted = true;
@@ -51,16 +36,33 @@ const useAddNewUsers = (projectId: number, searchValue?: string): HookReturn => 
     .filterBySearch(searchValue)
     .limitResults(4);
 
-  const addUser = (newUser: UserObj) => {
-    setSelectedUsers(prevstate => [...prevstate, newUser]);
+  const changeRole = (change: PermissionOrder) => {
+    setSelectedUsers(prevState => {
+      return prevState.map(prevUser => {
+        if (prevUser.uid === change.permissionUid) {
+          return {
+            ...prevUser,
+            permissionRole: change.permissionRole,
+          };
+        }
+        return prevUser;
+      });
+    });
   };
 
-  const selectedUsersWithDefaultRole = setDefaultRoles(selectedUsers);
+  const addUser = (newUser: UserObj) => {
+    const newUserObj: UserInPermissionsGrid = {
+      ...newUser,
+      permissionRole: 'viewer',
+    };
+    setSelectedUsers(prevstate => [...prevstate, newUserObj]);
+  };
 
   return {
     searchMatches,
-    selection: selectedUsersWithDefaultRole,
+    selection: selectedUsers,
     addUser,
+    changeRole,
   };
 };
 

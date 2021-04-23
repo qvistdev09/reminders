@@ -2,19 +2,25 @@ import { useEffect } from 'react';
 import { useAccessToken } from './use-access-token';
 import { projectsApi } from '../api-service/projects';
 import { useAppDispatch, useAppSelector } from './redux-hooks';
-import { getProjects, setProjects, updateOrAddPermissions, localDelete } from '../reducers/slices/projects';
-import { UserInPermissionsGrid } from 'reminders-shared/sharedTypes';
+import { getProjects, projectsReducer } from '../reducers/slices/projects';
+import {
+  PermissionOrder,
+  PermissionOrderSet,
+  ProjectVisibility,
+  UserInPermissionsGrid,
+} from 'reminders-shared/sharedTypes';
+import { permissionsApi } from '../api-service/permissions';
 
 const useProjects = () => {
   const accessToken = useAccessToken();
   const dispatch = useAppDispatch();
-  const { projects, retrieved, locallyChangedProjects } = useAppSelector(getProjects);
+  const { projects, retrieved } = useAppSelector(getProjects);
 
   const syncProjectsWithServer = () => {
     if (accessToken) {
       projectsApi
         .getAll(accessToken, 'mine')
-        .then(({ data: { projects } }) => dispatch(setProjects(projects)));
+        .then(({ data: { projects } }) => dispatch(projectsReducer.setAll(projects)));
     }
   };
 
@@ -32,19 +38,55 @@ const useProjects = () => {
     }
   };
 
-  const changePermissionsLocally = (projectId: number, permissionChanges: UserInPermissionsGrid[]) => {
-    dispatch(
-      updateOrAddPermissions({
+  const addPermissions = (projectId: number, newPermissions: UserInPermissionsGrid[]) => {
+    if (accessToken) {
+      dispatch(projectsReducer.addPermissions({ projectId, newPermissions }));
+      const assignments: PermissionOrder[] = newPermissions.map(permission => ({
+        permissionUid: permission.uid,
+        permissionRole: permission.permissionRole,
+      }));
+      const orderSet = {
         projectId,
-        permissionChanges,
-      })
-    );
+        assignments,
+      };
+      permissionsApi.postOrderSet(orderSet, accessToken).catch(() => syncProjectsWithServer());
+    }
+  };
+
+  const editSeveralPermissions = (projectId: number, changedPermissions: PermissionOrder[]) => {
+    dispatch(projectsReducer.editSeveralPermissions({ projectId, changedPermissions }));
+  };
+
+  const editPermission = (projectId: number, permission: PermissionOrder) => {
+    if (accessToken) {
+      dispatch(
+        projectsReducer.editPermission({
+          projectId,
+          uid: permission.permissionUid,
+          newRole: permission.permissionRole,
+        })
+      );
+      const orderSet: PermissionOrderSet = {
+        projectId,
+        assignments: [permission],
+      };
+      permissionsApi.postOrderSet(orderSet, accessToken).catch(() => syncProjectsWithServer());
+    }
   };
 
   const deleteProject = (projectId: number) => {
     if (accessToken) {
-      dispatch(localDelete({ projectId }));
+      dispatch(projectsReducer.delete({ projectId }));
       projectsApi.delete(projectId.toString(), accessToken).catch(() => syncProjectsWithServer());
+    }
+  };
+
+  const changeVisibility = (projectId: number, newSetting: ProjectVisibility) => {
+    if (accessToken) {
+      dispatch(projectsReducer.changeVisibility({ projectId, newSetting }));
+      projectsApi
+        .changeVisibility(projectId.toString(), newSetting, accessToken)
+        .catch(() => syncProjectsWithServer());
     }
   };
 
@@ -52,16 +94,17 @@ const useProjects = () => {
     if (accessToken && !retrieved) {
       projectsApi
         .getAll(accessToken, 'mine')
-        .then(({ data: { projects } }) => dispatch(setProjects(projects)));
+        .then(({ data: { projects } }) => dispatch(projectsReducer.setAll(projects)));
     }
   }, [accessToken, dispatch, retrieved]);
   return {
     projects,
     submitProject,
-    changePermissionsLocally,
-    locallyChangedProjects,
-    syncProjectsWithServer,
+    addPermissions,
+    editSeveralPermissions,
+    editPermission,
     deleteProject,
+    changeVisibility,
   };
 };
 

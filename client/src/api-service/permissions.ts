@@ -4,11 +4,13 @@ import { PermissionOrderSet } from 'reminders-shared/sharedTypes';
 
 import axios from 'axios';
 
-const postPermissionsOrderSet = (orderSet: PermissionOrderSet, accessToken: string) => {
-  const data = {
-    orderSet,
-  };
-  return axios.post(`${apiUrl}/permissions`, data, makeOptionsObj(accessToken));
+const permissionsApi = {
+  postOrderSet: (orderSet: PermissionOrderSet, accessToken: string) => {
+    const data = {
+      orderSet,
+    };
+    return axios.post(`${apiUrl}/permissions`, data, makeOptionsObj(accessToken));
+  },
 };
 
-export { postPermissionsOrderSet };
+export { permissionsApi };

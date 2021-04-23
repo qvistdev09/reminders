@@ -68,11 +68,8 @@ const appendPermissionsToProject = (project: ProjectInstance): Promise<ProjectOb
 const handlePermissionChange = async (
   permissionUid: string,
   projectId: number,
-  permissionRole: PermissionRole | 'Owner'
+  permissionRole: PermissionRole
 ) => {
-  if (permissionRole === 'Owner') {
-    return null;
-  }
   const preExistingMatch = await Permission.findOne({
     where: {
       permissionUid,

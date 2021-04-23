@@ -1,70 +1,82 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../store/store';
-import { ProjectObject, ProjectVisibility, UserInPermissionsGrid } from 'reminders-shared/sharedTypes';
+import {
+  PermissionOrder,
+  PermissionRole,
+  ProjectObject,
+  ProjectVisibility,
+  UserInPermissionsGrid,
+} from 'reminders-shared/sharedTypes';
+import { findPermission, findProject } from './projects-helpers';
 
 interface ProjectsState {
   projects: ProjectObject[];
   retrieved: boolean;
-  locallyChangedProjects: number[];
 }
 
 const initialState: ProjectsState = {
   projects: [],
   retrieved: false,
-  locallyChangedProjects: [],
 };
 
 const projects = createSlice({
   name: 'projects',
   initialState,
   reducers: {
-    setProjects: (state, action: PayloadAction<ProjectObject[]>) => {
+    setAll: (state, action: PayloadAction<ProjectObject[]>) => {
       state.projects = action.payload;
       state.retrieved = true;
-      state.locallyChangedProjects = [];
     },
-    updateOrAddPermissions: (
+    addPermissions: (
       state,
-      action: PayloadAction<{ projectId: number; permissionChanges: UserInPermissionsGrid[] }>
+      action: PayloadAction<{ projectId: number; newPermissions: UserInPermissionsGrid[] }>
     ) => {
-      const { projectId, permissionChanges } = action.payload;
-      const matchedProject = state.projects.find(project => project.projectId === projectId);
+      const { projectId, newPermissions } = action.payload;
+      const matchedProject = findProject(projectId, state.projects);
       if (matchedProject) {
-        if (!state.locallyChangedProjects.includes(projectId)) {
-          state.locallyChangedProjects.push(projectId);
-        }
-        const updatedPermissions = matchedProject.permissions.map(oldPermission => {
-          const updatedVersion = permissionChanges.find(
-            newPermission => newPermission.uid === oldPermission.uid
-          );
-          if (updatedVersion) {
-            return updatedVersion;
-          }
-          return oldPermission;
-        });
-        const newPermissions = permissionChanges.filter(newPermission => {
-          const existingObject = updatedPermissions.find(permission => permission.uid === newPermission.uid);
-          if (existingObject) {
-            return false;
-          }
-          return true;
-        });
-        matchedProject.permissions = [...updatedPermissions, ...newPermissions];
+        matchedProject.permissions = [...matchedProject.permissions, ...newPermissions];
       }
     },
-    updateVisibility(state, action: PayloadAction<{ projectId: number; newSetting: ProjectVisibility }>) {
-      const matchedProject = state.projects.find(project => project.projectId === action.payload.projectId);
+    editSeveralPermissions: (
+      state,
+      action: PayloadAction<{ projectId: number; changedPermissions: PermissionOrder[] }>
+    ) => {
+      const { projectId, changedPermissions } = action.payload;
+      const matchedProject = findProject(projectId, state.projects);
       if (matchedProject) {
-        matchedProject.projectVisibility = action.payload.newSetting;
+        matchedProject.permissions = matchedProject.permissions.map(old => {
+          const match = changedPermissions.find(newPermission => newPermission.permissionUid === old.uid);
+          if (match) {
+            return { ...old, permissionRole: match.permissionRole };
+          }
+          return old;
+        });
       }
     },
-    localDelete(state, action: PayloadAction<{ projectId: number }>) {
+    changeVisibility(state, action: PayloadAction<{ projectId: number; newSetting: ProjectVisibility }>) {
+      const { projectId, newSetting } = action.payload;
+      const matchedProject = findProject(projectId, state.projects);
+      if (matchedProject) {
+        matchedProject.projectVisibility = newSetting;
+      }
+    },
+    delete(state, action: PayloadAction<{ projectId: number }>) {
       state.projects = state.projects.filter(project => project.projectId !== action.payload.projectId);
+    },
+    editPermission(
+      state,
+      action: PayloadAction<{ projectId: number; uid: string; newRole: PermissionRole }>
+    ) {
+      const { projectId, uid, newRole } = action.payload;
+      const matchedPermission = findPermission(projectId, uid, state.projects);
+      if (matchedPermission) {
+        matchedPermission.permissionRole = newRole;
+      }
     },
   },
 });
 
-export const { setProjects, updateOrAddPermissions, updateVisibility, localDelete } = projects.actions;
+export const projectsReducer = projects.actions;
 
 export const getProjects = (state: RootState) => state.projects;
 

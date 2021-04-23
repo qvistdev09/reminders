@@ -4,7 +4,7 @@ import FormSearchWrapper from '../../form/elements/form-search-wrapper';
 import PermissionsGrid from '../../permissions-grid/permissions-grid';
 import { getSearchMatchRenderFunction } from './projects-user-search-match';
 import { useAddNewUsers } from '../../../hooks/use-add-new-users';
-import { useManagePermissions } from '../../../hooks/use-manage-permissions';
+import { useProjects } from '../../../hooks/use-projects';
 
 interface Props {
   projectId: number;
@@ -13,23 +13,21 @@ interface Props {
 
 const ProjectsAddCollaborators = ({ projectId, close }: Props) => {
   const [searchValue, setSearchValue] = useState('');
-  const { searchMatches, selection, addUser } = useAddNewUsers(projectId, searchValue);
-  const { addPermission, submitPermissionChanges, newPermissionsPreview } = useManagePermissions(
-    projectId,
-    selection,
-    true,
-    false
-  );
+  const { addPermissions } = useProjects();
+  const { searchMatches, selection, addUser, changeRole } = useAddNewUsers(projectId, searchValue);
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    submitPermissionChanges();
+    addPermissions(projectId, selection);
     close();
   };
 
   return (
     <form className='form' onSubmit={handleSubmit}>
-      <FormSearchWrapper suggestions={searchMatches} renderFunction={getSearchMatchRenderFunction(projectId, addUser)}>
+      <FormSearchWrapper
+        suggestions={searchMatches}
+        renderFunction={getSearchMatchRenderFunction(projectId, addUser)}
+      >
         <FormLabelledInput
           value={searchValue}
           onChange={setSearchValue}
@@ -40,7 +38,7 @@ const ProjectsAddCollaborators = ({ projectId, close }: Props) => {
         />
       </FormSearchWrapper>
       {selection.length > 0 && (
-        <PermissionsGrid permissions={newPermissionsPreview} showOwner={false} changePermission={addPermission} />
+        <PermissionsGrid permissions={selection} showOwner={false} changePermission={changeRole} />
       )}
       <button className='form__submit-btn utility--margin-top'>Save</button>
     </form>

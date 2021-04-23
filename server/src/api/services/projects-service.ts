@@ -1,3 +1,4 @@
+import { ControlledError } from '../../classes/controlled-error';
 import { Project } from '../../database/root';
 import { NewProject } from '../../types';
 
@@ -18,11 +19,12 @@ const createNewProject = (newProject: NewProject) => {
 };
 
 const userIsOwner = async (projectOwner: string, projectId: number) => {
-  const matchedProject = await Project.findOne({ where: { projectId, projectOwner } });
-  if (matchedProject) {
-    return true;
+  const matchedProject = await Project.findOne({ where: { projectId, projectOwner } }).catch(() => {
+    throw new ControlledError('Database malfunction', 500);
+  });
+  if (!matchedProject) {
+    throw new ControlledError('Unauthorized', 401);
   }
-  return false;
 };
 
 export { getProjectsByUserId, createNewProject, userIsOwner };

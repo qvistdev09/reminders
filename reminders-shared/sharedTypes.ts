@@ -9,17 +9,13 @@ export interface UserObj {
 
 export type Ownership = 'mine' | 'others';
 
-export interface UserInPermissionsGrid {
-  firstName: string;
-  lastName: string;
-  email: string;
-  uid: string;
-  permissionRole: PermissionRole | 'Owner';
+export interface UserInPermissionsGrid extends UserObj {
+  permissionRole: PermissionRole;
 }
 
 export interface PermissionOrder {
   permissionUid: string;
-  permissionRole: PermissionRole | 'Owner';
+  permissionRole: PermissionRole;
 }
 
 export interface PermissionOrderSet {
