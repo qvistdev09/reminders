@@ -12,7 +12,9 @@ const useProjects = () => {
 
   const syncProjectsWithServer = () => {
     if (accessToken) {
-      projectsApi.getAll(accessToken).then(({ data: { projects } }) => dispatch(setProjects(projects)));
+      projectsApi
+        .getAll(accessToken, 'others')
+        .then(({ data: { projects } }) => dispatch(setProjects(projects)));
     }
   };
 
@@ -48,7 +50,9 @@ const useProjects = () => {
 
   useEffect(() => {
     if (accessToken && !retrieved) {
-      projectsApi.getAll(accessToken).then(({ data: { projects } }) => dispatch(setProjects(projects)));
+      projectsApi
+        .getAll(accessToken, 'others')
+        .then(({ data: { projects } }) => dispatch(setProjects(projects)));
     }
   }, [accessToken, dispatch, retrieved]);
   return {
