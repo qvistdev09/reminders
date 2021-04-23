@@ -1,5 +1,6 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { ProjectRequestHandler } from '../../classes/get-project-handler';
+import { Project } from '../../database/root';
 import { authAppend } from '../../middleware/auth-append';
 import { authRequired } from '../../middleware/auth-required';
 import { appendPermissionsToProject } from '../services/permissions-service';
@@ -59,6 +60,35 @@ router.get('/', authRequired, async (req: Request, res: Response, next: NextFunc
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+router.put('/:projectId', authRequired, async (req: Request, res: Response, next: NextFunction) => {
+  const { uid } = req.jwt.claims;
+  const { projectId } = req.params;
+  const parsedId = parseInt(projectId, 10);
+
+  if (isNaN(parsedId)) {
+    return res.status(400).send('bad project id');
+  }
+
+  if (!req.body || !req.body.project || !req.body.project.projectVisibility) {
+    return res.status(400).send('no body');
+  }
+  const { projectVisibility } = req.body.project;
+  if (!['public', 'private', 'authorizedOnly'].includes(projectVisibility)) {
+    return res.status(400).send('bad visibility');
+  }
+
+  const matchedProject = await Project.findOne({ where: { projectId: parsedId } });
+  if (!matchedProject) {
+    return res.status(404).send('no such project');
+  }
+  if (matchedProject.projectOwner !== uid) {
+    return res.status(400).send('not product owner');
+  }
+  matchedProject.projectVisibility = projectVisibility;
+  await matchedProject.save();
+  res.status(204).end();
 });
 
 export default router;
