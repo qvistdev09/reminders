@@ -2,7 +2,7 @@ import { Permission } from '../../database/root';
 import { PermissionInstance } from '../../database/schemas/permission';
 import { ProjectInstance } from '../../database/schemas/project';
 import { PermissionRole, ProjectObject, UserInPermissionsGrid, UserObj } from 'reminders-shared/sharedTypes';
-import { getAllAppUsers } from './user-service';
+import { getAllAppUsers, getNameFromOkta } from './user-service';
 
 export interface PermissionInstanceWithName {
   userPermission: PermissionInstance;
@@ -51,12 +51,13 @@ const appendPermissionsToProject = (project: ProjectInstance): Promise<ProjectOb
         order: [['createdAt', 'ASC']],
       });
       const projectPermissions = await appendNames(rawPermissions);
+      const owner = await getNameFromOkta(project.projectOwner);
       resolve({
         projectTitle: project.projectTitle,
         projectId: project.projectId as number,
         permissions: projectPermissions,
         projectVisibility: project.projectVisibility,
-        projectOwner: project.projectOwner,
+        projectOwner: owner,
       });
     } catch (err) {
       reject(err);

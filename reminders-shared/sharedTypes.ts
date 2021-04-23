@@ -32,7 +32,7 @@ export interface ProjectObject {
   projectId: number;
   permissions: UserInPermissionsGrid[];
   projectVisibility: ProjectVisibility;
-  projectOwner: string;
+  projectOwner: UserObj;
 }
 
 export type ProjectVisibility = 'authorizedOnly' | 'public' | 'private';
