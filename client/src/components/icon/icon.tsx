@@ -5,6 +5,7 @@ import IconGrid from './elements/icon-grid';
 import IconOpen from './elements/icon-open';
 import IconClose from './elements/icon-close';
 import IconAddOutline from './elements/icon-add-outline';
+import IconShared from './elements/icon-shared';
 
 const icons = {
   cube: IconCube,
@@ -14,6 +15,7 @@ const icons = {
   open: IconOpen,
   close: IconClose,
   addOutline: IconAddOutline,
+  shared: IconShared,
 };
 
 const sizes = {
@@ -29,14 +31,7 @@ const colors = {
 };
 
 interface Props {
-  icon?:
-    | 'cube'
-    | 'chevronForward'
-    | 'chevronDown'
-    | 'grid'
-    | 'open'
-    | 'close'
-    | 'addOutline';
+  icon?: 'cube' | 'chevronForward' | 'chevronDown' | 'grid' | 'open' | 'close' | 'addOutline' | 'shared';
   size?: 'tiny' | 'small' | 'medium' | 'large';
   color?: 'white' | 'semiDark';
   padding?: number;
@@ -44,10 +39,7 @@ interface Props {
 
 const Icon = ({ icon = 'cube', size = 'small', color = 'white', padding = 0 }: Props) => (
   <div>
-    <div
-      className={`icon ${sizes[size]} ${colors[color]}`}
-      style={{ margin: `${padding.toString()}rem` }}
-    >
+    <div className={`icon ${sizes[size]} ${colors[color]}`} style={{ margin: `${padding.toString()}rem` }}>
       {icons[icon]()}
     </div>
   </div>

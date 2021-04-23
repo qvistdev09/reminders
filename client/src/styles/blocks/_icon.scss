@@ -28,6 +28,9 @@
 }
 
 .icon--white {
+  circle {
+    stroke: colors.$white;
+  }
   path {
     fill: colors.$white;
     &.nofill {
@@ -38,6 +41,9 @@
 }
 
 .icon--semi-dark {
+  circle {
+    stroke: colors.$lightBgIcon;
+  }
   path {
     fill: colors.$lightBgIcon;
     &.nofill {

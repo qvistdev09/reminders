@@ -44,7 +44,7 @@ const Header = () => {
           {authenticated && (
             <HeaderNavItem
               label='Shared with you'
-              icon={<Icon icon='grid' color='white' size='small' padding={0} />}
+              icon={<Icon icon='shared' color='white' size='small' padding={0} />}
               to='/projects/shared-with-you'
             />
           )}
