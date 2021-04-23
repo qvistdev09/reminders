@@ -5,6 +5,7 @@ import Icon from '../../icon/icon';
 import { ProjectObject } from 'reminders-shared/sharedTypes';
 import { useManagePermissions } from '../../../hooks/use-manage-permissions';
 import { useManageVisibility } from '../../../hooks/use-manage-visibility';
+import { useProjects } from '../../../hooks/use-projects';
 
 interface Props {
   data: ProjectObject;
@@ -13,6 +14,7 @@ interface Props {
 
 const ProjectsRow = ({ data, openModal }: Props) => {
   const { setVisibility } = useManageVisibility(data.projectId);
+  const { deleteProject } = useProjects();
   const [expanded, setExpanded] = useState(false);
   const { projectTitle, projectId } = data;
   const { addPermission, newPermissionsPreview, removeAllEdits } = useManagePermissions(
@@ -65,6 +67,10 @@ const ProjectsRow = ({ data, openModal }: Props) => {
               <option value='authorizedOnly'>Collaborators</option>
               <option value='public'>Public</option>
             </select>
+          </div>
+          <div className='projects__settings-section'>
+            <h4 className='projects__settings-header'>Delete project</h4>
+            <button onClick={() => deleteProject(data.projectId)}>Delete</button>
           </div>
         </div>
       )}

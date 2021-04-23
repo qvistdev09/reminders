@@ -38,10 +38,10 @@ const authAndSyncDatabase = async () => {
     console.log('attempting to connect to DB');
     await sequelize.authenticate();
     console.log('Successfully connected to database');
-    await sequelize.sync({ alter: true });
+    await sequelize.sync();
     console.log('Models synced');
   } catch (err) {
-    console.log(err.message);
+    console.log(err);
   }
 };
 

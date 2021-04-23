@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useAccessToken } from './use-access-token';
-import { getUsersProjects, postNewProject } from '../api-service/projects';
+import { projectsApi } from '../api-service/projects';
 import { useAppDispatch, useAppSelector } from './redux-hooks';
-import { getProjects, setProjects, updateOrAddPermissions } from '../reducers/slices/projects';
+import { getProjects, setProjects, updateOrAddPermissions, localDelete } from '../reducers/slices/projects';
 import { UserInPermissionsGrid } from 'reminders-shared/sharedTypes';
 
 const useProjects = () => {
@@ -12,19 +12,21 @@ const useProjects = () => {
 
   const syncProjectsWithServer = () => {
     if (accessToken) {
-      getUsersProjects(accessToken).then(({ data: { projects } }) => dispatch(setProjects(projects)));
+      projectsApi.getAll(accessToken).then(({ data: { projects } }) => dispatch(setProjects(projects)));
     }
   };
 
   const submitProject = (projectTitle: string) => {
     if (accessToken) {
-      postNewProject(
-        {
-          projectTitle,
-          projectVisibility: 'authorizedOnly',
-        },
-        accessToken
-      ).then(() => syncProjectsWithServer());
+      projectsApi
+        .create(
+          {
+            projectTitle,
+            projectVisibility: 'authorizedOnly',
+          },
+          accessToken
+        )
+        .then(() => syncProjectsWithServer());
     }
   };
 
@@ -37,9 +39,16 @@ const useProjects = () => {
     );
   };
 
+  const deleteProject = (projectId: number) => {
+    if (accessToken) {
+      dispatch(localDelete({ projectId }));
+      projectsApi.delete(projectId.toString(), accessToken).catch(() => syncProjectsWithServer());
+    }
+  };
+
   useEffect(() => {
     if (accessToken && !retrieved) {
-      getUsersProjects(accessToken).then(({ data: { projects } }) => dispatch(setProjects(projects)));
+      projectsApi.getAll(accessToken).then(({ data: { projects } }) => dispatch(setProjects(projects)));
     }
   }, [accessToken, dispatch, retrieved]);
   return {
@@ -48,6 +57,7 @@ const useProjects = () => {
     changePermissionsLocally,
     locallyChangedProjects,
     syncProjectsWithServer,
+    deleteProject,
   };
 };
 

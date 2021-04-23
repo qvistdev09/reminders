@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getSpecificProject } from '../api-service/projects';
+import { projectsApi } from '../api-service/projects';
 import { ProjectAccessResponse } from 'reminders-shared/sharedTypes';
 import { useOktaAuth } from '@okta/okta-react';
 
@@ -9,7 +9,7 @@ const useAccessProject = (projectId: string) => {
 
   useEffect(() => {
     const accessToken = authState.accessToken?.accessToken;
-    getSpecificProject(projectId, accessToken).then(res => {
+    projectsApi.getOne(projectId, accessToken).then(res => {
       setResponse(prev => {
         if (!prev || prev.role === 'none') {
           return res.data;

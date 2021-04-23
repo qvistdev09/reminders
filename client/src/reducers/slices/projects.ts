@@ -58,10 +58,13 @@ const projects = createSlice({
         matchedProject.projectVisibility = action.payload.newSetting;
       }
     },
+    localDelete(state, action: PayloadAction<{ projectId: number }>) {
+      state.projects = state.projects.filter(project => project.projectId !== action.payload.projectId);
+    },
   },
 });
 
-export const { setProjects, updateOrAddPermissions, updateVisibility } = projects.actions;
+export const { setProjects, updateOrAddPermissions, updateVisibility, localDelete } = projects.actions;
 
 export const getProjects = (state: RootState) => state.projects;
 

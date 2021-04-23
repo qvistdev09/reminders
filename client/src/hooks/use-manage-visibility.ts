@@ -1,6 +1,6 @@
 import { SyntheticEvent } from 'react';
 import { ProjectVisibility } from 'reminders-shared/sharedTypes';
-import { postNewVisibility } from '../api-service/projects';
+import { projectsApi } from '../api-service/projects';
 import { updateVisibility } from '../reducers/slices/projects';
 import { useAppDispatch } from './redux-hooks';
 import { useAccessToken } from './use-access-token';
@@ -20,7 +20,7 @@ const useManageVisibility = (projectId: number) => {
       const { value } = e.target;
       if (ascertainVisibilityString(value) && accessToken) {
         dispatch(updateVisibility({ projectId, newSetting: value }));
-        postNewVisibility(projectId.toString(), value, accessToken).catch(() => {
+        projectsApi.changeVisibility(projectId.toString(), value, accessToken).catch(() => {
           syncProjectsWithServer();
         });
       }
