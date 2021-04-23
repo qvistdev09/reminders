@@ -7,6 +7,7 @@ import { appendPermissionsToProject } from '../services/permissions-service';
 import { createNewProject, getProjectsByUserId } from '../services/projects-service';
 import { validateProjectFields } from '../validation/project-validation';
 import { sequelize } from '../../config/db-config';
+import { ProjectInstance } from '../../database/schemas/project';
 
 const router = express.Router();
 
@@ -50,16 +51,39 @@ router.get('/:projectIdString', authAppend, async (req: Request, res: Response, 
   }
 });
 
+const projectIsDefined = (project: ProjectInstance | null): project is ProjectInstance => {
+  return project !== null;
+};
+
 router.get('/', authRequired, async (req: Request, res: Response, next: NextFunction) => {
+  const { ownership } = req.query;
+  if (typeof ownership !== 'string' || !['mine', 'others'].includes(ownership)) {
+    return res.status(400).send('missing valid ownership query');
+  }
   const { uid } = req.jwt.claims;
-  try {
-    const rawProjects = await getProjectsByUserId(uid);
-    const projectsWithPermissions = await Promise.all(
-      rawProjects.map(project => appendPermissionsToProject(project))
-    );
-    res.json({ projects: projectsWithPermissions });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  if (ownership === 'mine') {
+    try {
+      const rawProjects = await getProjectsByUserId(uid);
+      const projectsWithPermissions = await Promise.all(
+        rawProjects.map(project => appendPermissionsToProject(project))
+      );
+      res.json({ projects: projectsWithPermissions });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  } else {
+    try {
+      const userPermissions = await Permission.findAll({ where: { permissionUid: uid } });
+      const authorizedProjects = await Promise.all(
+        userPermissions.map(permission => Project.findOne({ where: { projectId: permission.projectId } }))
+      );
+      const filterNulls = authorizedProjects.filter(projectIsDefined);
+      const noSelfOwned = filterNulls.filter(project => project.projectOwner !== uid);
+      const completedObjects = await Promise.all(noSelfOwned.map(proj => appendPermissionsToProject(proj)));
+      res.json({ projects: completedObjects });
+    } catch (err) {
+      res.status(500).send('Database error');
+    }
   }
 });
 

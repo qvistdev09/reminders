@@ -56,6 +56,7 @@ const appendPermissionsToProject = (project: ProjectInstance): Promise<ProjectOb
         projectId: project.projectId as number,
         permissions: projectPermissions,
         projectVisibility: project.projectVisibility,
+        projectOwner: project.projectOwner,
       });
     } catch (err) {
       reject(err);

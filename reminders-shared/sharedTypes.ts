@@ -7,6 +7,8 @@ export interface UserObj {
   uid: string;
 }
 
+export type Ownership = 'mine' | 'others';
+
 export interface UserInPermissionsGrid {
   firstName: string;
   lastName: string;
@@ -30,6 +32,7 @@ export interface ProjectObject {
   projectId: number;
   permissions: UserInPermissionsGrid[];
   projectVisibility: ProjectVisibility;
+  projectOwner: string;
 }
 
 export type ProjectVisibility = 'authorizedOnly' | 'public' | 'private';
