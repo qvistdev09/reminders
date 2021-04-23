@@ -29,6 +29,7 @@ export interface ProjectObject {
   projectTitle: string;
   projectId: number;
   permissions: UserInPermissionsGrid[];
+  projectVisibility: ProjectVisibility;
 }
 
 export type ProjectVisibility = 'authorizedOnly' | 'public' | 'private';
