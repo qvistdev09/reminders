@@ -1,25 +1,25 @@
 import express, { NextFunction, Request, Response } from 'express';
-import { ProjectRequestHandler } from '../../classes/get-project-handler';
+import { ProjectRequestHandler } from '../../classes/project-request-handler';
 import { Permission, Project, Task } from '../../database/root';
 import { authAppend } from '../../middleware/auth-append';
 import { authRequired } from '../../middleware/auth-required';
 import { appendPermissionsToProject } from '../services/permissions-service';
 import { createNewProject, getProjectsByUserId } from '../services/projects-service';
-import { validateProjectFields } from '../validation/project-validation';
+import { projectIsDefined, validateProjectFields } from '../validation/project-validation';
 import { sequelize } from '../../config/db-config';
-import { ProjectInstance } from '../../database/schemas/project';
+import { ControlledError } from '../../classes/controlled-error';
 
 const router = express.Router();
 
 router.post('/', authRequired, (req: Request, res: Response, next: NextFunction) => {
   if (!req.body.project) {
-    return res.status(400).end();
+    return next(new ControlledError('Invalid input', 400));
   }
   const { uid } = req.jwt.claims;
 
   const validatedFields = validateProjectFields(req.body.project);
   if (!validatedFields) {
-    return res.status(400).end();
+    return next(new ControlledError('Invalid input', 400));
   }
 
   const newProject = {
@@ -36,24 +36,16 @@ router.post('/', authRequired, (req: Request, res: Response, next: NextFunction)
 
 router.get('/:projectIdString', authAppend, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // prettier-ignore
     const handler = await new ProjectRequestHandler(req, res)
       .prepareNewRequest()
       .validateParam()
       .findProject();
 
-    // prettier-ignore
-    handler
-      .establishRole()
-      .sendResponse();
+    handler.establishRole().sendResponse();
   } catch (err) {
     next(err);
   }
 });
-
-const projectIsDefined = (project: ProjectInstance | null): project is ProjectInstance => {
-  return project !== null;
-};
 
 router.get('/', authRequired, async (req: Request, res: Response, next: NextFunction) => {
   const { ownership } = req.query;

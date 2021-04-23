@@ -1,10 +1,11 @@
 import { NewProjectFields, ProjectVisibility } from 'reminders-shared/sharedTypes';
+import { ProjectInstance } from '../../database/schemas/project';
 
 const validVisibility = (str: string): str is ProjectVisibility => {
   return ['authorizedOnly', 'public', 'private'].includes(str);
 };
 
-const validateProjectFields = (clientInput: any): NewProjectFields | null => {
+export const validateProjectFields = (clientInput: any): NewProjectFields | null => {
   const { projectTitle, projectVisibility } = clientInput;
   if (!projectTitle || !projectVisibility) {
     return null;
@@ -21,4 +22,6 @@ const validateProjectFields = (clientInput: any): NewProjectFields | null => {
   };
 };
 
-export { validateProjectFields };
+export const projectIsDefined = (project: ProjectInstance | null): project is ProjectInstance => {
+  return project !== null;
+};
