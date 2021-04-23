@@ -1,11 +1,12 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { ProjectRequestHandler } from '../../classes/get-project-handler';
-import { Project } from '../../database/root';
+import { Permission, Project, Task } from '../../database/root';
 import { authAppend } from '../../middleware/auth-append';
 import { authRequired } from '../../middleware/auth-required';
 import { appendPermissionsToProject } from '../services/permissions-service';
 import { createNewProject, getProjectsByUserId } from '../services/projects-service';
 import { validateProjectFields } from '../validation/project-validation';
+import { sequelize } from '../../config/db-config';
 
 const router = express.Router();
 
@@ -89,6 +90,36 @@ router.put('/:projectId', authRequired, async (req: Request, res: Response, next
   matchedProject.projectVisibility = projectVisibility;
   await matchedProject.save();
   res.status(204).end();
+});
+
+router.delete('/:projectId', authRequired, async (req: Request, res: Response, next: NextFunction) => {
+  const { uid } = req.jwt.claims;
+  const { projectId } = req.params;
+  const parsedId = parseInt(projectId, 10);
+
+  if (isNaN(parsedId)) {
+    return res.status(400).send('bad project id');
+  }
+
+  const matchedProject = await Project.findOne({ where: { projectId: parsedId } });
+  if (!matchedProject) {
+    return res.status(404).send('no such project');
+  }
+  if (matchedProject.projectOwner !== uid) {
+    return res.status(400).send('not product owner');
+  }
+
+  const t = await sequelize.transaction();
+  try {
+    const projectId = matchedProject.projectId as number;
+    await matchedProject.destroy({ transaction: t });
+    await Permission.destroy({ where: { projectId }, transaction: t });
+    await Task.destroy({ where: { projectId }, transaction: t });
+    await t.commit();
+    res.status(204).send('Project deleted');
+  } catch (err) {
+    res.status(500).send('DB error - could not delete project');
+  }
 });
 
 export default router;
