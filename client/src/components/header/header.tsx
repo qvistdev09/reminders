@@ -36,9 +36,16 @@ const Header = () => {
         <div className='header__nav-items-container'>
           {authenticated && (
             <HeaderNavItem
-              label='Projects'
+              label='Your projects'
               icon={<Icon icon='grid' color='white' size='small' padding={0} />}
-              to='/projects'
+              to='/projects/your-projects'
+            />
+          )}
+          {authenticated && (
+            <HeaderNavItem
+              label='Shared with you'
+              icon={<Icon icon='grid' color='white' size='small' padding={0} />}
+              to='/projects/shared-with-you'
             />
           )}
         </div>

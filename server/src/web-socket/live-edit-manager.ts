@@ -88,6 +88,9 @@ class LiveEditManager {
   }
 
   handleTaskStatusChange(client: AuthorizedEntry, packet: PktTaskStatus) {
+    if (client.permissionRole === 'viewer') {
+      return;
+    }
     const matchedSession = this.sessionManager.findSession(client.projectId);
     if (matchedSession) {
       matchedSession.setTaskStatus(packet);

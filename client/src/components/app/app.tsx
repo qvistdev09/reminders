@@ -14,6 +14,7 @@ import ProjectPage from '../project-page/project-page';
 
 // types
 import { OktaAuth } from '@okta/okta-auth-js/lib/types';
+import SharedWithYou from '../pages/shared-with-you';
 
 const App = () => {
   const history = useHistory();
@@ -35,7 +36,8 @@ const App = () => {
             </Route>
             <Route exact path='/sign-up' component={SignUp} />
             <Route exact path='/login' component={Login} />
-            <SecureRoute exact path='/projects' component={Projects} />
+            <SecureRoute exact path='/projects/your-projects' component={Projects} />
+            <SecureRoute exact path='/projects/shared-with-you' component={SharedWithYou} />
             <Route path='/projects/:slug' component={ProjectPage} />
             <Route path='/login/callback' component={LoginCallback} />
           </Switch>
