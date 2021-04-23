@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../store/store';
-import { ProjectObject, UserInPermissionsGrid } from 'reminders-shared/sharedTypes';
+import { ProjectObject, ProjectVisibility, UserInPermissionsGrid } from 'reminders-shared/sharedTypes';
 
 interface ProjectsState {
   projects: ProjectObject[];
@@ -34,7 +34,9 @@ const projects = createSlice({
           state.locallyChangedProjects.push(projectId);
         }
         const updatedPermissions = matchedProject.permissions.map(oldPermission => {
-          const updatedVersion = permissionChanges.find(newPermission => newPermission.uid === oldPermission.uid);
+          const updatedVersion = permissionChanges.find(
+            newPermission => newPermission.uid === oldPermission.uid
+          );
           if (updatedVersion) {
             return updatedVersion;
           }
@@ -50,10 +52,16 @@ const projects = createSlice({
         matchedProject.permissions = [...updatedPermissions, ...newPermissions];
       }
     },
+    updateVisibility(state, action: PayloadAction<{ projectId: number; newSetting: ProjectVisibility }>) {
+      const matchedProject = state.projects.find(project => project.projectId === action.payload.projectId);
+      if (matchedProject) {
+        matchedProject.projectVisibility = action.payload.newSetting;
+      }
+    },
   },
 });
 
-export const { setProjects, updateOrAddPermissions } = projects.actions;
+export const { setProjects, updateOrAddPermissions, updateVisibility } = projects.actions;
 
 export const getProjects = (state: RootState) => state.projects;
 

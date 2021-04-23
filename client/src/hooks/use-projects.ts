@@ -42,7 +42,13 @@ const useProjects = () => {
       getUsersProjects(accessToken).then(({ data: { projects } }) => dispatch(setProjects(projects)));
     }
   }, [accessToken, dispatch, retrieved]);
-  return { projects, submitProject, changePermissionsLocally, locallyChangedProjects, syncProjectsWithServer };
+  return {
+    projects,
+    submitProject,
+    changePermissionsLocally,
+    locallyChangedProjects,
+    syncProjectsWithServer,
+  };
 };
 
 export { useProjects };
