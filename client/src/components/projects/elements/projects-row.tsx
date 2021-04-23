@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Icon from '../../icon/icon';
 import { ProjectObject } from 'reminders-shared/sharedTypes';
 import { useManagePermissions } from '../../../hooks/use-manage-permissions';
+import { useManageVisibility } from '../../../hooks/use-manage-visibility';
 
 interface Props {
   data: ProjectObject;
@@ -11,7 +12,7 @@ interface Props {
 }
 
 const ProjectsRow = ({ data, openModal }: Props) => {
-  // const isSavingChanges = useProjects().locallyChangedProjects.includes(data.projectId);
+  const { setVisibility } = useManageVisibility(data.projectId);
   const [expanded, setExpanded] = useState(false);
   const { projectTitle, projectId } = data;
   const { addPermission, newPermissionsPreview, removeAllEdits } = useManagePermissions(
@@ -51,7 +52,19 @@ const ProjectsRow = ({ data, openModal }: Props) => {
                 Add
               </button>
             </div>
-            <PermissionsGrid permissions={newPermissionsPreview} showOwner={true} changePermission={addPermission} />
+            <PermissionsGrid
+              permissions={newPermissionsPreview}
+              showOwner={true}
+              changePermission={addPermission}
+            />
+          </div>
+          <div className='projects__settings-section'>
+            <h4 className='projects__settings-header'>Visibility</h4>
+            <select onChange={setVisibility} value={data.projectVisibility}>
+              <option value='private'>Private</option>
+              <option value='authorizedOnly'>Collaborators</option>
+              <option value='public'>Public</option>
+            </select>
           </div>
         </div>
       )}
