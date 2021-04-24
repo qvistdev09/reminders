@@ -87,4 +87,6 @@ const handlePermissionChange = async (
   });
 };
 
+export const findProjectPermissions = (projectId: number) => Permission.findAll({ where: { projectId } });
+
 export { appendPermissionsToProject, handlePermissionChange };

@@ -17,10 +17,10 @@ const ProjectPage = () => {
     return <p>Retrieving project...</p>;
   }
 
-  const { visibility, role } = response;
+  const { projectVisibility, role } = response;
 
   if (role === 'none') {
-    if (visibility === 'public') {
+    if (projectVisibility === 'public') {
       return <ProjectPageViewer />;
     }
     return <ProjectPageUnauthorized />;

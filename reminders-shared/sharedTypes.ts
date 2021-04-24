@@ -39,8 +39,8 @@ export interface NewProjectFields {
 }
 
 export interface ProjectAccessResponse {
-  role: PermissionRole | 'Owner' | 'none';
-  visibility: ProjectVisibility;
+  role: PermissionRole | 'owner' | 'none';
+  projectVisibility: ProjectVisibility;
 }
 
 export interface SocketStatus {

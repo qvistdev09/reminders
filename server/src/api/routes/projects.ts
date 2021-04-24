@@ -1,13 +1,18 @@
 import express, { NextFunction, Request, Response } from 'express';
-import { ProjectRequestHandler } from '../../classes/project-request-handler';
 import { Permission, Project, Task } from '../../database/root';
 import { authAppend } from '../../middleware/auth-append';
 import { authRequired } from '../../middleware/auth-required';
-import { appendPermissionsToProject } from '../services/permissions-service';
-import { createNewProject, getProjectsByUserId } from '../services/projects-service';
-import { projectIsDefined, validateProjectFields } from '../validation/project-validation';
+import { appendPermissionsToProject, findProjectPermissions } from '../services/permissions-service';
+import {
+  createNewProject,
+  establishRole,
+  findProject,
+  getProjectsByUserId,
+} from '../services/projects-service';
+import { projectIsDefined, validateParam, validateProjectFields } from '../validation/project-validation';
 import { sequelize } from '../../config/db-config';
 import { ControlledError } from '../../classes/controlled-error';
+import { ProjectAccessResponse } from 'reminders-shared/sharedTypes';
 
 const router = express.Router();
 
@@ -36,12 +41,19 @@ router.post('/', authRequired, (req: Request, res: Response, next: NextFunction)
 
 router.get('/:projectIdString', authAppend, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const handler = await new ProjectRequestHandler(req, res)
-      .prepareNewRequest()
-      .validateParam()
-      .findProject();
-
-    handler.establishRole().sendResponse();
+    const projectId = validateParam(req.params.projectIdString);
+    const matchedProject = await findProject(projectId);
+    if (!matchedProject) {
+      throw new ControlledError('No project found', 404);
+    }
+    const permissions = await findProjectPermissions(projectId);
+    const role = req.jwt ? establishRole(permissions, matchedProject, req.jwt.claims.uid) : 'none';
+    const { projectVisibility } = matchedProject;
+    const response: ProjectAccessResponse = {
+      role,
+      projectVisibility,
+    };
+    res.json(response);
   } catch (err) {
     next(err);
   }
