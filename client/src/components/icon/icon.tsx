@@ -6,6 +6,7 @@ import IconOpen from './elements/icon-open';
 import IconClose from './elements/icon-close';
 import IconAddOutline from './elements/icon-add-outline';
 import IconShared from './elements/icon-shared';
+import { IconTrash } from './elements/icon-trash';
 import './icon.scss';
 
 const icons = {
@@ -17,6 +18,7 @@ const icons = {
   close: IconClose,
   addOutline: IconAddOutline,
   shared: IconShared,
+  trash: IconTrash,
 };
 
 const sizes = {
@@ -33,7 +35,16 @@ const colors = {
 };
 
 interface Props {
-  icon?: 'cube' | 'chevronForward' | 'chevronDown' | 'grid' | 'open' | 'close' | 'addOutline' | 'shared';
+  icon?:
+    | 'cube'
+    | 'chevronForward'
+    | 'chevronDown'
+    | 'grid'
+    | 'open'
+    | 'close'
+    | 'addOutline'
+    | 'shared'
+    | 'trash';
   size?: 'tiny' | 'small' | 'medium' | 'large';
   color?: 'white' | 'semiDark' | 'primary';
   padding?: number;

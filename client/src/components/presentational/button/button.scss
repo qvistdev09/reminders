@@ -42,6 +42,24 @@
   }
 }
 
+.button__destructive {
+  font-size: font-sizes.$small;
+  font-weight: font-weights.$strong;
+  color: colors.$strongDestructive;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 0.35rem;
+  display: flex;
+  align-items: center;
+  &:hover {
+    background-color: colors.$softDestructive;
+  }
+}
+
+.button__destructive--dontstretch {
+  align-self: flex-start;
+}
+
 // modifiers
 
 .button--action {

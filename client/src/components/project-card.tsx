@@ -1,6 +1,7 @@
 import { ProjectObject, UserInPermissionsGrid } from 'reminders-shared/sharedTypes';
 import { useAppUserDetails } from '../hooks/use-app-user-details';
 import Icon from './icon/icon';
+import { DestructiveButton } from './presentational/button/destructive-button';
 import { SettingsButton } from './presentational/button/settings-button';
 import { ExpandableCard } from './presentational/containers/expandable-card';
 import { Flex } from './presentational/containers/flex';
@@ -67,6 +68,7 @@ export const ProjectCard = ({ project }: Props) => {
           <SettingsHeader label='Visibility' />
           <Select choices={visibilityOptions} onChange={() => {}} />
         </Flex>
+        <DestructiveButton label='Delete project' onClick={() => {}} dontStretch={true} />
       </Flex>
     </ExpandableCard>
   );
