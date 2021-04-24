@@ -6,7 +6,7 @@ export const BreadcrumbRow = () => {
   const crumbs = useBreadcrumbs();
   return (
     <Flex justify='center' bg='darkenedBg'>
-      <Flex yPadding={0.8} maxWidth='appMaxWidth'>
+      <Flex yPadding={0.8} maxWidth='appMaxWidth' xPadding={1}>
         {crumbs.map(crumb => (
           <Breadcrumb key={crumb.link} link={crumb.link} beautifiedLink={crumb.beautifiedLink} />
         ))}

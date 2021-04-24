@@ -28,7 +28,7 @@ export const Header = () => {
   return (
     <header>
       <Flex justify='center' bg='brightBg' minHeight='header' borders={['bottom']} align='stretch'>
-        <Flex isNav={true} align='stretch' maxWidth='appMaxWidth' flex={1}>
+        <Flex isNav={true} align='stretch' maxWidth='appMaxWidth' flex={1} xPadding={1}>
           <Logo />
           <Flex justify='start' flex={1} align='stretch'>
             {authenticated && (
