@@ -7,7 +7,7 @@ export const Projects = () => {
   const { projects } = useProjects();
   return (
     <Flex justify='center' flex={1} align='start' bg='darkenedBg'>
-      <Flex maxWidth='appMaxWidth' align='start' yPadding={1} childrenGap='big'>
+      <Flex maxWidth='appMaxWidth' align='start' yPadding={0} childrenGap='big'>
         <Card header='New project' flex={0.4}>
           <ProjectCreator />
         </Card>

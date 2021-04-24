@@ -5,8 +5,8 @@ import { Breadcrumb } from './presentational/breadcrumb/breadcrumb';
 export const BreadcrumbRow = () => {
   const crumbs = useBreadcrumbs();
   return (
-    <Flex justify='center' bg='darkenedBg' borders={['bottom']}>
-      <Flex yPadding={0.35} maxWidth='appMaxWidth'>
+    <Flex justify='center' bg='darkenedBg'>
+      <Flex yPadding={0.8} maxWidth='appMaxWidth'>
         {crumbs.map(crumb => (
           <Breadcrumb key={crumb.link} link={crumb.link} beautifiedLink={crumb.beautifiedLink} />
         ))}

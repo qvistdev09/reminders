@@ -22,7 +22,7 @@ export const LabelledInput = ({
   placeholder = '',
 }: Props) => (
   <label htmlFor={id} className='inputs__label'>
-    {label}
+    <span>{label}</span>
     <input
       value={value}
       onChange={(e: SyntheticEvent) => {
