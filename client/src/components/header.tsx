@@ -1,5 +1,4 @@
-import { Row } from './presentational/containers/row';
-import { InnerMaxWidth } from './presentational/containers/inner-max-width';
+import { Flex } from './presentational/containers/flex';
 import { Logo } from './presentational/logo/logo';
 import { NavItem } from './presentational/nav-item/nav-item';
 import Icon from './icon/icon';
@@ -28,10 +27,10 @@ export const Header = () => {
 
   return (
     <header>
-      <Row justify='centered' bg='brightBg' minHeight='header' borders={['bottom']} align='stretch'>
-        <InnerMaxWidth isNav={true} align='stretch'>
+      <Flex justify='center' bg='brightBg' minHeight='header' borders={['bottom']} align='stretch'>
+        <Flex isNav={true} align='stretch' maxWidth='appMaxWidth' flex={1}>
           <Logo />
-          <Row justify='start' expand={true} align='stretch'>
+          <Flex justify='start' flex={1} align='stretch'>
             {authenticated && (
               <>
                 <NavItem
@@ -46,14 +45,14 @@ export const Header = () => {
                 />
               </>
             )}
-          </Row>
-          <Row justify='start'>
+          </Flex>
+          <Flex justify='start' flex={0}>
             {!authenticated && <Button onClick={signUpAction} label='Sign up' btnStyle='action' />}
             {loginOrLogout}
             {appUser.retrieved && <UserIcon firstName={appUser.firstName} lastName={appUser.lastName} />}
-          </Row>
-        </InnerMaxWidth>
-      </Row>
+          </Flex>
+        </Flex>
+      </Flex>
     </header>
   );
 };

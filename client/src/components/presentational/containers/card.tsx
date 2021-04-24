@@ -4,9 +4,9 @@ interface Props extends ContainerBase {
   header?: string;
 }
 
-export const Card = ({ children, header }: Props) => {
+export const Card = ({ children, header, flex = 0 }: Props) => {
   return (
-    <div className='containers__card'>
+    <div className='containers__card' style={{ flex }}>
       {header && (
         <div className='containers__card-header'>
           <h2>{header}</h2>

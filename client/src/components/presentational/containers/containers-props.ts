@@ -1,20 +1,19 @@
 import { ReactNode } from 'react';
 
 type Border = 'top' | 'bottom' | 'left' | 'right';
-type Align = 'start' | 'center' | 'stretch';
 
 export interface ContainerBase {
   children: ReactNode;
   bg?: 'brightBg' | 'darkenedBg';
-  expand?: boolean;
+  flex?: number;
   isNav?: boolean;
   minHeight?: 'header';
-  xPadding?: string;
-  yPadding?: string;
+  maxWidth?: 'appMaxWidth';
+  xPadding?: number;
+  yPadding?: number;
   borders?: Border[];
-  align?: Align;
-}
-
-export interface ContainerRow extends ContainerBase {
-  justify: 'start' | 'centered';
+  align?: 'start' | 'center' | 'stretch';
+  direction?: 'row' | 'column';
+  childrenGap?: 'small' | 'big' | 'none';
+  justify?: 'between' | 'start' | 'end' | 'center';
 }

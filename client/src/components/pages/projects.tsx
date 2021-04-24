@@ -1,26 +1,22 @@
 import { ProjectCreator } from '../project-creator';
 import { Card } from '../presentational/containers/card';
-import { Columns } from '../presentational/containers/columns';
-import { InnerMaxWidth } from '../presentational/containers/inner-max-width';
-import { Row } from '../presentational/containers/row';
+import { Flex } from '../presentational/containers/flex';
 import { useProjects } from '../../hooks/use-projects';
 
 export const Projects = () => {
   const { projects } = useProjects();
   return (
-    <Row justify='centered' expand={true} align='start' bg='darkenedBg'>
-      <InnerMaxWidth>
-        <Columns columns={[0.4, 1]} yPadding='1rem' gap={1}>
-          <Card header='New project'>
-            <ProjectCreator />
-          </Card>
-          <Card header='Your projects'>
-            {projects.map(project => (
-              <p key={project.projectId}>{project.projectTitle}</p>
-            ))}
-          </Card>
-        </Columns>
-      </InnerMaxWidth>
-    </Row>
+    <Flex justify='center' flex={1} align='start' bg='darkenedBg'>
+      <Flex maxWidth='appMaxWidth' align='start' yPadding={1} childrenGap='big'>
+        <Card header='New project' flex={0.4}>
+          <ProjectCreator />
+        </Card>
+        <Card header='Your projects' flex={1}>
+          {projects.map(project => (
+            <p key={project.projectId}>{project.projectTitle}</p>
+          ))}
+        </Card>
+      </Flex>
+    </Flex>
   );
 };

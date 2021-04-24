@@ -3,25 +3,91 @@
 @use '../../../styles/variables/font-sizes';
 @use '../../../styles/variables/font-weights';
 
-.containers__row-centered {
+// flex
+
+.containers__flex-row {
   display: flex;
+  flex-direction: row;
+
+  &.containers--gap-small {
+    & > * {
+      margin-left: 0.5rem;
+    }
+
+    & > *:first-child {
+      margin-left: 0rem;
+    }
+  }
+
+  &.containers--gap-big {
+    & > * {
+      margin-left: 1rem;
+    }
+    & > *:first-child {
+      margin-left: 0rem;
+    }
+  }
+}
+
+.containers__flex-column {
+  display: flex;
+  flex-direction: column;
+
+  &.containers--gap-small {
+    & > * {
+      margin-top: 0.5rem;
+    }
+
+    & > *:first-child {
+      margin-top: 0rem;
+    }
+  }
+
+  &.containers--gap-big {
+    & > * {
+      margin-top: 1rem;
+    }
+    & > *:first-child {
+      margin-top: 0rem;
+    }
+  }
+}
+
+// flex modifiers
+
+.containers--align-start {
+  align-items: flex-start;
+}
+
+.containers--align-center {
   align-items: center;
+}
+
+.containers--align-stretch {
+  align-items: stretch;
+}
+
+.containers--justify-start {
+  justify-content: flex-start;
+}
+
+.containers--justify-center {
   justify-content: center;
 }
 
-.containers__row-start {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+.containers--justify-end {
+  justify-content: flex-end;
 }
 
-.containers__inner-max-width {
-  flex: 1;
-  display: flex;
-  align-items: stretch;
-  justify-content: flex-start;
+.containers--justify-between {
+  justify-content: space-between;
+}
+
+.containers--appMaxWidth {
   max-width: layout.$innerWidth;
 }
+
+// Card
 
 .containers__card {
   background-color: colors.$brightBg;
@@ -46,11 +112,6 @@
   padding: 0.5rem;
 }
 
-.containers__columns {
-  flex: 1;
-  display: grid;
-}
-
 .containers__form {
   display: grid;
   grid-template-columns: 1fr;
@@ -59,10 +120,6 @@
 }
 
 // modifiers
-
-.containers--expand {
-  flex: 1;
-}
 
 .containers--brightBg {
   background-color: colors.$brightBg;
@@ -90,16 +147,4 @@
 
 .containers--border-right {
   border-right: 1px solid colors.$border;
-}
-
-.containers--align-start {
-  align-items: flex-start;
-}
-
-.containers--align-center {
-  align-items: center;
-}
-
-.containers--align-stretch {
-  align-items: stretch;
 }

@@ -3,6 +3,7 @@
 @use '../../../styles/variables/colors';
 
 .button {
+  white-space: nowrap;
   outline: none;
   border: 1px solid transparent;
   padding: 0.5rem;
