@@ -1,5 +1,4 @@
 import express, { NextFunction, Request, Response } from 'express';
-import { Permission, Project, Task } from '../../database/root';
 import { authAppend } from '../../middleware/auth-append';
 import { authRequired } from '../../middleware/auth-required';
 import {
