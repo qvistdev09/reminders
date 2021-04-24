@@ -1,5 +1,7 @@
 @use '../../../styles/variables/layout';
 @use '../../../styles/variables/colors';
+@use '../../../styles/variables/font-sizes';
+@use '../../../styles/variables/font-weights';
 
 .containers__row-centered {
   display: flex;
@@ -19,6 +21,34 @@
   align-items: stretch;
   justify-content: flex-start;
   max-width: layout.$innerWidth;
+}
+
+.containers__card {
+  background-color: colors.$brightBg;
+  border: 1px solid colors.$border;
+  border-radius: 0.5rem;
+}
+
+.containers__card-header {
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid colors.$border;
+  padding: 0.5rem;
+
+  h2 {
+    color: colors.$textDark;
+    font-size: font-sizes.$normal;
+    font-weight: font-weights.$strong;
+  }
+}
+
+.containers__card-content {
+  padding: 0.5rem;
+}
+
+.containers__columns {
+  flex: 1;
+  display: grid;
 }
 
 // modifiers
@@ -53,4 +83,16 @@
 
 .containers--border-right {
   border-right: 1px solid colors.$border;
+}
+
+.containers--align-start {
+  align-items: flex-start;
+}
+
+.containers--align-center {
+  align-items: center;
+}
+
+.containers--align-stretch {
+  align-items: stretch;
 }

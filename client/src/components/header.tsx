@@ -17,7 +17,7 @@ export const Header = () => {
   const { authenticated } = useAuthenticationStatus();
 
   const signUpAction = () => {
-    history.push('/sign/up');
+    history.push('/sign-up');
   };
 
   const loginOrLogout = authenticated ? (
@@ -28,10 +28,10 @@ export const Header = () => {
 
   return (
     <header>
-      <Row justify='centered' bg='brightBg' minHeight='header' borders={['bottom']}>
-        <InnerMaxWidth isNav={true}>
+      <Row justify='centered' bg='brightBg' minHeight='header' borders={['bottom']} align='stretch'>
+        <InnerMaxWidth isNav={true} align='stretch'>
           <Logo />
-          <Row justify='start' expand={true}>
+          <Row justify='start' expand={true} align='stretch'>
             {authenticated && (
               <>
                 <NavItem

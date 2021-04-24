@@ -7,9 +7,9 @@ import { clientAuth } from '../config/okta-config';
 // components
 import { Header } from './header';
 import { BreadcrumbRow } from './breadcrumb-row';
+import { Projects } from './pages/projects';
 import SignUp from './sign-up/sign-up';
 import Login from './login/login';
-import Projects from './projects/projects';
 import ProjectPage from './project-page/project-page';
 
 // types
@@ -29,19 +29,17 @@ const App = () => {
       <Header />
       <BreadcrumbRow />
       <main className='main'>
-        <div className='main__inner'>
-          <Switch>
-            <Route exact path='/'>
-              <p>This is the home route</p>
-            </Route>
-            <Route exact path='/sign-up' component={SignUp} />
-            <Route exact path='/login' component={Login} />
-            <SecureRoute exact path='/projects/your-projects' component={Projects} />
-            <SecureRoute exact path='/projects/shared-with-you' component={SharedWithYou} />
-            <Route path='/projects/:slug' component={ProjectPage} />
-            <Route path='/login/callback' component={LoginCallback} />
-          </Switch>
-        </div>
+        <Switch>
+          <Route exact path='/'>
+            <p>This is the home route</p>
+          </Route>
+          <Route exact path='/sign-up' component={SignUp} />
+          <Route exact path='/login' component={Login} />
+          <SecureRoute exact path='/projects/your-projects' component={Projects} />
+          <SecureRoute exact path='/projects/shared-with-you' component={SharedWithYou} />
+          <Route path='/projects/:slug' component={ProjectPage} />
+          <Route path='/login/callback' component={LoginCallback} />
+        </Switch>
       </main>
       <footer className='footer'>
         <div className='footer__inner'>

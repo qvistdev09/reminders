@@ -9,18 +9,21 @@ export const InnerMaxWidth = ({
   isNav,
   xPadding = '0rem',
   yPadding = '0rem',
+  align = 'center',
 }: ContainerBase) => {
   const baseClass = 'containers__inner-max-width';
   const bgModifier = getModifier('containers', bg);
   const style = {
     padding: `${yPadding} ${xPadding}`,
   };
+  const alignClass = getModifier('containers', `align-${align}`);
+  const className = makeClassname(baseClass, bgModifier, alignClass);
   return isNav ? (
-    <nav className={makeClassname(baseClass, bgModifier)} style={style}>
+    <nav className={className} style={style}>
       {children}
     </nav>
   ) : (
-    <div className={makeClassname(baseClass, bgModifier)} style={style}>
+    <div className={className} style={style}>
       {children}
     </div>
   );
