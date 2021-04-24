@@ -3,13 +3,10 @@
 @use './global/base-styles';
 @use './global/utilities';
 
-@use './blocks/header';
 @use './blocks/form';
 @use './blocks/main';
-@use './blocks/icon';
 @use './blocks/footer';
 @use './blocks/breadcrumb';
-@use './blocks/user-icon';
 @use './blocks/projects';
 @use './blocks/permissions-grid';
 @use './blocks/modal';

@@ -1,0 +1,23 @@
+@use '../../../styles/variables/font-sizes';
+@use '../../../styles/variables/font-weights';
+@use '../../../styles/variables/colors';
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: font-sizes.$verySmall;
+  font-weight: font-weights.$normal;
+  padding: 0.5rem;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.167);
+  }
+}
+
+.nav-item__label {
+  margin-top: 0.45rem;
+  color: colors.$textDark;
+  text-align: center;
+}

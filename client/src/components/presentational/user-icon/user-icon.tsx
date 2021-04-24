@@ -1,3 +1,5 @@
+import './user-icon.scss';
+
 interface Props {
   firstName: string;
   lastName: string;

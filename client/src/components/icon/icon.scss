@@ -1,4 +1,4 @@
-@use '../variables/colors';
+@use '../../styles/variables/colors';
 
 .icon {
   display: flex;
@@ -49,6 +49,19 @@
     &.nofill {
       fill: none;
       stroke: colors.$lightBgIcon;
+    }
+  }
+}
+
+.icon--primary {
+  circle {
+    stroke: colors.$strongPrimary;
+  }
+  path {
+    fill: colors.$strongPrimary;
+    &.nofill {
+      fill: none;
+      stroke: colors.$strongPrimary;
     }
   }
 }

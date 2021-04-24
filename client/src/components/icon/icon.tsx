@@ -6,6 +6,7 @@ import IconOpen from './elements/icon-open';
 import IconClose from './elements/icon-close';
 import IconAddOutline from './elements/icon-add-outline';
 import IconShared from './elements/icon-shared';
+import './icon.scss';
 
 const icons = {
   cube: IconCube,
@@ -28,12 +29,13 @@ const sizes = {
 const colors = {
   white: 'icon--white',
   semiDark: 'icon--semi-dark',
+  primary: 'icon--primary',
 };
 
 interface Props {
   icon?: 'cube' | 'chevronForward' | 'chevronDown' | 'grid' | 'open' | 'close' | 'addOutline' | 'shared';
   size?: 'tiny' | 'small' | 'medium' | 'large';
-  color?: 'white' | 'semiDark';
+  color?: 'white' | 'semiDark' | 'primary';
   padding?: number;
 }
 

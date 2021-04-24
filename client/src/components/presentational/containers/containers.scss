@@ -1,0 +1,36 @@
+@use '../../../styles/variables/layout';
+@use '../../../styles/variables/colors';
+
+.containers__row-centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.containers__row-start {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.containers__inner-max-width {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  max-width: layout.$innerWidth;
+}
+
+// modifiers
+
+.containers--expand {
+  flex: 1;
+}
+
+.containers--brightBg {
+  background-color: colors.$brightBg;
+}
+
+.containers--header {
+  min-height: layout.$headerMinHeight;
+}

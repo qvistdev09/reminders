@@ -1,0 +1,23 @@
+@use '../../../styles/variables/font-sizes';
+@use '../../../styles/variables/font-weights';
+@use '../../../styles/variables/colors';
+
+.logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.logo__text {
+  display: flex;
+  align-items: center;
+  font-size: font-sizes.$logo;
+  color: colors.$textDark;
+  letter-spacing: 0.1rem;
+  font-weight: font-weights.$veryStrong;
+
+  & > div {
+    margin-right: 0.5rem;
+  }
+}

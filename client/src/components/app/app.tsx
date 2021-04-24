@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { clientAuth } from '../../config/okta-config';
 
 // components
-import Header from '../header/header';
+import { Header } from '../header';
 import SignUp from '../sign-up/sign-up';
 import Login from '../login/login';
 import Breadcrumb from '../breadcrumb/breadcrumb';
