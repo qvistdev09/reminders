@@ -1,30 +1,15 @@
+import './permissions-grid.scss';
 import { PermissionOrder, UserInPermissionsGrid } from 'reminders-shared/sharedTypes';
-import PermissionsRow from './elements/permissions-row';
-import { useAppUserDetails } from '../../hooks/use-app-user-details';
+import PermissionsRow from './permissions-row';
 
 interface Props {
   permissions: UserInPermissionsGrid[];
-  showOwner: boolean;
   changePermission: (change: PermissionOrder) => void;
+  owner?: UserInPermissionsGrid;
 }
 
-const PermissionsGrid = ({ permissions, showOwner = false, changePermission }: Props) => {
-  const owner = useAppUserDetails();
-
-  const permissionsArray: UserInPermissionsGrid[] =
-    showOwner && owner.retrieved
-      ? [
-          {
-            firstName: owner.firstName,
-            lastName: owner.lastName,
-            email: owner.email,
-            uid: owner.uid,
-            permissionRole: 'editor',
-          },
-          ...permissions,
-        ]
-      : permissions;
-
+const PermissionsGrid = ({ permissions, owner, changePermission }: Props) => {
+  const permissionsArray: UserInPermissionsGrid[] = owner ? [owner, ...permissions] : permissions;
   const base = 'permissions-grid__header-label permissions-grid__cell permissions-grid__header';
   const left = 'permissions-grid__header-left';
   const middle = 'permissions-grid__header-middle';
@@ -40,7 +25,7 @@ const PermissionsGrid = ({ permissions, showOwner = false, changePermission }: P
           key={permission.uid}
           data={permission}
           final={index === permissionsArray.length - 1}
-          isOwner={permission.uid === owner.uid}
+          isOwner={permission.uid === owner?.uid}
           changePermission={changePermission}
         />
       ))}

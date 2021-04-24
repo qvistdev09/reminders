@@ -1,7 +1,7 @@
 import { SyntheticEvent, useState } from 'react';
 import FormLabelledInput from '../../form/elements/form-labelled-input';
 import FormSearchWrapper from '../../form/elements/form-search-wrapper';
-import PermissionsGrid from '../../permissions-grid/permissions-grid';
+import PermissionsGrid from '../../presentational/permissions-grid/permissions-grid';
 import { getSearchMatchRenderFunction } from './projects-user-search-match';
 import { useAddNewUsers } from '../../../hooks/use-add-new-users';
 import { useProjects } from '../../../hooks/use-projects';
@@ -37,9 +37,7 @@ const ProjectsAddCollaborators = ({ projectId, close }: Props) => {
           id='user-search'
         />
       </FormSearchWrapper>
-      {selection.length > 0 && (
-        <PermissionsGrid permissions={selection} showOwner={false} changePermission={changeRole} />
-      )}
+      {selection.length > 0 && <PermissionsGrid permissions={selection} changePermission={changeRole} />}
       <button className='form__submit-btn utility--margin-top'>Save</button>
     </form>
   );

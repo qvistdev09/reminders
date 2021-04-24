@@ -37,7 +37,7 @@ const PermissionsRow = ({ data, final, isOwner, changePermission }: Props) => {
       <p className={`${cell} ${text} ${middle}`}>{email}</p>
       <div className={`${cell} ${text} ${right}`}>
         <select
-          className='form__input form__input-select'
+          className='permissions-grid__select'
           value={isOwner ? 'Owner' : permissionRole}
           onChange={handleChange}
           disabled={isOwner}

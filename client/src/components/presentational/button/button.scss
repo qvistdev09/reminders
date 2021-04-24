@@ -29,6 +29,19 @@
   }
 }
 
+.button__settings {
+  font-size: font-sizes.$small;
+  font-weight: font-weights.$strong;
+  color: colors.$strongSecondary;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 0.35rem;
+
+  &:hover {
+    background-color: colors.$softSecondary;
+  }
+}
+
 // modifiers
 
 .button--action {

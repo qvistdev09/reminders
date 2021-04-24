@@ -1,0 +1,98 @@
+@use '../../../styles/variables/layout';
+@use '../../../styles/variables/colors';
+@use '../../../styles/variables/font-sizes';
+@use '../../../styles/variables/font-weights';
+
+.permissions-grid {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+}
+
+.permissions-grid__header-label {
+  color: colors.$textDark;
+  font-size: font-sizes.$small;
+  font-weight: font-weights.$strong;
+}
+
+.permissions-grid__content-text {
+  color: colors.$textDark;
+  font-size: font-sizes.$small;
+  font-weight: font-weights.$normal;
+}
+
+.permissions-grid__cell {
+  padding: 0.5rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.permissions-grid__header {
+  border-top: 1px solid colors.$border;
+  border-bottom: 1px solid colors.$border;
+  background-color: colors.$lightShadeBg;
+}
+
+.permissions-grid__header-left {
+  border-left: 1px solid colors.$border;
+  border-right: 1px solid colors.$border;
+  border-top-left-radius: 0.45rem;
+}
+
+.permissions-grid__header-middle {
+  border-right: 1px solid colors.$border;
+}
+
+.permissions-grid__header-right {
+  border-right: 1px solid colors.$border;
+  border-top-right-radius: 0.45rem;
+}
+
+.permissions-grid__content-left {
+  border-left: 1px solid colors.$border;
+  border-right: 1px solid colors.$border;
+  border-bottom: 1px solid colors.$border;
+}
+
+.permissions-grid__content-middle {
+  border-right: 1px solid colors.$border;
+  border-bottom: 1px solid colors.$border;
+}
+
+.permissions-grid__content-right {
+  border-right: 1px solid colors.$border;
+  border-bottom: 1px solid colors.$border;
+}
+
+.permissions-grid__content-left-final {
+  border-left: 1px solid colors.$border;
+  border-bottom: 1px solid colors.$border;
+  border-right: 1px solid colors.$border;
+  border-bottom-left-radius: 0.45rem;
+}
+
+.permissions-grid__content-middle-final {
+  border-bottom: 1px solid colors.$border;
+  border-right: 1px solid colors.$border;
+}
+
+.permissions-grid__content-right-final {
+  border-right: 1px solid colors.$border;
+  border-bottom: 1px solid colors.$border;
+  border-bottom-right-radius: 0.45rem;
+}
+
+.permissions-grid__select {
+  color: colors.$textDark;
+  font-size: font-sizes.$small;
+  font-weight: font-weights.$normal;
+  margin: 0;
+  padding: 0.15rem;
+  border-radius: 0.25rem;
+  border: none;
+  background-color: transparent;
+  outline: none;
+  &:disabled {
+    opacity: 0.3;
+  }
+}

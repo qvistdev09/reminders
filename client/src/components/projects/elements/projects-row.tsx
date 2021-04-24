@@ -1,4 +1,4 @@
-import PermissionsGrid from '../../permissions-grid/permissions-grid';
+import PermissionsGrid from '../../presentational/permissions-grid/permissions-grid';
 import { Link } from 'react-router-dom';
 import { SyntheticEvent, useState } from 'react';
 import Icon from '../../icon/icon';
@@ -52,7 +52,6 @@ const ProjectsRow = ({ data, openModal }: Props) => {
             </div>
             <PermissionsGrid
               permissions={data.permissions}
-              showOwner={true}
               changePermission={(permission: PermissionOrder) => editPermission(projectId, permission)}
             />
           </div>

@@ -7,3 +7,10 @@
   font-size: font-sizes.$normal;
   font-weight: font-weights.$strong;
 }
+
+.headers__settings {
+  color: colors.$textDark;
+  font-size: font-sizes.$small;
+  font-weight: font-weights.$strong;
+  padding-left: 0.25rem;
+}
