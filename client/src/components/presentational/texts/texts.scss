@@ -1,0 +1,9 @@
+@use '../../../styles/variables/colors';
+@use '../../../styles/variables/font-sizes';
+@use '../../../styles/variables/font-weights';
+
+.texts__small-text {
+  color: colors.$textSemiDark;
+  font-size: font-sizes.$small;
+  font-weight: font-weights.$thin;
+}

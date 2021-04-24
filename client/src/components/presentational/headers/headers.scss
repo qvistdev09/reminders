@@ -1,0 +1,9 @@
+@use '../../../styles/variables/colors';
+@use '../../../styles/variables/font-weights';
+@use '../../../styles/variables/font-sizes';
+
+.headers__projecttitle {
+  color: colors.$textDark;
+  font-size: font-sizes.$normal;
+  font-weight: font-weights.$strong;
+}

@@ -42,13 +42,13 @@
 
 .icon--semi-dark {
   circle {
-    stroke: colors.$lightBgIcon;
+    stroke: colors.$textSemiDark;
   }
   path {
-    fill: colors.$lightBgIcon;
+    fill: colors.$textSemiDark;
     &.nofill {
       fill: none;
-      stroke: colors.$lightBgIcon;
+      stroke: colors.$textSemiDark;
     }
   }
 }

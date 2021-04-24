@@ -99,7 +99,7 @@
   display: flex;
   justify-content: center;
   border-bottom: 1px solid colors.$border;
-  padding: 0.5rem;
+  padding: 1rem;
 
   h2 {
     color: colors.$textDark;
@@ -111,7 +111,7 @@
 .containers__expandable-card-header {
   display: flex;
   align-items: center;
-  padding: 0.5rem;
+  padding: 1rem;
 }
 
 .containers__expandable-card-header--expanded {
@@ -122,6 +122,15 @@
   display: flex;
   align-items: center;
   cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.35rem;
+  &:hover {
+    background-color: colors.$softSecondary;
+  }
+
+  & > *:last-child {
+    margin-left: 0.25rem;
+  }
 }
 
 .containers__expandable-card-headerobj {
@@ -129,7 +138,7 @@
 }
 
 .containers__card-content {
-  padding: 0.5rem;
+  padding: 1rem;
 }
 
 .containers__form {
