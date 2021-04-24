@@ -51,6 +51,13 @@
   display: grid;
 }
 
+.containers__form {
+  display: grid;
+  grid-template-columns: 1fr;
+  padding: 0.5rem;
+  row-gap: 1rem;
+}
+
 // modifiers
 
 .containers--expand {

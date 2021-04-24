@@ -10,10 +10,8 @@ interface Props {
 }
 
 const FormLabelledInput = ({ value, onChange, required = true, type = 'text', label, id }: Props) => (
-  <>
-    <label htmlFor={id} className='form__label'>
-      {label}
-    </label>
+  <label htmlFor={id} className='form__label'>
+    {label}
     <input
       value={value}
       onChange={(e: SyntheticEvent) => {
@@ -25,7 +23,7 @@ const FormLabelledInput = ({ value, onChange, required = true, type = 'text', la
       id={id}
       className='form__input'
     />
-  </>
+  </label>
 );
 
 export default FormLabelledInput;

@@ -13,16 +13,17 @@
 }
 
 .form__label {
-  margin-bottom: 0.35rem;
   text-transform: uppercase;
   font-size: font-sizes.$formLabel;
   font-weight: font-weights.$formLabel;
   color: colors.$lightBgText;
   padding-left: 0.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .form__input {
-  margin-bottom: 1.2rem;
   outline: none;
   border: 1px solid darken(colors.$lightBg, 25%);
   background-color: lighten(colors.$lightBg, 8%);
