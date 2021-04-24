@@ -36,3 +36,11 @@ export const validateParam = (param: any) => {
   }
   throw new ControlledError('Invalid param', 400);
 };
+
+export const validateOwnershipQuerystring = (query: any) => {
+  const ownerships = ['mine', 'others'];
+  if (query && typeof query === 'string' && ownerships.includes(query)) {
+    return query;
+  }
+  throw new ControlledError('Invalid query string', 400);
+};

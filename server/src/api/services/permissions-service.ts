@@ -1,8 +1,7 @@
 import { Permission } from '../../database/root';
 import { PermissionInstance } from '../../database/schemas/permission';
 import { ProjectInstance } from '../../database/schemas/project';
-import { PermissionRole, ProjectObject, UserInPermissionsGrid, UserObj } from 'reminders-shared/sharedTypes';
-import { getAllAppUsers, getNameFromOkta } from './user-service';
+import { PermissionRole, UserObj } from 'reminders-shared/sharedTypes';
 
 export interface PermissionInstanceWithName {
   userPermission: PermissionInstance;
@@ -14,58 +13,7 @@ export interface ProjectWithPermissions {
   projectPermissions: PermissionInstanceWithName[];
 }
 
-const userIsDefined = (user: UserInPermissionsGrid | undefined): user is UserInPermissionsGrid => {
-  return user !== undefined;
-};
-
-const appendNames = (permissions: PermissionInstance[]): Promise<UserInPermissionsGrid[]> => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const allUsers = await getAllAppUsers();
-      const usersInProject = allUsers.map(user => {
-        const match = permissions.find(permission => permission.permissionUid === user.uid);
-        if (match) {
-          const preparedObject: UserInPermissionsGrid = {
-            ...user,
-            permissionRole: match.permissionRole,
-          };
-          return preparedObject;
-        }
-        return undefined;
-      });
-      const noNulls = usersInProject.filter(userIsDefined);
-      resolve(noNulls);
-    } catch (err) {
-      reject(err);
-    }
-  });
-};
-
-const appendPermissionsToProject = (project: ProjectInstance): Promise<ProjectObject> => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const rawPermissions = await Permission.findAll({
-        where: {
-          projectId: project.projectId,
-        },
-        order: [['createdAt', 'ASC']],
-      });
-      const projectPermissions = await appendNames(rawPermissions);
-      const owner = await getNameFromOkta(project.projectOwner);
-      resolve({
-        projectTitle: project.projectTitle,
-        projectId: project.projectId as number,
-        permissions: projectPermissions,
-        projectVisibility: project.projectVisibility,
-        projectOwner: owner,
-      });
-    } catch (err) {
-      reject(err);
-    }
-  });
-};
-
-const handlePermissionChange = async (
+export const handlePermissionChange = async (
   permissionUid: string,
   projectId: number,
   permissionRole: PermissionRole
@@ -87,6 +35,21 @@ const handlePermissionChange = async (
   });
 };
 
+export const attachPermissions = async (project: ProjectInstance) => {
+  try {
+    const permissions = await Permission.findAll({ where: { projectId: project.projectId } });
+    return {
+      project,
+      permissions,
+    };
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const attachPermissionsToProjects = (projects: ProjectInstance[]) =>
+  Promise.all(projects.map(project => attachPermissions(project)));
+
 export const findProjectPermissions = (projectId: number) => Permission.findAll({ where: { projectId } });
 
-export { appendPermissionsToProject, handlePermissionChange };
+export const findPermissionsByUserId = (uid: string) => Permission.findAll({ where: { permissionUid: uid } });

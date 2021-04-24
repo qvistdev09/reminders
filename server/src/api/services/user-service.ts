@@ -1,6 +1,8 @@
 import { oktaAxios } from './okta-axios';
 import { ClientUserProfile } from '../validation/sign-up-validation';
-import { UserObj } from 'reminders-shared/sharedTypes'
+import { UserInPermissionsGrid, UserObj } from 'reminders-shared/sharedTypes';
+import { PermissionInstance } from '../../database/schemas/permission';
+import { ProjectInstance } from '../../database/schemas/project';
 
 const oktaGroup = process.env.OKTA_GROUP as string;
 
@@ -21,7 +23,7 @@ interface OktaUserProfile {
   groupIds: [string];
 }
 
-const postUserToOkta = (userDetails: ClientUserProfile) => {
+export const postUserToOkta = (userDetails: ClientUserProfile) => {
   if (!oktaGroup) {
     throw new Error('Missing Okta group, cannot create user');
   }
@@ -44,7 +46,7 @@ const postUserToOkta = (userDetails: ClientUserProfile) => {
   return oktaAxios.post('users', newUser);
 };
 
-const getNameFromOkta = (uid: string): Promise<UserObj> => {
+export const getNameFromOkta = (uid: string): Promise<UserObj> => {
   return new Promise(async (resolve, reject) => {
     try {
       const userDetailsFromOkta = await oktaAxios.get(`users/${uid}`);
@@ -63,7 +65,7 @@ const getNameFromOkta = (uid: string): Promise<UserObj> => {
   });
 };
 
-const getAllAppUsers = (): Promise<UserObj[]> => {
+export const getAllAppUsers = (): Promise<UserObj[]> => {
   return new Promise(async (resolve, reject) => {
     try {
       const oktaUserObjects = await oktaAxios.get(`groups/${oktaGroup}/users`);
@@ -80,4 +82,42 @@ const getAllAppUsers = (): Promise<UserObj[]> => {
   });
 };
 
-export { postUserToOkta, getNameFromOkta, getAllAppUsers };
+export const userIsDefined = (user: UserInPermissionsGrid | undefined): user is UserInPermissionsGrid => {
+  return user !== undefined;
+};
+
+export const appendNamesToPermissions = (
+  permissions: PermissionInstance[],
+  usersCatalog: UserObj[]
+): UserInPermissionsGrid[] => {
+  return usersCatalog
+    .map(user => {
+      const match = permissions.find(permission => permission.permissionUid === user.uid);
+      if (match) {
+        const preparedObject: UserInPermissionsGrid = {
+          ...user,
+          permissionRole: match.permissionRole,
+        };
+        return preparedObject;
+      }
+      return undefined;
+    })
+    .filter(userIsDefined);
+};
+
+export const appendNamesToManyProjects = async (
+  projects: { project: ProjectInstance; permissions: PermissionInstance[] }[],
+  catalog?: UserObj[]
+) => {
+  try {
+    const allUsers = catalog ? catalog : await getAllAppUsers();
+    return projects.map(({ project, permissions }) => {
+      return {
+        project,
+        permissions: appendNamesToPermissions(permissions, allUsers),
+      };
+    });
+  } catch (err) {
+    throw err;
+  }
+};

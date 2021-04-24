@@ -2,17 +2,29 @@ import express, { NextFunction, Request, Response } from 'express';
 import { Permission, Project, Task } from '../../database/root';
 import { authAppend } from '../../middleware/auth-append';
 import { authRequired } from '../../middleware/auth-required';
-import { appendPermissionsToProject, findProjectPermissions } from '../services/permissions-service';
 import {
+  attachPermissionsToProjects,
+  findPermissionsByUserId,
+  findProjectPermissions,
+} from '../services/permissions-service';
+import {
+  attachOwnersToManyProjects,
   createNewProject,
   establishRole,
   findProject,
+  findProjectsByPermissions,
   getProjectsByUserId,
+  structureProjectsDataForClient,
 } from '../services/projects-service';
-import { projectIsDefined, validateParam, validateProjectFields } from '../validation/project-validation';
+import {
+  validateOwnershipQuerystring,
+  validateParam,
+  validateProjectFields,
+} from '../validation/project-validation';
 import { sequelize } from '../../config/db-config';
 import { ControlledError } from '../../classes/controlled-error';
 import { ProjectAccessResponse } from 'reminders-shared/sharedTypes';
+import { appendNamesToManyProjects, getAllAppUsers, getNameFromOkta } from '../services/user-service';
 
 const router = express.Router();
 
@@ -60,34 +72,28 @@ router.get('/:projectIdString', authAppend, async (req: Request, res: Response, 
 });
 
 router.get('/', authRequired, async (req: Request, res: Response, next: NextFunction) => {
-  const { ownership } = req.query;
-  if (typeof ownership !== 'string' || !['mine', 'others'].includes(ownership)) {
-    return res.status(400).send('missing valid ownership query');
-  }
-  const { uid } = req.jwt.claims;
-  if (ownership === 'mine') {
-    try {
-      const rawProjects = await getProjectsByUserId(uid);
-      const projectsWithPermissions = await Promise.all(
-        rawProjects.map(project => appendPermissionsToProject(project))
-      );
-      res.json({ projects: projectsWithPermissions });
-    } catch (err) {
-      res.status(500).json({ error: err.message });
+  try {
+    const userCatalog = await getAllAppUsers();
+    const ownership = validateOwnershipQuerystring(req.query.ownership);
+    const { uid } = req.jwt.claims;
+    if (ownership === 'mine') {
+      const ownerUserObj = await getNameFromOkta(uid);
+      const projects = await getProjectsByUserId(uid)
+        .then(attachPermissionsToProjects)
+        .then(projects => appendNamesToManyProjects(projects, userCatalog))
+        .then(projects => structureProjectsDataForClient(projects, ownerUserObj));
+      res.json({ projects });
+    } else {
+      const projects = await findPermissionsByUserId(uid)
+        .then(findProjectsByPermissions)
+        .then(attachPermissionsToProjects)
+        .then(projects => appendNamesToManyProjects(projects, userCatalog))
+        .then(projects => attachOwnersToManyProjects(projects, userCatalog))
+        .then(structureProjectsDataForClient);
+      res.json({ projects });
     }
-  } else {
-    try {
-      const userPermissions = await Permission.findAll({ where: { permissionUid: uid } });
-      const authorizedProjects = await Promise.all(
-        userPermissions.map(permission => Project.findOne({ where: { projectId: permission.projectId } }))
-      );
-      const filterNulls = authorizedProjects.filter(projectIsDefined);
-      const noSelfOwned = filterNulls.filter(project => project.projectOwner !== uid);
-      const completedObjects = await Promise.all(noSelfOwned.map(proj => appendPermissionsToProject(proj)));
-      res.json({ projects: completedObjects });
-    } catch (err) {
-      res.status(500).send('Database error');
-    }
+  } catch (err) {
+    next(err);
   }
 });
 
