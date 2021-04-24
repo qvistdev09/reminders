@@ -2,6 +2,7 @@ import { ProjectCreator } from '../project-creator';
 import { Card } from '../presentational/containers/card';
 import { Flex } from '../presentational/containers/flex';
 import { useProjects } from '../../hooks/use-projects';
+import { ExpandableCard } from '../presentational/containers/expandable-card';
 
 export const Projects = () => {
   const { projects } = useProjects();
@@ -12,9 +13,7 @@ export const Projects = () => {
           <ProjectCreator />
         </Card>
         <Card header='Your projects' flex={1}>
-          {projects.map(project => (
-            <p key={project.projectId}>{project.projectTitle}</p>
-          ))}
+          <p>Hey</p>
         </Card>
       </Flex>
     </Flex>

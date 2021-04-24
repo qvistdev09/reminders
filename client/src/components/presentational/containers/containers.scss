@@ -108,6 +108,26 @@
   }
 }
 
+.containers__expandable-card-header {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+.containers__expandable-card-header--expanded {
+  border-bottom: 1px solid colors.$border;
+}
+
+.containers__expandable-card-btn {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.containers__expandable-card-headerobj {
+  flex: 1;
+}
+
 .containers__card-content {
   padding: 0.5rem;
 }
