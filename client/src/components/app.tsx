@@ -2,19 +2,19 @@ import { Route, Switch } from 'react-router-dom';
 import { Security, LoginCallback, SecureRoute } from '@okta/okta-react';
 import { toRelativeUrl } from '@okta/okta-auth-js';
 import { useHistory } from 'react-router-dom';
-import { clientAuth } from '../../config/okta-config';
+import { clientAuth } from '../config/okta-config';
 
 // components
-import { Header } from '../header';
-import SignUp from '../sign-up/sign-up';
-import Login from '../login/login';
-import Breadcrumb from '../breadcrumb/breadcrumb';
-import Projects from '../projects/projects';
-import ProjectPage from '../project-page/project-page';
+import { Header } from './header';
+import { BreadcrumbRow } from './breadcrumb-row';
+import SignUp from './sign-up/sign-up';
+import Login from './login/login';
+import Projects from './projects/projects';
+import ProjectPage from './project-page/project-page';
 
 // types
 import { OktaAuth } from '@okta/okta-auth-js/lib/types';
-import SharedWithYou from '../pages/shared-with-you';
+import SharedWithYou from './pages/shared-with-you';
 
 const App = () => {
   const history = useHistory();
@@ -27,7 +27,7 @@ const App = () => {
   return (
     <Security oktaAuth={clientAuth} restoreOriginalUri={restoreOriginalUri} onAuthRequired={onAuthRequired}>
       <Header />
-      <Breadcrumb />
+      <BreadcrumbRow />
       <main className='main'>
         <div className='main__inner'>
           <Switch>

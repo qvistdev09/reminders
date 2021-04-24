@@ -27,7 +27,7 @@ const useBreadcrumbs = (): CrumbObject[] => {
     beautifiedLink: beautify(crumb),
   }));
 
-  return crumbObjects;
+  return [{ link: '/', beautifiedLink: 'Home' }, ...crumbObjects];
 };
 
 export { useBreadcrumbs };

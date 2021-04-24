@@ -28,7 +28,7 @@ export const Header = () => {
 
   return (
     <header>
-      <Row justify='centered' bg='brightBg' minHeight='header'>
+      <Row justify='centered' bg='brightBg' minHeight='header' borders={['bottom']}>
         <InnerMaxWidth isNav={true}>
           <Logo />
           <Row justify='start' expand={true}>
