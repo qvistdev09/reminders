@@ -9,7 +9,7 @@ export const Projects = () => {
     <Row justify='centered' expand={true} align='start' bg='darkenedBg'>
       <InnerMaxWidth>
         <Columns columns={[0.4, 1]} yPadding='1rem' gap={1}>
-          <Card header='Create project'>
+          <Card header='New project'>
             <ProjectCreator />
           </Card>
           <Card header='Your projects'>
