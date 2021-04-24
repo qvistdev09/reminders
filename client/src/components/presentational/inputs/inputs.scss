@@ -31,3 +31,24 @@
     background-color: colors.$brightBg;
   }
 }
+
+.inputs__select {
+  color: colors.$textDark;
+  font-size: font-sizes.$small;
+  font-weight: font-weights.$normal;
+  margin: 0;
+  padding: 0.15rem;
+  border-radius: 0.25rem;
+  border: none;
+  background-color: transparent;
+  outline: none;
+  &:disabled {
+    opacity: 0.3;
+  }
+}
+
+.inputs__select-wrapper {
+  border: 1px solid colors.$border;
+  border-radius: 0.35rem;
+  padding: 0.25rem;
+}

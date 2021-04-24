@@ -6,6 +6,7 @@ import { ExpandableCard } from './presentational/containers/expandable-card';
 import { Flex } from './presentational/containers/flex';
 import { ProjectTitle } from './presentational/headers/project-title';
 import { SettingsHeader } from './presentational/headers/settings-header';
+import { Select } from './presentational/inputs/select';
 import { LinkRow } from './presentational/links/link-row';
 import PermissionsGrid from './presentational/permissions-grid/permissions-grid';
 import { SmallText } from './presentational/texts/small-text';
@@ -46,14 +47,26 @@ export const ProjectCard = ({ project }: Props) => {
     </>
   );
 
+  const visibilityOptions = [
+    { value: 'private', label: 'Private' },
+    { value: 'authorizedOnly', label: 'Collaborators' },
+    { value: 'public', label: 'Public' },
+  ];
+
   return (
     <ExpandableCard headerObj={headerObj} button={button} buttonExpanded={buttonExpanded}>
-      <Flex direction='column' align='stretch' childrenGap='small'>
-        <Flex direction='row' justify='between' align='center'>
-          <SettingsHeader label='Permissions' />
-          <SettingsButton label='Add' onClick={() => {}} />
+      <Flex direction='column' align='stretch' childrenGap='big'>
+        <Flex direction='column' align='stretch' childrenGap='small'>
+          <Flex direction='row' justify='between' align='center'>
+            <SettingsHeader label='Permissions' />
+            <SettingsButton label='Add' onClick={() => {}} />
+          </Flex>
+          <PermissionsGrid permissions={permissions} changePermission={() => {}} owner={ownerObj} />
         </Flex>
-        <PermissionsGrid permissions={permissions} changePermission={() => {}} owner={ownerObj} />
+        <Flex direction='column' align='start' childrenGap='small'>
+          <SettingsHeader label='Visibility' />
+          <Select choices={visibilityOptions} onChange={() => {}} />
+        </Flex>
       </Flex>
     </ExpandableCard>
   );
