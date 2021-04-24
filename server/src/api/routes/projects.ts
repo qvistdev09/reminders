@@ -4,12 +4,14 @@ import { authAppend } from '../../middleware/auth-append';
 import { authRequired } from '../../middleware/auth-required';
 import {
   attachPermissionsToProjects,
+  destroyPermissionsByProjectId,
   findPermissionsByUserId,
   findProjectPermissions,
 } from '../services/permissions-service';
 import {
   attachOwnersToManyProjects,
   createNewProject,
+  destroyProject,
   establishRole,
   findProject,
   findProjectsByPermissions,
@@ -20,11 +22,13 @@ import {
   validateOwnershipQuerystring,
   validateParam,
   validateProjectFields,
+  validateProjectVisibillity,
 } from '../validation/project-validation';
 import { sequelize } from '../../config/db-config';
 import { ControlledError } from '../../classes/controlled-error';
 import { ProjectAccessResponse } from 'reminders-shared/sharedTypes';
 import { appendNamesToManyProjects, getAllAppUsers, getNameFromOkta } from '../services/user-service';
+import { destroyTasksByProjectId } from '../services/tasks-service';
 
 const router = express.Router();
 
@@ -98,61 +102,46 @@ router.get('/', authRequired, async (req: Request, res: Response, next: NextFunc
 });
 
 router.put('/:projectId', authRequired, async (req: Request, res: Response, next: NextFunction) => {
-  const { uid } = req.jwt.claims;
-  const { projectId } = req.params;
-  const parsedId = parseInt(projectId, 10);
-
-  if (isNaN(parsedId)) {
-    return res.status(400).send('bad project id');
+  try {
+    const { uid } = req.jwt.claims;
+    const projectId = validateParam(req.params.projectId);
+    const newVisibility = validateProjectVisibillity(req.body);
+    const matchedProject = await findProject(projectId);
+    if (!matchedProject) {
+      throw new ControlledError('Not found', 404);
+    }
+    if (matchedProject.projectOwner !== uid) {
+      throw new ControlledError('Unauthorized', 401);
+    }
+    matchedProject.projectVisibility = newVisibility;
+    await matchedProject.save();
+    res.status(204).end();
+  } catch (err) {
+    next(err);
   }
-
-  if (!req.body || !req.body.project || !req.body.project.projectVisibility) {
-    return res.status(400).send('no body');
-  }
-  const { projectVisibility } = req.body.project;
-  if (!['public', 'private', 'authorizedOnly'].includes(projectVisibility)) {
-    return res.status(400).send('bad visibility');
-  }
-
-  const matchedProject = await Project.findOne({ where: { projectId: parsedId } });
-  if (!matchedProject) {
-    return res.status(404).send('no such project');
-  }
-  if (matchedProject.projectOwner !== uid) {
-    return res.status(400).send('not product owner');
-  }
-  matchedProject.projectVisibility = projectVisibility;
-  await matchedProject.save();
-  res.status(204).end();
 });
 
 router.delete('/:projectId', authRequired, async (req: Request, res: Response, next: NextFunction) => {
-  const { uid } = req.jwt.claims;
-  const { projectId } = req.params;
-  const parsedId = parseInt(projectId, 10);
-
-  if (isNaN(parsedId)) {
-    return res.status(400).send('bad project id');
-  }
-
-  const matchedProject = await Project.findOne({ where: { projectId: parsedId } });
-  if (!matchedProject) {
-    return res.status(404).send('no such project');
-  }
-  if (matchedProject.projectOwner !== uid) {
-    return res.status(400).send('not product owner');
-  }
-
-  const t = await sequelize.transaction();
   try {
-    const projectId = matchedProject.projectId as number;
-    await matchedProject.destroy({ transaction: t });
-    await Permission.destroy({ where: { projectId }, transaction: t });
-    await Task.destroy({ where: { projectId }, transaction: t });
-    await t.commit();
-    res.status(204).send('Project deleted');
+    const { uid } = req.jwt.claims;
+    const projectId = validateParam(req.params.projectId);
+    const matchedProject = await findProject(projectId);
+    if (!matchedProject) {
+      throw new ControlledError('Not found', 404);
+    }
+    if (matchedProject.projectOwner !== uid) {
+      throw new ControlledError('Unauthorized', 401);
+    }
+    const transaction = await sequelize.transaction();
+    await Promise.all([
+      destroyProject(matchedProject, transaction),
+      destroyPermissionsByProjectId(projectId, transaction),
+      destroyTasksByProjectId(projectId, transaction),
+    ]);
+    await transaction.commit();
+    res.status(204).end();
   } catch (err) {
-    res.status(500).send('DB error - could not delete project');
+    next(err);
   }
 });
 

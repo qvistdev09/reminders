@@ -44,3 +44,15 @@ export const validateOwnershipQuerystring = (query: any) => {
   }
   throw new ControlledError('Invalid query string', 400);
 };
+
+export const validateProjectVisibillity = (body: any) => {
+  if (!body || !body.project || !body.project.projectVisibility) {
+    throw new ControlledError('Invalid input', 400);
+  }
+  const { projectVisibility } = body.project;
+  const validSettings = ['authorizedOnly', 'public', 'private'];
+  if (typeof projectVisibility !== 'string' || !validSettings.includes(projectVisibility)) {
+    throw new ControlledError('Invalid input', 400);
+  }
+  return projectVisibility as ProjectVisibility;
+};

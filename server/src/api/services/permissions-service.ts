@@ -2,6 +2,7 @@ import { Permission } from '../../database/root';
 import { PermissionInstance } from '../../database/schemas/permission';
 import { ProjectInstance } from '../../database/schemas/project';
 import { PermissionRole, UserObj } from 'reminders-shared/sharedTypes';
+import { Transaction } from 'sequelize/types';
 
 export interface PermissionInstanceWithName {
   userPermission: PermissionInstance;
@@ -53,3 +54,7 @@ export const attachPermissionsToProjects = (projects: ProjectInstance[]) =>
 export const findProjectPermissions = (projectId: number) => Permission.findAll({ where: { projectId } });
 
 export const findPermissionsByUserId = (uid: string) => Permission.findAll({ where: { permissionUid: uid } });
+
+export const destroyPermissionsByProjectId = (projectId: number, transaction: Transaction) => {
+  return Permission.destroy({ where: { projectId }, transaction });
+};

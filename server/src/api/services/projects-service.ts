@@ -1,4 +1,5 @@
 import { PermissionRole, ProjectObject, UserInPermissionsGrid, UserObj } from 'reminders-shared/sharedTypes';
+import { Transaction } from 'sequelize/types';
 import { ControlledError } from '../../classes/controlled-error';
 import { Project } from '../../database/root';
 import { PermissionInstance } from '../../database/schemas/permission';
@@ -98,3 +99,9 @@ export const attachOwnersToManyProjects = async (
     throw err;
   }
 };
+
+export const destroyProject = (project: ProjectInstance, transaction: Transaction) => {
+  return project.destroy({ transaction });
+};
+
+
