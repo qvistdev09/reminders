@@ -1,5 +1,6 @@
 import { ProjectObject, UserInPermissionsGrid } from 'reminders-shared/sharedTypes';
 import { useAppUserDetails } from '../hooks/use-app-user-details';
+import { useProjects } from '../hooks/use-projects';
 import Icon from './icon/icon';
 import { DestructiveButton } from './presentational/button/destructive-button';
 import { SettingsButton } from './presentational/button/settings-button';
@@ -17,7 +18,8 @@ interface Props {
 }
 
 export const ProjectCard = ({ project }: Props) => {
-  const { projectTitle, projectId, permissions } = project;
+  const { changeVisibility } = useProjects();
+  const { projectTitle, projectId, permissions, projectVisibility } = project;
   const appUser = useAppUserDetails();
   const slug = `${projectTitle.toLowerCase().replace(/\s/g, '-')}_${projectId}`;
 
@@ -27,6 +29,12 @@ export const ProjectCard = ({ project }: Props) => {
     email: appUser.email,
     uid: appUser.uid,
     permissionRole: 'editor',
+  };
+
+  const handleVisibilitySelectChange = (newSetting: string) => {
+    if (newSetting === 'authorizedOnly' || newSetting === 'public' || newSetting === 'private') {
+      changeVisibility(projectId, newSetting);
+    }
   };
 
   const headerObj = (
@@ -66,7 +74,11 @@ export const ProjectCard = ({ project }: Props) => {
         </Flex>
         <Flex direction='column' align='start' childrenGap='small'>
           <SettingsHeader label='Visibility' />
-          <Select choices={visibilityOptions} onChange={() => {}} />
+          <Select
+            choices={visibilityOptions}
+            value={projectVisibility}
+            onChange={handleVisibilitySelectChange}
+          />
         </Flex>
         <DestructiveButton label='Delete project' onClick={() => {}} dontStretch={true} />
       </Flex>

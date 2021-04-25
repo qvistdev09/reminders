@@ -12,6 +12,7 @@ export const getProjectsByUserId = (userId: string) =>
     where: {
       projectOwner: userId,
     },
+    order: [['createdAt', 'ASC']],
   });
 
 export const createNewProject = (newProject: NewProject) => {
@@ -103,5 +104,3 @@ export const attachOwnersToManyProjects = async (
 export const destroyProject = (project: ProjectInstance, transaction: Transaction) => {
   return project.destroy({ transaction });
 };
-
-
