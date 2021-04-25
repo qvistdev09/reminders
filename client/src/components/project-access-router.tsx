@@ -3,6 +3,7 @@ import { useAccessProject } from '../hooks/use-access-project';
 import ProjectPageViewer from './project-page/elements/project-page-viewer';
 import { Editor } from './pages/editor';
 import ProjectPageUnauthorized from './project-page/elements/project-page-unauthorized';
+import { Text } from './presentational/texts/text';
 
 interface Params {
   slug: string;
@@ -14,7 +15,7 @@ export const ProjectAccessRouter = () => {
   const { response } = useAccessProject(projectId);
 
   if (!response) {
-    return <p>Retrieving project...</p>;
+    return <Text>Retrieving project...</Text>;
   }
 
   const { projectVisibility, role } = response;
