@@ -1,7 +1,7 @@
 import { SyntheticEvent, useState } from 'react';
 import FormLabelledInput from '../form/elements/form-labelled-input';
 import ProjectsRow from './elements/projects-row';
-import Modal from '../modal/modal';
+import Modal from '../presentational/modal/modal';
 import ProjectsAddCollaborators from './elements/projects-add-collaborators';
 import { useProjects } from '../../hooks/use-projects';
 

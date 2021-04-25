@@ -1,7 +1,7 @@
-@use '../variables/layout';
-@use '../variables/colors';
-@use '../variables/font-sizes';
-@use '../variables/font-weights';
+@use '../../../styles/variables/layout';
+@use '../../../styles/variables/colors';
+@use '../../../styles/variables/font-sizes';
+@use '../../../styles/variables/font-weights';
 
 .modal {
   position: fixed;
@@ -18,11 +18,12 @@
 }
 
 .modal__inner {
-  background-color: colors.$lightBg;
+  background-color: colors.$brightBg;
   border-radius: 0.3rem;
   flex: 1;
   max-width: 40rem;
   box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.132);
+  border: 1px solid colors.$border;
 }
 
 .modal__header-container {
@@ -31,13 +32,13 @@
   align-items: center;
   padding: 0.5rem;
   padding-left: 1rem;
-  border-bottom: 1px solid colors.$lightBgBorder;
+  border-bottom: 1px solid colors.$border;
 }
 
 .modal__label {
-  color: colors.$black;
-  font-size: font-sizes.$modalLabel;
-  font-weight: font-weights.$modalLabel;
+  color: colors.$textDark;
+  font-size: font-sizes.$small;
+  font-weight: font-weights.$normal;
 }
 
 .modal__close-btn {
@@ -47,4 +48,8 @@
   &:hover {
     background-color: rgba(0, 0, 0, 0.098);
   }
+}
+
+.modal__content {
+  padding: 1rem;
 }

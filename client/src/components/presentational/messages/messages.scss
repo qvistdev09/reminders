@@ -1,0 +1,13 @@
+@use '../../../styles/variables/colors';
+@use '../../../styles/variables/font-sizes';
+@use '../../../styles/variables/font-weights';
+
+.messages__warning {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 1rem;
+  background-color: colors.$softDestructive;
+  border-radius: 0.4rem;
+  border-left: 3px solid colors.$darkDestructive;
+}

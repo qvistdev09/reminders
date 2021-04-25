@@ -1,4 +1,5 @@
-import Icon from '../icon/icon';
+import Icon from '../../icon/icon';
+import './modal.scss';
 
 interface Props {
   children: React.ReactNode;
@@ -7,7 +8,6 @@ interface Props {
 }
 
 const Modal = ({ children, label, close }: Props) => {
-
   return (
     <div className='modal'>
       <div className='modal__inner'>

@@ -2,8 +2,33 @@
 @use '../../../styles/variables/font-sizes';
 @use '../../../styles/variables/font-weights';
 
-.texts__small-text {
+.texts__text {
   color: colors.$textSemiDark;
+}
+
+// size modifiers
+.texts--size-small {
   font-size: font-sizes.$small;
+}
+
+.texts--size-normal {
+  font-size: font-sizes.$normal;
+}
+
+// weight modifiers
+.texts--weight-thin {
   font-weight: font-weights.$thin;
+}
+
+.texts--weight-normal {
+  font-weight: font-weights.$normal;
+}
+
+.texts--weight-strong {
+  font-weight: font-weights.$strong;
+}
+
+// mood modifiers
+.texts--warning {
+  color: colors.$darkDestructive;
 }

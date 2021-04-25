@@ -1,7 +1,9 @@
 import { ProjectObject, UserInPermissionsGrid } from 'reminders-shared/sharedTypes';
 import { useAppUserDetails } from '../hooks/use-app-user-details';
+import { useModal } from '../hooks/use-modal';
 import { useProjects } from '../hooks/use-projects';
 import Icon from './icon/icon';
+import { Button } from './presentational/button/button';
 import { DestructiveButton } from './presentational/button/destructive-button';
 import { SettingsButton } from './presentational/button/settings-button';
 import { ExpandableCard } from './presentational/containers/expandable-card';
@@ -10,15 +12,18 @@ import { ProjectTitle } from './presentational/headers/project-title';
 import { SettingsHeader } from './presentational/headers/settings-header';
 import { Select } from './presentational/inputs/select';
 import { LinkRow } from './presentational/links/link-row';
+import { Warning } from './presentational/messages/warning';
+import Modal from './presentational/modal/modal';
 import PermissionsGrid from './presentational/permissions-grid/permissions-grid';
-import { SmallText } from './presentational/texts/small-text';
+import { Text } from './presentational/texts/text';
 
 interface Props {
   project: ProjectObject;
 }
 
 export const ProjectCard = ({ project }: Props) => {
-  const { changeVisibility } = useProjects();
+  const { changeVisibility, deleteProject } = useProjects();
+  const { activeModal, setModal, closeModal } = useModal();
   const { projectTitle, projectId, permissions, projectVisibility } = project;
   const appUser = useAppUserDetails();
   const slug = `${projectTitle.toLowerCase().replace(/\s/g, '-')}_${projectId}`;
@@ -45,13 +50,13 @@ export const ProjectCard = ({ project }: Props) => {
   );
   const button = (
     <>
-      <SmallText>Configure</SmallText>
+      <Text>Configure</Text>
       <Icon icon='chevronForward' color='semiDark' size='tiny' />
     </>
   );
   const buttonExpanded = (
     <>
-      <SmallText>Configure</SmallText>
+      <Text>Configure</Text>
       <Icon icon='chevronDown' color='semiDark' size='tiny' />
     </>
   );
@@ -68,7 +73,10 @@ export const ProjectCard = ({ project }: Props) => {
         <Flex direction='column' align='stretch' childrenGap='small'>
           <Flex direction='row' justify='between' align='center'>
             <SettingsHeader label='Permissions' />
-            <SettingsButton label='Add' onClick={() => {}} />
+            <SettingsButton
+              label='Add'
+              onClick={() => setModal(`${projectId.toString()}-add-collaborators`)}
+            />
           </Flex>
           <PermissionsGrid permissions={permissions} changePermission={() => {}} owner={ownerObj} />
         </Flex>
@@ -80,8 +88,34 @@ export const ProjectCard = ({ project }: Props) => {
             onChange={handleVisibilitySelectChange}
           />
         </Flex>
-        <DestructiveButton label='Delete project' onClick={() => {}} dontStretch={true} />
+        <DestructiveButton
+          label='Delete project'
+          onClick={() => setModal(`${projectId.toString()}-delete`)}
+          dontStretch={true}
+        />
       </Flex>
+      {activeModal === `${projectId.toString()}-add-collaborators` && (
+        <Modal label='Add collaborators' close={closeModal}>
+          <p>This will be the add people modal</p>
+        </Modal>
+      )}
+      {activeModal === `${projectId.toString()}-delete` && (
+        <Modal label={`Delete project '${projectTitle}'`} close={closeModal}>
+          <Flex direction='column' childrenGap='big' align='stretch'>
+            <Warning text='Do you really want to delete the project?' />
+            <Flex direction='row' justify='start' childrenGap='big'>
+              <DestructiveButton
+                label='Confirm delete'
+                onClick={() => {
+                  closeModal();
+                  deleteProject(projectId);
+                }}
+              />
+              <Button label='Cancel' onClick={closeModal} />
+            </Flex>
+          </Flex>
+        </Modal>
+      )}
     </ExpandableCard>
   );
 };
