@@ -10,7 +10,7 @@ interface Props {
 
 export const Spinner = ({ children = 'Loading...' }: Props) => {
   return (
-    <Flex childrenGap='small'>
+    <Flex childrenGap='small' justify='center'>
       <div className='spinner--rotate'>
         <Icon color='semiDark' icon='loading' size='small' />
       </div>

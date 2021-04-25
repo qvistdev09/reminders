@@ -2,8 +2,9 @@ import { useParams } from 'react-router-dom';
 import { useAccessProject } from '../hooks/use-access-project';
 import { Editor } from './pages/editor';
 import { Unauthorized } from './unauthorized';
-import { Text } from './presentational/texts/text';
 import { PublicProject } from './public-project';
+import { Spinner } from './presentational/spinner/spinner';
+import { Flex } from './presentational/containers/flex';
 
 interface Params {
   slug: string;
@@ -15,7 +16,11 @@ export const ProjectAccessRouter = () => {
   const { response } = useAccessProject(projectId);
 
   if (!response) {
-    return <Text>Retrieving project...</Text>;
+    return (
+      <Flex align='start' justify='center'>
+        <Spinner>Retrieving project...</Spinner>
+      </Flex>
+    );
   }
 
   const { projectVisibility, role } = response;
