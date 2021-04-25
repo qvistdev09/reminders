@@ -26,6 +26,13 @@ const ProjectPage = () => {
     return <ProjectPageUnauthorized />;
   }
 
+  if (projectVisibility === 'private') {
+    if (role === 'owner') {
+      return <Editor projectId={projectId} />;
+    }
+    return <ProjectPageUnauthorized />;
+  }
+  
   return <Editor projectId={projectId} />;
 };
 
