@@ -8,7 +8,7 @@ import { clientAuth } from '../config/okta-config';
 import { Header } from './header';
 import { BreadcrumbRow } from './breadcrumb-row';
 import { Projects } from './pages/projects';
-import SignUp from './sign-up/sign-up';
+import SignUp from './sign-up';
 import Login from './login/login';
 import ProjectPage from './project-page/project-page';
 
