@@ -32,3 +32,9 @@
 .texts--warning {
   color: colors.$darkDestructive;
 }
+
+// other
+
+.texts--dontWrap {
+  white-space: nowrap;
+}

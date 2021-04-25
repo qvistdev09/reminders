@@ -17,12 +17,14 @@ import { Warning } from './presentational/messages/warning';
 import Modal from './presentational/modal/modal';
 import PermissionsGrid from './presentational/permissions-grid/permissions-grid';
 import { Text } from './presentational/texts/text';
+import UserIcon from './presentational/user-icon/user-icon';
 
 interface Props {
   project: ProjectObject;
+  owned?: boolean;
 }
 
-export const ProjectCard = ({ project }: Props) => {
+export const ProjectCard = ({ project, owned = true }: Props) => {
   const { changeVisibility, deleteProject, editPermission } = useProjects();
   const { activeModal, setModal, closeModal } = useModal();
   const { projectTitle, projectId, permissions, projectVisibility } = project;
@@ -68,8 +70,33 @@ export const ProjectCard = ({ project }: Props) => {
     { value: 'public', label: 'Public' },
   ];
 
+  const ownerSymbol = (
+    <Flex flex={0} childrenGap='big'>
+      <Flex direction='column' align='start'>
+        <Text dontWrap='dontWrap'>Owned by:</Text>
+        <Text
+          dontWrap='dontWrap'
+          weight='strong'
+        >{`${project.projectOwner.firstName} ${project.projectOwner.lastName}`}</Text>
+      </Flex>
+      <Flex direction='column' align='start'>
+        <Text>Access:</Text>
+        <Text weight='strong'>
+          {project.projectVisibility === 'authorizedOnly' ? 'Collaborators' : project.projectVisibility}
+        </Text>
+      </Flex>
+      <UserIcon firstName={project.projectOwner.firstName} lastName={project.projectOwner.lastName} />
+    </Flex>
+  );
+
   return (
-    <ExpandableCard headerObj={headerObj} button={button} buttonExpanded={buttonExpanded}>
+    <ExpandableCard
+      headerObj={headerObj}
+      button={button}
+      buttonExpanded={buttonExpanded}
+      enabled={owned}
+      alternativeHeaderObj={!owned ? ownerSymbol : null}
+    >
       <Flex direction='column' align='stretch' childrenGap='big'>
         <Flex direction='column' align='stretch' childrenGap='small'>
           <Flex direction='row' justify='between' align='center'>

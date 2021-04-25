@@ -8,13 +8,15 @@ interface Props {
   mood?: 'warning';
   size?: 'small' | 'normal';
   weight?: 'thin' | 'normal' | 'strong';
+  dontWrap?: 'dontWrap';
 }
 
-export const Text = ({ children, mood, size = 'small', weight = 'thin' }: Props) => {
+export const Text = ({ children, mood, size = 'small', weight = 'thin', dontWrap }: Props) => {
   const baseClass = 'texts__text';
   const moodModifier = getModifier('texts', mood);
   const sizeModifier = getModifier('texts', size, 'size');
   const weightModifier = getModifier('texts', weight, 'weight');
-  const className = makeClassname(baseClass, moodModifier, sizeModifier, weightModifier);
+  const wrapModifier = getModifier('texts', dontWrap);
+  const className = makeClassname(baseClass, moodModifier, sizeModifier, weightModifier, wrapModifier);
   return <p className={className}>{children}</p>;
 };

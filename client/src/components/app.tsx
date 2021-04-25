@@ -10,7 +10,7 @@ import { BreadcrumbRow } from './breadcrumb-row';
 import { Projects } from './pages/projects';
 import SignUp from './sign-up';
 import Login from './login';
-import ProjectPage from './project-page/project-page';
+import { ProjectAccessRouter } from './project-access-router';
 
 // types
 import { OktaAuth } from '@okta/okta-auth-js/lib/types';
@@ -37,7 +37,7 @@ const App = () => {
           <Route exact path='/login' component={Login} />
           <SecureRoute exact path='/projects/your-projects' component={Projects} />
           <SecureRoute exact path='/projects/shared-with-you' component={SharedWithYou} />
-          <Route path='/projects/:slug' component={ProjectPage} />
+          <Route path='/projects/:slug' component={ProjectAccessRouter} />
           <Route path='/login/callback' component={LoginCallback} />
         </Switch>
       </main>

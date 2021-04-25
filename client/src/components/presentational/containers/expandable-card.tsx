@@ -5,9 +5,19 @@ interface Props extends ContainerBase {
   headerObj: ReactNode;
   buttonExpanded: ReactNode;
   button: ReactNode;
+  enabled?: boolean;
+  alternativeHeaderObj?: ReactNode | null;
 }
 
-export const ExpandableCard = ({ children, headerObj, flex = 0, button, buttonExpanded }: Props) => {
+export const ExpandableCard = ({
+  children,
+  headerObj,
+  flex = 0,
+  button,
+  buttonExpanded,
+  enabled = true,
+  alternativeHeaderObj,
+}: Props) => {
   const [expanded, setExpanded] = useState(false);
 
   const toggle = () => {
@@ -22,9 +32,12 @@ export const ExpandableCard = ({ children, headerObj, flex = 0, button, buttonEx
     <div className='containers__card' style={{ flex }}>
       <div className={headerClassname}>
         <div className='containers__expandable-card-headerobj'>{headerObj}</div>
-        <button onClick={() => toggle()} className='containers__expandable-card-btn'>
-          {expanded ? buttonExpanded : button}
-        </button>
+        {enabled && (
+          <button onClick={() => toggle()} className='containers__expandable-card-btn'>
+            {expanded ? buttonExpanded : button}
+          </button>
+        )}
+        {!enabled && alternativeHeaderObj}
       </div>
       {expanded && <div className='containers__card-content'>{children}</div>}
     </div>

@@ -1,14 +1,14 @@
 import { useParams } from 'react-router-dom';
-import { useAccessProject } from '../../hooks/use-access-project';
-import ProjectPageViewer from './elements/project-page-viewer';
-import { Editor } from '../pages/editor';
-import ProjectPageUnauthorized from './elements/project-page-unauthorized';
+import { useAccessProject } from '../hooks/use-access-project';
+import ProjectPageViewer from './project-page/elements/project-page-viewer';
+import { Editor } from './pages/editor';
+import ProjectPageUnauthorized from './project-page/elements/project-page-unauthorized';
 
 interface Params {
   slug: string;
 }
 
-const ProjectPage = () => {
+export const ProjectAccessRouter = () => {
   const { slug } = useParams() as Params;
   const projectId = slug.split('_')[1];
   const { response } = useAccessProject(projectId);
@@ -32,8 +32,6 @@ const ProjectPage = () => {
     }
     return <ProjectPageUnauthorized />;
   }
-  
+
   return <Editor projectId={projectId} />;
 };
-
-export default ProjectPage;
