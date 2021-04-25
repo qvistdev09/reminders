@@ -1,5 +1,5 @@
 import './button.scss';
-import Icon from '../../icon/icon';
+import Icon from '../icon/icon';
 import { Text } from '../texts/text';
 
 interface Props {

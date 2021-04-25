@@ -3,7 +3,7 @@ import { useAppUserDetails } from '../hooks/use-app-user-details';
 import { useModal } from '../hooks/use-modal';
 import { useProjects } from '../hooks/use-projects';
 import { AddCollaborators } from './add-collaborators';
-import Icon from './icon/icon';
+import Icon from './presentational/icon/icon';
 import { Button } from './presentational/button/button';
 import { DestructiveButton } from './presentational/button/destructive-button';
 import { SettingsButton } from './presentational/button/settings-button';

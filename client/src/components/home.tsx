@@ -1,4 +1,4 @@
-import Icon from './icon/icon';
+import Icon from './presentational/icon/icon';
 import { Card } from './presentational/containers/card';
 import { Flex } from './presentational/containers/flex';
 import { Text } from './presentational/texts/text';

@@ -1,7 +1,7 @@
 import { Flex } from './presentational/containers/flex';
 import { Logo } from './presentational/logo/logo';
 import { NavItem } from './presentational/nav-item/nav-item';
-import Icon from './icon/icon';
+import Icon from './presentational/icon/icon';
 import { useAuthenticationStatus } from '../hooks/use-authentication-status';
 import { Button } from './presentational/button/button';
 import { useHistory } from 'react-router';

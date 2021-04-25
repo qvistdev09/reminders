@@ -18,7 +18,7 @@ import SharedWithYou from './pages/shared-with-you';
 import { Home } from './home';
 import { Flex } from './presentational/containers/flex';
 import { Text } from './presentational/texts/text';
-import Icon from './icon/icon';
+import Icon from './presentational/icon/icon';
 
 const App = () => {
   const history = useHistory();

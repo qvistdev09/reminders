@@ -1,6 +1,6 @@
 import { SyntheticEvent } from 'react';
 import { UserObj } from 'reminders-shared/sharedTypes';
-import Icon from '../../icon/icon';
+import Icon from '../icon/icon';
 
 interface Props {
   user: UserObj;
