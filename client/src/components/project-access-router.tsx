@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useAccessProject } from '../hooks/use-access-project';
 import { Editor } from './pages/editor';
-import ProjectPageUnauthorized from './project-page/elements/project-page-unauthorized';
+import { Unauthorized } from './unauthorized';
 import { Text } from './presentational/texts/text';
 import { PublicProject } from './public-project';
 
@@ -24,14 +24,14 @@ export const ProjectAccessRouter = () => {
     if (projectVisibility === 'public') {
       return <PublicProject project={response} />;
     }
-    return <ProjectPageUnauthorized />;
+    return <Unauthorized />;
   }
 
   if (projectVisibility === 'private') {
     if (role === 'owner') {
       return <Editor projectId={projectId} />;
     }
-    return <ProjectPageUnauthorized />;
+    return <Unauthorized />;
   }
 
   return <Editor projectId={projectId} />;
