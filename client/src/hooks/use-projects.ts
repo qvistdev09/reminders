@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAccessToken } from './use-access-token';
 import { projectsApi } from '../api-service/projects';
 import { useAppDispatch, useAppSelector } from './redux-hooks';
@@ -15,17 +15,20 @@ const useProjects = () => {
   const accessToken = useAccessToken();
   const dispatch = useAppDispatch();
   const { projects, retrieved } = useAppSelector(getProjects);
+  const [submittingProject, setSubmittingProject] = useState(false);
 
   const syncProjectsWithServer = () => {
     if (accessToken) {
       projectsApi
         .getAll(accessToken, 'mine')
-        .then(({ data: { projects } }) => dispatch(projectsReducer.setAll(projects)));
+        .then(({ data: { projects } }) => dispatch(projectsReducer.setAll(projects)))
+        .finally(() => setSubmittingProject(false));
     }
   };
 
   const submitProject = (projectTitle: string) => {
     if (accessToken) {
+      setSubmittingProject(true);
       projectsApi
         .create(
           {
@@ -34,7 +37,9 @@ const useProjects = () => {
           },
           accessToken
         )
-        .then(() => syncProjectsWithServer());
+        .then(() => {
+          syncProjectsWithServer();
+        });
     }
   };
 
@@ -105,6 +110,7 @@ const useProjects = () => {
     editPermission,
     deleteProject,
     changeVisibility,
+    submittingProject,
   };
 };
 
