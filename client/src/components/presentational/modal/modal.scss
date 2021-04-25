@@ -41,15 +41,6 @@
   font-weight: font-weights.$normal;
 }
 
-.modal__close-btn {
-  cursor: pointer;
-  padding: 0.25rem;
-  border-radius: 0.35rem;
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.098);
-  }
-}
-
 .modal__content {
   padding: 1rem;
 }

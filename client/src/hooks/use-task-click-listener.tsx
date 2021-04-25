@@ -8,7 +8,7 @@ const useTaskClickListener = (stopUserEdit: StopUserEdit) => {
     const click = (e: MouseEvent) => {
       const { target } = e;
       if (target instanceof HTMLElement) {
-        if (target.classList.contains('task__input') || target.classList.contains('task__label-btn')) {
+        if (target.classList.contains('inputs__text-input') || target.classList.contains('button__task-title')) {
           return;
         }
         stopUserEdit();

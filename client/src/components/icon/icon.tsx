@@ -7,6 +7,8 @@ import IconClose from './elements/icon-close';
 import IconAddOutline from './elements/icon-add-outline';
 import IconShared from './elements/icon-shared';
 import { IconTrash } from './elements/icon-trash';
+import { IconPencil } from './elements/icon-pencil';
+import { IconCheck } from './elements/icon-check';
 import './icon.scss';
 
 const icons = {
@@ -19,6 +21,8 @@ const icons = {
   addOutline: IconAddOutline,
   shared: IconShared,
   trash: IconTrash,
+  pencil: IconPencil,
+  check: IconCheck,
 };
 
 const sizes = {
@@ -44,7 +48,9 @@ interface Props {
     | 'close'
     | 'addOutline'
     | 'shared'
-    | 'trash';
+    | 'trash'
+    | 'pencil'
+    | 'check';
   size?: 'tiny' | 'small' | 'medium' | 'large';
   color?: 'white' | 'semiDark' | 'primary';
   padding?: number;

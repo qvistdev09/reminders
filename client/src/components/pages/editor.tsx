@@ -1,6 +1,6 @@
 import { useLiveEdit } from '../../hooks/use-live-edit';
 import { SyntheticEvent, useState } from 'react';
-import { Task } from '../project-page/task';
+import { Task } from '../task';
 import { TaskLiveModel } from 'reminders-shared/sharedTypes';
 import { useTaskClickListener } from '../../hooks/use-task-click-listener';
 import { useTaskFilterer } from '../../hooks/use-task-filterer';
@@ -56,9 +56,14 @@ export const Editor = ({ projectId, editable = true }: Props) => {
             </Flex>
           </Card>
         </Flex>
-        <Flex flex={0.7} direction='column' align='stretch'>
+        <Flex flex={0.7} direction='column' align='stretch' childrenGap='big'>
           {session.tasks.map(task => (
-            <Task key={task.taskId} taskObj={task} inEdit={false} taskActions={taskActions} />
+            <Task
+              key={task.taskId}
+              taskObj={task}
+              inEdit={task.inEditBy.length > 0}
+              taskActions={taskActions}
+            />
           ))}
         </Flex>
       </Flex>

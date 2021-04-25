@@ -7,7 +7,7 @@ interface Props {
   onChange: (str: string) => void;
   required?: boolean;
   type?: 'text' | 'password' | 'email' | 'search';
-  label: string;
+  label?: string;
   id: string;
   placeholder?: string;
 }
@@ -20,9 +20,24 @@ export const LabelledInput = ({
   label,
   id,
   placeholder = '',
-}: Props) => (
-  <label htmlFor={id} className='inputs__label'>
-    <span>{label}</span>
+}: Props) => {
+  return label ? (
+    <label htmlFor={id} className='inputs__label'>
+      <span>{label}</span>
+      <input
+        value={value}
+        onChange={(e: SyntheticEvent) => {
+          const target = e.target as HTMLInputElement;
+          onChange(target.value);
+        }}
+        type={type}
+        required={required}
+        id={id}
+        placeholder={placeholder}
+        className='inputs__text-input'
+      />
+    </label>
+  ) : (
     <input
       value={value}
       onChange={(e: SyntheticEvent) => {
@@ -34,6 +49,7 @@ export const LabelledInput = ({
       id={id}
       placeholder={placeholder}
       className='inputs__text-input'
+      style={{ marginTop: 0 }}
     />
-  </label>
-);
+  );
+};

@@ -1,4 +1,5 @@
 import Icon from '../../icon/icon';
+import { Close } from '../button/close';
 import './modal.scss';
 
 interface Props {
@@ -13,9 +14,7 @@ const Modal = ({ children, label, close }: Props) => {
       <div className='modal__inner'>
         <div className='modal__header-container'>
           <h5 className='modal__label'>{label}</h5>
-          <button className='modal__close-btn' onClick={() => close()}>
-            <Icon icon='close' color='semiDark' size='large' />
-          </button>
+          <Close close={close} />
         </div>
         <div className='modal__content'>{children}</div>
       </div>

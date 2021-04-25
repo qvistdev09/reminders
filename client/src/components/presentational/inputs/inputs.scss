@@ -11,7 +11,7 @@
   align-items: stretch;
 
   span {
-    padding-left: 0.30rem;
+    padding-left: 0.3rem;
   }
 }
 
@@ -51,4 +51,22 @@
   border: 1px solid colors.$border;
   border-radius: 0.35rem;
   padding: 0.25rem;
+}
+
+$checkerSize: 2.2rem;
+.inputs__checker {
+  cursor: pointer;
+  width: $checkerSize;
+  height: $checkerSize;
+  min-width: $checkerSize;
+  min-height: $checkerSize;
+  border: 1px solid colors.$border;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.25rem;
+
+  &:hover {
+    background-color: colors.$softSecondary;
+  }
 }
