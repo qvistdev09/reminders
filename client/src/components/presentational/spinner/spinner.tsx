@@ -6,11 +6,12 @@ import './spinner.scss';
 
 interface Props {
   children?: ReactNode;
+  justify?: 'start' | 'center';
 }
 
-export const Spinner = ({ children = 'Loading...' }: Props) => {
+export const Spinner = ({ children = 'Loading...', justify = 'start' }: Props) => {
   return (
-    <Flex childrenGap='small' justify='center'>
+    <Flex childrenGap='small' justify={justify}>
       <div className='spinner--rotate'>
         <Icon color='semiDark' icon='loading' size='small' />
       </div>

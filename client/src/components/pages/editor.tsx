@@ -8,13 +8,13 @@ import { Text } from '../presentational/texts/text';
 import { Collaborator } from '../presentational/collaborator';
 import { TaskCreator } from '../task-creator';
 import { TaskFilterer } from '../task-filterer';
+import { Spinner } from '../presentational/spinner/spinner';
 
 interface Props {
   projectId: string;
-  editable?: boolean;
 }
 
-export const Editor = ({ projectId, editable = true }: Props) => {
+export const Editor = ({ projectId }: Props) => {
   const { socketStatus, session, taskActions } = useLiveEdit(projectId);
   const { nextFilter, filteredTasks, currentFilter } = useTaskFilterer(session.tasks);
   useTaskClickListener(taskActions.stopUserEdit);
@@ -25,7 +25,7 @@ export const Editor = ({ projectId, editable = true }: Props) => {
         <Flex flex={0.3} direction='column' align='stretch' childrenGap='big'>
           <Card header='Connection status'>
             <Flex direction='column' childrenGap='small' align='start'>
-              <Text weight='strong'>{socketStatus.authenticated ? 'Connected' : 'Connecting'}</Text>
+              {socketStatus.authenticated ? <Text>Connected</Text> : <Spinner>Connecting...</Spinner>}
               {socketStatus.authenticated && <Text>{`Your role: ${socketStatus.role}`}</Text>}
             </Flex>
           </Card>

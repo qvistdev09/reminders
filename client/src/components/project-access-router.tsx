@@ -18,7 +18,7 @@ export const ProjectAccessRouter = () => {
   if (!response) {
     return (
       <Flex align='start' justify='center'>
-        <Spinner>Retrieving project...</Spinner>
+        <Spinner justify='center'>Retrieving project...</Spinner>
       </Flex>
     );
   }
