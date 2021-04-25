@@ -15,6 +15,7 @@ import { ProjectAccessRouter } from './project-access-router';
 // types
 import { OktaAuth } from '@okta/okta-auth-js/lib/types';
 import SharedWithYou from './pages/shared-with-you';
+import { Home } from './home';
 
 const App = () => {
   const history = useHistory();
@@ -31,7 +32,7 @@ const App = () => {
       <main className='main'>
         <Switch>
           <Route exact path='/'>
-            <p>This is the home route</p>
+            <Home />
           </Route>
           <Route exact path='/sign-up' component={SignUp} />
           <Route exact path='/login' component={Login} />

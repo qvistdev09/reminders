@@ -9,6 +9,7 @@ import IconShared from './elements/icon-shared';
 import { IconTrash } from './elements/icon-trash';
 import { IconPencil } from './elements/icon-pencil';
 import { IconCheck } from './elements/icon-check';
+import { IconHeart } from './elements/icon-heart';
 import './icon.scss';
 
 const icons = {
@@ -23,6 +24,7 @@ const icons = {
   trash: IconTrash,
   pencil: IconPencil,
   check: IconCheck,
+  heart: IconHeart,
 };
 
 const sizes = {
@@ -50,7 +52,8 @@ interface Props {
     | 'shared'
     | 'trash'
     | 'pencil'
-    | 'check';
+    | 'check'
+    | 'heart';
   size?: 'tiny' | 'small' | 'medium' | 'large';
   color?: 'white' | 'semiDark' | 'primary';
   padding?: number;
