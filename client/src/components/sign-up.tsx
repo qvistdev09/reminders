@@ -16,7 +16,7 @@ const SignUp = () => {
   return (
     <Flex justify='center' flex={1} align='start'>
       <Flex maxWidth='appMaxWidth' justify='center' align='start' yPadding={0} xPadding={1}>
-        <Card header='Sign up' flex={0.5}>
+        <Card header='Sign up' flex={1} cardMax={30}>
           <Form onSubmit={performSignup}>
             <LabelledInput
               value={form.firstName}

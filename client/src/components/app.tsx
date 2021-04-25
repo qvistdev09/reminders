@@ -9,7 +9,7 @@ import { Header } from './header';
 import { BreadcrumbRow } from './breadcrumb-row';
 import { Projects } from './pages/projects';
 import SignUp from './sign-up';
-import Login from './login/login';
+import Login from './login';
 import ProjectPage from './project-page/project-page';
 
 // types
