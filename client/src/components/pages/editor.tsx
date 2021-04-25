@@ -1,7 +1,5 @@
 import { useLiveEdit } from '../../hooks/use-live-edit';
-import { SyntheticEvent, useState } from 'react';
 import { Task } from '../task';
-import { TaskLiveModel } from 'reminders-shared/sharedTypes';
 import { useTaskClickListener } from '../../hooks/use-task-click-listener';
 import { useTaskFilterer } from '../../hooks/use-task-filterer';
 import { Flex } from '../presentational/containers/flex';
@@ -9,13 +7,7 @@ import { Card } from '../presentational/containers/card';
 import { Text } from '../presentational/texts/text';
 import { Collaborator } from '../presentational/collaborator';
 import { TaskCreator } from '../task-creator';
-
-const inEdit = (task: TaskLiveModel, uid: string | null) => {
-  if (!uid) {
-    return false;
-  }
-  return task.inEditBy.includes(uid);
-};
+import { TaskFilterer } from '../task-filterer';
 
 interface Props {
   projectId: string;
@@ -23,17 +15,9 @@ interface Props {
 }
 
 export const Editor = ({ projectId, editable = true }: Props) => {
-  const [newTaskInput, setNewTaskInput] = useState('');
   const { socketStatus, session, taskActions } = useLiveEdit(projectId);
   const { nextFilter, filteredTasks, currentFilter } = useTaskFilterer(session.tasks);
   useTaskClickListener(taskActions.stopUserEdit);
-
-  console.log(session.users);
-  const handleNewSubmit = (e: SyntheticEvent) => {
-    e.preventDefault();
-    taskActions.submitNewTask({ taskLabel: newTaskInput });
-    setNewTaskInput('');
-  };
 
   return (
     <Flex justify='center' align='start' flex={1}>
@@ -57,7 +41,8 @@ export const Editor = ({ projectId, editable = true }: Props) => {
           </Card>
         </Flex>
         <Flex flex={0.7} direction='column' align='stretch' childrenGap='big'>
-          {session.tasks.map(task => (
+          <TaskFilterer currentFilter={currentFilter} nextFilter={nextFilter} />
+          {filteredTasks.map(task => (
             <Task
               key={task.taskId}
               taskObj={task}

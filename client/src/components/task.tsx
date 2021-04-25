@@ -1,4 +1,4 @@
-import { SyntheticEvent, useState } from 'react';
+import { SyntheticEvent } from 'react';
 import { PktTaskStatus, TaskLiveModel } from 'reminders-shared/sharedTypes';
 import { TaskActions } from '../@types/src/components/project-page/task';
 import { Close } from './presentational/button/close';
@@ -17,7 +17,6 @@ interface Props {
 
 export const Task = ({ taskObj, inEdit, taskActions }: Props) => {
   const { taskLabel, taskId, taskFinished } = taskObj;
-  const [input, setInput] = useState(taskLabel);
   const { liveChange, deleteTask, taskEditStop, taskEditStart, setTaskStatus, stopUserEdit } = taskActions;
 
   const handleCommit = (e?: SyntheticEvent) => {
@@ -26,7 +25,6 @@ export const Task = ({ taskObj, inEdit, taskActions }: Props) => {
   };
 
   const handleChange = (value: string) => {
-    setInput(value);
     liveChange({ taskId, taskLabel: value });
   };
 

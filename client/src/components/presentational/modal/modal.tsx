@@ -1,4 +1,3 @@
-import Icon from '../../icon/icon';
 import { Close } from '../button/close';
 import './modal.scss';
 

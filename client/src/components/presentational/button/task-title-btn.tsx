@@ -1,6 +1,4 @@
 import './button.scss';
-import { getModifier } from '../../../modules/get-modifier';
-import { makeClassname } from '../../../modules/make-classname';
 import Icon from '../../icon/icon';
 import { Text } from '../texts/text';
 
