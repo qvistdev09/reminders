@@ -6,8 +6,6 @@
 .footer {
   display: flex;
   justify-content: center;
-  background-color: colors.$lightBgDarkened;
-  border-top: 2px solid colors.$lightBgBorder;
 }
 
 .footer__inner {
@@ -20,9 +18,9 @@
 }
 
 .footer__text {
-  color: colors.$black;
-  font-size: font-sizes.$footerText;
-  font-weight: font-weights.$footerText;
+  color: colors.$textDark;
+  font-size: font-sizes.$verySmall;
+  font-weight: font-weights.$thin;
 }
 
 
