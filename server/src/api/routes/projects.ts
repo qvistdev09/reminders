@@ -27,7 +27,7 @@ import { sequelize } from '../../config/db-config';
 import { ControlledError } from '../../classes/controlled-error';
 import { ProjectAccessResponse } from 'reminders-shared/sharedTypes';
 import { appendNamesToManyProjects, getAllAppUsers, getNameFromOkta } from '../services/user-service';
-import { destroyTasksByProjectId } from '../services/tasks-service';
+import { destroyTasksByProjectId, getTasksByProjectId } from '../services/tasks-service';
 
 const router = express.Router();
 
@@ -67,6 +67,10 @@ router.get('/:projectIdString', authAppend, async (req: Request, res: Response, 
     const response: ProjectAccessResponse = {
       role,
       projectVisibility,
+      tasks:
+        projectVisibility === 'public' ? await getTasksByProjectId(matchedProject.projectId as number) : null,
+      owner: projectVisibility === 'public' ? await getNameFromOkta(matchedProject.projectOwner) : null,
+      title: projectVisibility === 'public' ? matchedProject.projectTitle : null,
     };
     res.json(response);
   } catch (err) {

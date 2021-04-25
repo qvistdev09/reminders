@@ -41,6 +41,9 @@ export interface NewProjectFields {
 export interface ProjectAccessResponse {
   role: PermissionRole | 'owner' | 'none';
   projectVisibility: ProjectVisibility;
+  tasks?: TaskLiveModel[] | null;
+  owner?: UserObj | null;
+  title?: string | null;
 }
 
 export interface SocketStatus {

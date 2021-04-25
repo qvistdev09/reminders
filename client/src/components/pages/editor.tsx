@@ -39,9 +39,9 @@ export const Editor = ({ projectId, editable = true }: Props) => {
               ))}
             </Flex>
           </Card>
+          <TaskFilterer currentFilter={currentFilter} nextFilter={nextFilter} />
         </Flex>
         <Flex flex={0.7} direction='column' align='stretch' childrenGap='big'>
-          <TaskFilterer currentFilter={currentFilter} nextFilter={nextFilter} />
           {filteredTasks.map(task => (
             <Task
               key={task.taskId}
