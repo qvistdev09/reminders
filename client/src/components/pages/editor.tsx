@@ -48,7 +48,7 @@ export const Editor = ({ projectId, editable = true }: Props) => {
           <Card header='Create task'>
             <TaskCreator onCreate={taskLabel => taskActions.submitNewTask({ taskLabel })} />
           </Card>
-          <Card header='Collaborators'>
+          <Card header='Collaborators online'>
             <Flex direction='column' childrenGap='big' align='stretch'>
               {session.users.map(user => (
                 <Collaborator key={user.uid} user={user} />
