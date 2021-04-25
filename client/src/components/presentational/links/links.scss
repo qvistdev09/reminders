@@ -9,4 +9,12 @@
   & > *:last-child {
     margin-left: 0.5rem;
   }
+
+  & > *:first-child {
+    margin-left: 0;
+  }
+}
+
+.links__external:hover {
+  text-decoration: underline;
 }

@@ -16,6 +16,9 @@ import { ProjectAccessRouter } from './project-access-router';
 import { OktaAuth } from '@okta/okta-auth-js/lib/types';
 import SharedWithYou from './pages/shared-with-you';
 import { Home } from './home';
+import { Flex } from './presentational/containers/flex';
+import { Text } from './presentational/texts/text';
+import Icon from './icon/icon';
 
 const App = () => {
   const history = useHistory();
@@ -43,10 +46,16 @@ const App = () => {
           <Route path='/login/callback' component={LoginCallback} />
         </Switch>
       </main>
-      <footer className='footer'>
-        <div className='footer__inner'>
-          <p className='footer__text'>by Oscar Lindqvist</p>
-        </div>
+      <footer>
+        <Flex justify='center' yPadding={1} childrenGap='small'>
+          <Text size='small' weight='thin'>
+            by Oscar Lindqvist
+          </Text>
+          <Icon icon='heart' color='semiDark' size='tiny' />
+          <a href='https://github.com/qvistdev09' className='links__external'>
+            <Text weight='strong'>my Github</Text>
+          </a>
+        </Flex>
       </footer>
     </Security>
   );
