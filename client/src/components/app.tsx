@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { Security, LoginCallback, SecureRoute } from '@okta/okta-react';
 import { toRelativeUrl } from '@okta/okta-auth-js';
 import { useHistory } from 'react-router-dom';
@@ -35,6 +35,7 @@ const App = () => {
           </Route>
           <Route exact path='/sign-up' component={SignUp} />
           <Route exact path='/login' component={Login} />
+          <Route exact path='/projects' component={() => <Redirect to='/projects/your-projects' />} />
           <SecureRoute exact path='/projects/your-projects' component={Projects} />
           <SecureRoute exact path='/projects/shared-with-you' component={SharedWithYou} />
           <Route path='/projects/:slug' component={ProjectAccessRouter} />
