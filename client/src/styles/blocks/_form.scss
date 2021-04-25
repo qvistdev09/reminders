@@ -76,36 +76,3 @@
 .form__submit-btn:focus {
   box-shadow: 0px 0px 0px 3px darken(colors.$lightBg, 40%);
 }
-
-.form__search-wrapper {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  margin-bottom: 1.2rem;
-  .form__input {
-    margin-bottom: 0rem;
-  }
-}
-
-.form__search-wrapper--expanded {
-  .form__input {
-    border-bottom-left-radius: 0rem;
-    border-bottom-right-radius: 0rem;
-  }
-}
-
-.form__search-wrapper-suggestions {
-  position: absolute;
-  left: 0px;
-  top: 100%;
-  width: 100%;
-  box-shadow: 0px 0px 0px 2px darken(colors.$lightBg, 25%);
-  background-color: lighten(colors.$lightBg, 10%);
-  border: 1px solid darken(colors.$lightBg, 25%);
-  border-bottom-left-radius: 0.45rem;
-  border-bottom-right-radius: 0.45rem;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}

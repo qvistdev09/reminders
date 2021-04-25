@@ -2,6 +2,7 @@ import { ProjectObject, UserInPermissionsGrid } from 'reminders-shared/sharedTyp
 import { useAppUserDetails } from '../hooks/use-app-user-details';
 import { useModal } from '../hooks/use-modal';
 import { useProjects } from '../hooks/use-projects';
+import { AddCollaborators } from './add-collaborators';
 import Icon from './icon/icon';
 import { Button } from './presentational/button/button';
 import { DestructiveButton } from './presentational/button/destructive-button';
@@ -22,7 +23,7 @@ interface Props {
 }
 
 export const ProjectCard = ({ project }: Props) => {
-  const { changeVisibility, deleteProject } = useProjects();
+  const { changeVisibility, deleteProject, editPermission } = useProjects();
   const { activeModal, setModal, closeModal } = useModal();
   const { projectTitle, projectId, permissions, projectVisibility } = project;
   const appUser = useAppUserDetails();
@@ -78,7 +79,11 @@ export const ProjectCard = ({ project }: Props) => {
               onClick={() => setModal(`${projectId.toString()}-add-collaborators`)}
             />
           </Flex>
-          <PermissionsGrid permissions={permissions} changePermission={() => {}} owner={ownerObj} />
+          <PermissionsGrid
+            permissions={permissions}
+            changePermission={change => editPermission(projectId, change)}
+            owner={ownerObj}
+          />
         </Flex>
         <Flex direction='column' align='start' childrenGap='small'>
           <SettingsHeader label='Visibility' />
@@ -96,7 +101,7 @@ export const ProjectCard = ({ project }: Props) => {
       </Flex>
       {activeModal === `${projectId.toString()}-add-collaborators` && (
         <Modal label='Add collaborators' close={closeModal}>
-          <p>This will be the add people modal</p>
+          <AddCollaborators projectId={projectId} />
         </Modal>
       )}
       {activeModal === `${projectId.toString()}-delete` && (

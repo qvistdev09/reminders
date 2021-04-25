@@ -2,7 +2,6 @@ import { SyntheticEvent, useState } from 'react';
 import FormLabelledInput from '../form/elements/form-labelled-input';
 import ProjectsRow from './elements/projects-row';
 import Modal from '../presentational/modal/modal';
-import ProjectsAddCollaborators from './elements/projects-add-collaborators';
 import { useProjects } from '../../hooks/use-projects';
 
 const Projects = () => {
@@ -57,7 +56,7 @@ const Projects = () => {
         <h2 className='utility--feature-header'>Your projects</h2>
         {permissionsModal && projectInEdit && (
           <Modal label='Add collaborators' close={closePermissionsModal}>
-            <ProjectsAddCollaborators projectId={projectInEdit} close={closePermissionsModal} />
+           
           </Modal>
         )}
         <div className='projects__container'>

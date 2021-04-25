@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import './search-wrapper.scss';
 
 interface Props {
   suggestions: any[];
@@ -6,7 +7,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-const FormSearchWrapper = ({ suggestions, renderFunction, children }: Props) => {
+export const SearchWrapper = ({ suggestions, renderFunction, children }: Props) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
@@ -29,15 +30,14 @@ const FormSearchWrapper = ({ suggestions, renderFunction, children }: Props) => 
     <div
       className={
         suggestions.length > 0 && showSuggestions
-          ? 'form__search-wrapper form__search-wrapper--expanded'
-          : 'form__search-wrapper'
+          ? 'search-wrapper search-wrapper--expanded'
+          : 'search-wrapper'
       }
     >
       {children}
       {suggestions.length > 0 && showSuggestions && (
-        <div className='form__search-wrapper-suggestions'>{renderFunction(suggestions)}</div>
+        <div className='search-wrapper-suggestions'>{renderFunction(suggestions)}</div>
       )}
     </div>
   );
 };
-export default FormSearchWrapper;
