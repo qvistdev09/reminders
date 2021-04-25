@@ -8,7 +8,7 @@ interface Props {
   taskActions: TaskActions;
 }
 
-const Task = ({ taskObj, inEdit, taskActions }: Props) => {
+export const Task = ({ taskObj, inEdit, taskActions }: Props) => {
   const { taskLabel, taskId, taskFinished } = taskObj;
   const [input, setInput] = useState(taskLabel);
   const { liveChange, deleteTask, taskEditStop, taskEditStart, setTaskStatus } = taskActions;
@@ -51,5 +51,3 @@ const Task = ({ taskObj, inEdit, taskActions }: Props) => {
     </div>
   );
 };
-
-export default Task;

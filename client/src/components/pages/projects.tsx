@@ -9,10 +9,10 @@ export const Projects = () => {
   return (
     <Flex justify='center' flex={1} align='start' bg='darkenedBg'>
       <Flex maxWidth='appMaxWidth' align='start' yPadding={0} childrenGap='big' xPadding={1}>
-        <Card header='New project' flex={0.4}>
+        <Card header='New project' flex={0.3}>
           <ProjectCreator />
         </Card>
-        <Flex direction='column' align='stretch' childrenGap='big'>
+        <Flex direction='column' align='stretch' childrenGap='big' flex={0.7}>
           {projects.map(project => (
             <ProjectCard key={project.projectId} project={project} />
           ))}

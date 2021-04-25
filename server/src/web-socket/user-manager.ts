@@ -18,6 +18,7 @@ class UserManager {
           fullName: `${user.userObj.firstName} ${user.userObj.lastName}`,
           color: user.color,
           uid: user.userObj.uid,
+          role: user.connections[0].permissionRole,
         }
     );
   };

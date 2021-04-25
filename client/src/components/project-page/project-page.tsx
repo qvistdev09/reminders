@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useAccessProject } from '../../hooks/use-access-project';
 import ProjectPageViewer from './elements/project-page-viewer';
-import ProjectPageEditor from './elements/project-page-editor';
+import { Editor } from '../pages/editor';
 import ProjectPageUnauthorized from './elements/project-page-unauthorized';
 
 interface Params {
@@ -26,7 +26,7 @@ const ProjectPage = () => {
     return <ProjectPageUnauthorized />;
   }
 
-  return <ProjectPageEditor projectId={projectId} />;
+  return <Editor projectId={projectId} />;
 };
 
 export default ProjectPage;
