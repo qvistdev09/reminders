@@ -97,6 +97,7 @@ const useProjects = () => {
 
   useEffect(() => {
     if (accessToken && !retrieved) {
+      dispatch(projectsReducer.setRetrieved(false));
       projectsApi
         .getAll(accessToken, 'mine')
         .then(({ data: { projects } }) => dispatch(projectsReducer.setAll(projects)));
@@ -111,6 +112,7 @@ const useProjects = () => {
     deleteProject,
     changeVisibility,
     submittingProject,
+    retrieved,
   };
 };
 

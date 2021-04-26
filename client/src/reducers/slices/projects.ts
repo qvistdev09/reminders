@@ -73,6 +73,9 @@ const projects = createSlice({
         matchedPermission.permissionRole = newRole;
       }
     },
+    setRetrieved(state, action: PayloadAction<boolean>) {
+      state.retrieved = action.payload;
+    },
   },
 });
 
