@@ -1,39 +1,14 @@
-$white: rgb(246, 255, 240);
-$black: rgb(7, 48, 22);
-$primary: rgb(46, 148, 130);
-$lightBg: rgb(213, 238, 234);
-$action: rgb(0, 203, 132);
-$settingsAction: rgb(52, 93, 255);
-$userIcon: rgb(0, 115, 255);
-$infoBg: rgb(255, 241, 210);
-$infoBgDarkened: rgb(247, 182, 71);
-
-// derived colors
-$lightBgLightened: lighten($lightBg, 6%);
-$lightBgSemiLightened: lighten($lightBg, 3%);
-$lightBgDarkened: darken($lightBg, 3%);
-$lightBgBorder: darken($lightBg, 10%);
-$lightBgIcon: darken($lightBg, 50%);
-$lightBgText: darken($lightBg, 70%);
-$primaryDark: darken($primary, 25%);
-
-// NEW
-
 $brightBg: #fffefb;
 $darkenedBg: #f5f3ef;
 $lightShadeBg: #f9f6f3;
-
 $border: #dbd6c3;
-
 $strongPrimary: rgb(255, 64, 96);
 $softPrimary: rgba(255, 64, 96, 0.233);
 $strongSecondary: rgb(52, 69, 255);
 $softSecondary: rgba(52, 69, 255, 0.057);
-
 $strongDestructive: rgb(230, 0, 0);
 $softDestructive: rgba(182, 0, 0, 0.139);
 $darkDestructive: rgb(238, 0, 0);
-
 $textDark: rgb(33, 3, 3);
 $textSemiDark: rgb(62, 54, 54);
 $textLight: white;

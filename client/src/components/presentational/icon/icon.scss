@@ -29,13 +29,13 @@
 
 .icon--white {
   circle {
-    stroke: colors.$white;
+    stroke: colors.$textLight;
   }
   path {
-    fill: colors.$white;
+    fill: colors.$textLight;
     &.nofill {
       fill: none;
-      stroke: colors.$white;
+      stroke: colors.$textLight;
     }
   }
 }

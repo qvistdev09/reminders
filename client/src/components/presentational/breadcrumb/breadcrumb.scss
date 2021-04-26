@@ -22,7 +22,7 @@
 
   &:focus {
     outline: none;
-    box-shadow: 0px 0px 0px 1px colors.$lightBgIcon;
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.055);
     outline-offset: 2px;
   }
 }
