@@ -31,11 +31,8 @@ The app is deployed to Heroku on the following url:
 
 ### Mock users to test the app with
 
-Username: rachel@example.com
-
-Password: centralperk
-
-Username: jennifer@example.com
-
-Password: centralperk
+| Username          | Password.     | 
+| ----------------- |:-------------:|
+| ross@example.com. | centralperk   | 
+| rachel@example.com| centralperk   | 
 
